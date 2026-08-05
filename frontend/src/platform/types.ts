@@ -7,4 +7,9 @@ export interface EvidenceMetadata { status:string; confidence:string; origin:rea
 export interface GovernanceArtifact { artifactType:string; artifactVersion?:string; schemaVersion:string; evidence?:EvidenceMetadata; [key:string]:unknown }
 export interface ContractCompatibility extends GovernanceArtifact { overallCompatibility:string; networkRequestPerformed:boolean; matrix:readonly Record<string,unknown>[]; missingContractsReport:{ status:string; items:readonly string[] }; versionReport:Record<string,string> }
 export interface Gate0BGovernance { passport:GovernanceArtifact; features:GovernanceArtifact; capabilities:GovernanceArtifact; knowledge:GovernanceArtifact; aiPolicies:GovernanceArtifact; boundaries:GovernanceArtifact; healthManifest:GovernanceArtifact; registrationReadiness:GovernanceArtifact; contractCompatibility:ContractCompatibility; dependencies:GovernanceArtifact }
-export interface PlatformFoundationStatus { manifest:PlatformManifest; health:HealthStatus; connection:GlobalEcosystemConnectionStatus; governance:Gate0BGovernance }
+export type RegistrationStatus='NOT_REGISTERED'|'READY'|'BLOCKED'|'REGISTERED';
+export interface RegistrationEvidence { status:'VERIFIED'|'NOT_VERIFIED'; confidence:'HIGH'|'MEDIUM'|'LOW'; origin:readonly string[] }
+export interface RegistrationMetadata { platformId:string; platformName:string; platformVersion:string; currentGate:string; currentSprint:string; currentPhase:string; compatibilityStatus:'VERIFIED'|'NOT_VERIFIED'; registrationMode:'LOCAL_ONLY'; evidence:RegistrationEvidence }
+export interface RegistrationReadiness { ready:boolean; status:RegistrationStatus; blockingItems:readonly string[]; evidence:RegistrationEvidence }
+export interface RegistrationSummary { status:RegistrationStatus; readiness:RegistrationReadiness; metadata:RegistrationMetadata }
+export interface PlatformFoundationStatus { manifest:PlatformManifest; health:HealthStatus; connection:GlobalEcosystemConnectionStatus; governance:Gate0BGovernance; registration:RegistrationSummary }

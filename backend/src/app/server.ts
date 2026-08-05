@@ -6,6 +6,7 @@ import { loadEnvironment, isGlobalEcosystemConfigured, type EnvironmentConfig } 
 import { registerHealthRoutes } from '../health/routes.js';
 import { MockGlobalEcosystemApiClient } from '../integrations/global-ecosystem/mock-adapter.js';
 import { registerPlatformRoutes } from '../platform/routes.js';
+import { registerRegistrationRoutes } from '../registration/routes.js';
 import { registerCorrelationIds } from '../shared/correlation-id.js';
 import { registerErrorHandler } from '../shared/errors.js';
 import { NoopLogger, StructuredConsoleLogger, type PlatformLogger } from '../shared/logger.js';
@@ -40,6 +41,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
 
   registerHealthRoutes(app, config);
   registerPlatformRoutes(app, config, globalEcosystemClient);
+  registerRegistrationRoutes(app);
 
   return app;
 }
