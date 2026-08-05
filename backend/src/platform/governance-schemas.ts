@@ -52,8 +52,8 @@ export const capabilityRegistrySchema = z.object({ ...header, artifactType: z.li
 });
 export const knowledgeRegistrySchema = z.object({ ...header, artifactType: z.literal('KNOWLEDGE_REGISTRY'), knowledge: z.array(registryItem), evidence }).strict();
 export const aiPolicyRegistrySchema = z.object({ ...header, artifactType: z.literal('AI_POLICY_REGISTRY'), policies: z.array(registryItem), evidence }).strict();
-const score = z.object({ value: z.number().min(0).max(100), basis: z.string().min(1), status: z.literal('VERIFIED') }).strict();
-export const healthManifestSchema = z.object({ ...header, artifactType: z.literal('PLATFORM_HEALTH_MANIFEST'), architectureComplianceScore: score, repositoryHealthScore: score, foundationCompletion: score, currentGate: z.literal('GATE_0B'), currentSprint: z.string(), currentPhase: z.string(), overallReadiness: score, evidence }).strict();
+const governanceArtifactName = z.enum(['passport', 'boundaries', 'features', 'capabilities', 'knowledge', 'aiPolicies', 'dependencies', 'registrationReadiness']);
+export const healthManifestSchema = z.object({ ...header, artifactType: z.literal('PLATFORM_HEALTH_MANIFEST'), currentGate: z.literal('GATE_0B'), currentSprint: z.literal('AAT-YTOS-SPRINT-0.0.3'), currentPhase: z.string().min(1), requiredGovernanceArtifacts: z.array(governanceArtifactName).min(1), requiredRepositoryFiles: z.array(z.string().min(1)).min(1), evidence }).strict();
 export const dependencyDeclarationSchema = z.object({ ...header, artifactType: z.literal('PLATFORM_DEPENDENCY_DECLARATION'), globalApis: z.array(registryItem), globalEvents: z.array(registryItem), missingContracts: z.array(z.string()), networkContactPerformed: z.literal(false), evidence }).strict();
 export const registrationReadinessSchema = z.object({ ...header, artifactType: z.literal('REGISTRATION_READINESS'), status: z.string(), readinessPercent: z.number().min(0).max(100), localFoundationReady: z.boolean(), enterpriseRegistrationComplete: z.boolean(), sprint0Authorized: z.literal(false), blockingItems: z.array(z.string()), requiredActions: z.array(z.string()), evidence }).strict();
 

@@ -26,6 +26,9 @@
     "GET /api/v1/platform/knowledge",
     "GET /api/v1/platform/ai-policies",
     "GET /api/v1/platform/health-manifest",
+    "GET /api/v1/platform/health/summary",
+    "GET /api/v1/platform/health/readiness",
+    "GET /api/v1/platform/health/architecture-compliance",
     "GET /api/v1/platform/registration-readiness",
     "GET /api/v1/platform/contracts/compatibility",
     "GET /api/v1/platform/dependencies"

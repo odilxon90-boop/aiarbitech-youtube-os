@@ -7,6 +7,7 @@ import { createRequestMetadata } from '../integrations/global-ecosystem/mock-ada
 import { getCapabilityById, getCapabilityRegistry, getCapabilitySummary, getCapabilityValidationResult } from './capability-service.js';
 import { discoverContractCompatibility } from './contract-discovery.js';
 import { loadGovernanceArtifact } from './governance-loader.js';
+import { getArchitectureCompliance, getHealthSummary, getPlatformHealthManifest, getReadiness } from './health-service.js';
 import { loadPlatformManifest } from './manifest.js';
 
 function expose(app: FastifyInstance, path: string, name: Parameters<typeof loadGovernanceArtifact>[0]): void {
@@ -28,7 +29,10 @@ export function registerPlatformRoutes(app: FastifyInstance, config: Environment
   app.get<{ Params: { capabilityId: string } }>('/api/v1/platform/capabilities/:capabilityId', async (request) => successResponse(await getCapabilityById(request.params.capabilityId), request.correlationId));
   expose(app, '/api/v1/platform/knowledge', 'knowledge');
   expose(app, '/api/v1/platform/ai-policies', 'aiPolicies');
-  expose(app, '/api/v1/platform/health-manifest', 'healthManifest');
+  app.get('/api/v1/platform/health-manifest', async (request) => successResponse(await getPlatformHealthManifest(), request.correlationId));
+  app.get('/api/v1/platform/health/summary', async (request) => successResponse(await getHealthSummary(), request.correlationId));
+  app.get('/api/v1/platform/health/readiness', async (request) => successResponse(await getReadiness(), request.correlationId));
+  app.get('/api/v1/platform/health/architecture-compliance', async (request) => successResponse(await getArchitectureCompliance(), request.correlationId));
   expose(app, '/api/v1/platform/registration-readiness', 'registrationReadiness');
   expose(app, '/api/v1/platform/dependencies', 'dependencies');
   app.get('/api/v1/platform/contracts/compatibility', async (request) => successResponse(await discoverContractCompatibility(), request.correlationId));
