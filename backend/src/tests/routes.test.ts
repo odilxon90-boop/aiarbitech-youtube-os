@@ -88,4 +88,15 @@ describe('foundation routes', () => {
       expect(postResponse.statusCode, url).toBe(404);
     }
   });
+
+  it('exposes complete GET-only capability registry endpoints', async () => {
+    const app = await createApp();
+    const routes = ['/api/v1/platform/capabilities','/api/v1/platform/capabilities/summary','/api/v1/platform/capabilities/validation','/api/v1/platform/capabilities/CHANNEL_MANAGEMENT'];
+    for (const url of routes) {
+      expect((await app.inject({ method:'GET', url })).statusCode, url).toBe(200);
+      for (const method of ['POST','PUT','PATCH','DELETE'] as const) expect((await app.inject({ method, url, payload:{} })).statusCode, `${method} ${url}`).toBe(404);
+    }
+    expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).statusCode).toBe(404);
+    expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).json().error.code).toBe('CAPABILITY_NOT_FOUND');
+  });
 });

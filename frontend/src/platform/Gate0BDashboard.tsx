@@ -3,7 +3,6 @@ import type { Gate0BGovernance } from './types';
 export function Gate0BDashboard({governance}: {governance:Gate0BGovernance}) { const cards=[
  ['Platform Passport',governance.passport,'Verified platform identity, ownership and registration identifiers.',['platformId','currentGate','currentSprint','compatibility']],
  ['Feature Registry',governance.features,'Versioned feature scope with prohibited business work held NOT_IMPLEMENTED.',['artifactVersion','features']],
- ['Capability Registry',governance.capabilities,'Ownership and compatibility status for platform and Global Ecosystem capabilities.',['artifactVersion','capabilities']],
  ['Knowledge Registry',governance.knowledge,'Repository evidence and explicitly missing authoritative knowledge.',['artifactVersion','knowledge']],
  ['AI Policy Registry',governance.aiPolicies,'Gate 0B deny policies; no AI runtime or requests are present.',['artifactVersion','policies']],
  ['Platform Boundary Registry',governance.boundaries,'Owned modules, APIs, data objects and prohibited dependencies.',['platformInternalModules','platformPublicApis','forbiddenDependencies','forbiddenDatabaseAccess']],

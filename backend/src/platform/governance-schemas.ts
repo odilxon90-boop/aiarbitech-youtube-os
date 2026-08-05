@@ -32,9 +32,24 @@ export const platformPassportSchema = z.object({
 }).strict();
 
 const registryItem = evidenceRecord;
-export const boundaryRegistrySchema = z.object({ ...header, artifactType: z.literal('PLATFORM_BOUNDARY_REGISTRY'), platformInternalModules: z.array(registryItem), platformOwnedDatabaseObjects: z.array(registryItem), platformPublicApis: z.array(z.string()), platformPublicEvents: z.array(z.string()), platformPublicEventsStatus: z.string(), consumedGlobalApis: z.array(registryItem), consumedGlobalEvents: z.array(registryItem), forbiddenDependencies: z.array(z.string()), forbiddenDatabaseAccess: z.array(z.string()), externalProviders: z.array(z.string()), externalProvidersStatus: z.string(), allowedNetworkDestinations: z.array(registryItem), evidence }).strict();
+export const boundaryRegistrySchema = z.object({ ...header, artifactType: z.literal('PLATFORM_BOUNDARY_REGISTRY'), platformInternalModules: z.array(registryItem), platformOwnedDatabaseObjects: z.array(registryItem), platformPublicApis: z.array(z.string()), platformPublicEvents: z.array(z.string()), platformPublicEventsStatus: z.string(), consumedGlobalApis: z.array(registryItem), consumedGlobalEvents: z.array(registryItem), forbiddenDependencies: z.array(z.string()), forbiddenDatabaseAccess: z.array(z.string()), externalProviders: z.array(z.string()), externalProvidersStatus: z.string(), allowedNetworkDestinations: z.array(registryItem), approvedArchitectureDecisions: z.record(z.string(), z.unknown()).optional(), evidence }).strict();
 export const featureRegistrySchema = z.object({ ...header, artifactType: z.literal('FEATURE_REGISTRY'), features: z.array(registryItem), evidence }).strict();
-export const capabilityRegistrySchema = z.object({ ...header, artifactType: z.literal('CAPABILITY_REGISTRY'), capabilities: z.array(registryItem), evidence }).strict();
+export const capabilityLifecycleValues = ['REGISTERED', 'PLANNED', 'AUTHORIZED', 'NOT_IMPLEMENTED', 'IMPLEMENTED', 'VERIFIED', 'DEPRECATED'] as const;
+export const capabilityRecordSchema = z.object({
+  capabilityId: z.string().regex(/^[A-Z][A-Z0-9_]*$/), capabilityName: z.string().min(1), capabilityDescription: z.string().min(1),
+  capabilityCategory: z.enum(['FOUNDATION_GOVERNANCE', 'GLOBAL_DEPENDENCY', 'YOUTUBE_BUSINESS']), capabilityOwner: z.enum(['PLATFORM', 'GLOBAL_ECOSYSTEM']),
+  platformId: z.literal('PLATFORM_YOUTUBE_OS'), currentStatus: z.enum(['AVAILABLE', 'NOT_VERIFIED']), lifecycleStatus: z.enum(capabilityLifecycleValues), version,
+  evidenceStatus: z.enum(['VERIFIED', 'NOT_VERIFIED']), confidenceLevel: z.enum(['HIGH', 'MEDIUM', 'LOW']), origin: z.array(z.string().min(1)).min(1),
+  dependencies: z.array(z.string().min(1)), requiredGlobalServices: z.array(z.string().min(1)), requiredContracts: z.array(z.string().min(1)),
+  implementationStatus: z.enum(['IMPLEMENTED', 'NOT_IMPLEMENTED']), certificationStatus: z.enum(['CERTIFIED', 'NOT_VERIFIED']), lastUpdated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+}).strict().superRefine((capability, context) => {
+  if (capability.implementationStatus === 'IMPLEMENTED' && capability.evidenceStatus !== 'VERIFIED') context.addIssue({ code: z.ZodIssueCode.custom, path: ['evidenceStatus'], message: 'IMPLEMENTED capabilities require VERIFIED repository evidence.' });
+  if (capability.lifecycleStatus === 'VERIFIED' && capability.evidenceStatus !== 'VERIFIED') context.addIssue({ code: z.ZodIssueCode.custom, path: ['evidenceStatus'], message: 'VERIFIED lifecycle status requires VERIFIED repository evidence.' });
+  if (capability.capabilityCategory === 'YOUTUBE_BUSINESS' && capability.implementationStatus !== 'NOT_IMPLEMENTED') context.addIssue({ code: z.ZodIssueCode.custom, path: ['implementationStatus'], message: 'YouTube business capabilities must remain NOT_IMPLEMENTED.' });
+});
+export const capabilityRegistrySchema = z.object({ ...header, artifactType: z.literal('CAPABILITY_REGISTRY'), platformId: z.literal('PLATFORM_YOUTUBE_OS'), capabilities: z.array(capabilityRecordSchema).min(1), evidence }).strict().superRefine((registry, context) => {
+  const ids = new Set<string>(); registry.capabilities.forEach((capability, index) => { if (ids.has(capability.capabilityId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['capabilities', index, 'capabilityId'], message: `Duplicate capability ID: ${capability.capabilityId}` }); ids.add(capability.capabilityId); });
+});
 export const knowledgeRegistrySchema = z.object({ ...header, artifactType: z.literal('KNOWLEDGE_REGISTRY'), knowledge: z.array(registryItem), evidence }).strict();
 export const aiPolicyRegistrySchema = z.object({ ...header, artifactType: z.literal('AI_POLICY_REGISTRY'), policies: z.array(registryItem), evidence }).strict();
 const score = z.object({ value: z.number().min(0).max(100), basis: z.string().min(1), status: z.literal('VERIFIED') }).strict();
@@ -56,3 +71,5 @@ export const governanceSchemas = {
 
 export type GovernanceArtifactName = keyof typeof governanceSchemas;
 export type PlatformPassport = z.infer<typeof platformPassportSchema>;
+export type CapabilityRecord = z.infer<typeof capabilityRecordSchema>;
+export type CapabilityRegistry = z.infer<typeof capabilityRegistrySchema>;
