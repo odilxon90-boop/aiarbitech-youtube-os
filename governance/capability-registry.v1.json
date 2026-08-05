@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "artifactType": "CAPABILITY_REGISTRY",
-  "artifactVersion": "1.0.0",
+  "artifactVersion": "1.1.0",
   "capabilities": [
     { "id": "FOUNDATION_GOVERNANCE", "ownership": "PLATFORM", "implementationStatus": "IMPLEMENTED", "compatibility": "LOCAL_VERIFIED", "evidenceOrigin": "governance" },
     { "id": "IDENTITY", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
@@ -15,12 +15,14 @@
     { "id": "WORKFLOW_ENGINE", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
     { "id": "NOTIFICATIONS", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
     { "id": "BILLING_SUBSCRIPTION_PAYMENT", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "GLOBAL_WALLET", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "AAT-FOUNDATION-SYNC-001" },
+    { "id": "CENTRALIZED_MEDIA_MANAGEMENT", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "AAT-FOUNDATION-SYNC-001" },
     { "id": "MONITORING_CONFIGURATION_FEATURE_FLAGS_SERVICE_REGISTRY", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" }
   ],
   "evidence": {
     "status": "VERIFIED",
     "confidence": "HIGH",
-    "origin": ["platform.manifest.json", "docs/PLATFORM_BOUNDARIES.md"],
+    "origin": ["platform.manifest.json", "docs/PLATFORM_BOUNDARIES.md", "AAT-FOUNDATION-SYNC-001"],
     "decisionClassification": "CAPABILITY_OWNERSHIP"
   }
 }
