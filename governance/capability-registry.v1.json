@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "CAPABILITY_REGISTRY",
+  "artifactVersion": "1.0.0",
+  "capabilities": [
+    { "id": "FOUNDATION_GOVERNANCE", "ownership": "PLATFORM", "implementationStatus": "IMPLEMENTED", "compatibility": "LOCAL_VERIFIED", "evidenceOrigin": "governance" },
+    { "id": "IDENTITY", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "AUTHENTICATION", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "AUTHORIZATION", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "RBAC_ABAC", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "SECURITY", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "AUDIT", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "AI_PRESIDENT_CORE", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "GLOBAL_AI_CORE", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "WORKFLOW_ENGINE", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "NOTIFICATIONS", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "BILLING_SUBSCRIPTION_PAYMENT", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" },
+    { "id": "MONITORING_CONFIGURATION_FEATURE_FLAGS_SERVICE_REGISTRY", "ownership": "GLOBAL_ECOSYSTEM", "implementationStatus": "NOT_IMPLEMENTED", "compatibility": "NOT_VERIFIED", "evidenceOrigin": "platform.manifest.json" }
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["platform.manifest.json", "docs/PLATFORM_BOUNDARIES.md"],
+    "decisionClassification": "CAPABILITY_OWNERSHIP"
+  }
+}

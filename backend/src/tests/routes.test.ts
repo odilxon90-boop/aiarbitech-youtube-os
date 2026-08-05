@@ -63,4 +63,29 @@ describe('foundation routes', () => {
       status: 'NOT_CONFIGURED',
     });
   });
+
+  it('exposes every Gate 0B governance artifact through GET-only routes', async () => {
+    const app = await createApp();
+    const routes = [
+      '/api/v1/platform/passport',
+      '/api/v1/platform/boundaries',
+      '/api/v1/platform/features',
+      '/api/v1/platform/capabilities',
+      '/api/v1/platform/knowledge',
+      '/api/v1/platform/ai-policies',
+      '/api/v1/platform/health-manifest',
+      '/api/v1/platform/registration-readiness',
+      '/api/v1/platform/contracts/compatibility',
+      '/api/v1/platform/dependencies',
+    ];
+
+    for (const url of routes) {
+      const getResponse = await app.inject({ method: 'GET', url });
+      expect(getResponse.statusCode, url).toBe(200);
+      expect(getResponse.json().data.schemaVersion, url).toBe('1.0.0');
+
+      const postResponse = await app.inject({ method: 'POST', url, payload: {} });
+      expect(postResponse.statusCode, url).toBe(404);
+    }
+  });
 });

@@ -12,11 +12,11 @@ export function AppShell({ children }: AppShellProps) {
           <p className="eyebrow">AIArbiTechnology</p>
           <h1>AIArbiTech YouTube OS</h1>
         </div>
-        <span className="foundation-badge">Foundation 0.1.0</span>
+        <span className="foundation-badge">Gate 0B · Foundation 0.1.0</span>
       </header>
       <main>{children}</main>
       <footer>
-        Independent platform service · Global Ecosystem integration is API/event-only · Gate 0 required
+        Independent platform service В· Global Ecosystem integration is API/event-only В· Gate 0B · Awaiting Enterprise Audit
       </footer>
     </div>
   );

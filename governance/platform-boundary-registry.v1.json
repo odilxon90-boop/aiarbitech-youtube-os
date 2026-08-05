@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "PLATFORM_BOUNDARY_REGISTRY",
+  "artifactVersion": "1.0.0",
+  "platformInternalModules": [
+    { "id": "FRONTEND_FOUNDATION_DASHBOARD", "status": "IMPLEMENTED", "origin": "frontend/src" },
+    { "id": "BACKEND_FOUNDATION_API", "status": "IMPLEMENTED", "origin": "backend/src" },
+    { "id": "FOUNDATION_GOVERNANCE", "status": "IMPLEMENTED", "origin": "governance" },
+    { "id": "PLATFORM_PERSISTENCE_METADATA", "status": "IMPLEMENTED", "origin": "backend/prisma/schema.prisma" }
+  ],
+  "platformOwnedDatabaseObjects": [
+    { "name": "platform_runtime_metadata", "type": "TABLE_MODEL", "status": "DECLARED", "origin": "backend/prisma/schema.prisma" }
+  ],
+  "platformPublicApis": [
+    "GET /api/v1/health/live",
+    "GET /api/v1/health/ready",
+    "GET /api/v1/platform/manifest",
+    "GET /api/v1/platform/compatibility",
+    "GET /api/v1/platform/passport",
+    "GET /api/v1/platform/boundaries",
+    "GET /api/v1/platform/features",
+    "GET /api/v1/platform/capabilities",
+    "GET /api/v1/platform/knowledge",
+    "GET /api/v1/platform/ai-policies",
+    "GET /api/v1/platform/health-manifest",
+    "GET /api/v1/platform/registration-readiness",
+    "GET /api/v1/platform/contracts/compatibility",
+    "GET /api/v1/platform/dependencies"
+  ],
+  "platformPublicEvents": [],
+  "platformPublicEventsStatus": "NOT_ASSIGNED",
+  "consumedGlobalApis": [
+    { "id": "GLOBAL_ECOSYSTEM_API_V1", "status": "AUTHORITATIVE_CONTRACT_NOT_AVAILABLE", "origin": "contracts/api/global-ecosystem-api.v1.json" }
+  ],
+  "consumedGlobalEvents": [
+    { "id": "GLOBAL_ECOSYSTEM_EVENTS_V1", "status": "AUTHORITATIVE_CONTRACT_NOT_AVAILABLE", "origin": "contracts/events/global-ecosystem-events.v1.json" }
+  ],
+  "forbiddenDependencies": [
+    "GLOBAL_ECOSYSTEM_SOURCE_IMPORT",
+    "GLOBAL_ECOSYSTEM_PACKAGE_LINK",
+    "GLOBAL_CORE_SERVICE_DUPLICATION",
+    "UNAPPROVED_EXTERNAL_PROVIDER_SDK",
+    "YOUTUBE_BUSINESS_RUNTIME"
+  ],
+  "forbiddenDatabaseAccess": [
+    "GLOBAL_ECOSYSTEM_DATABASE",
+    "CROSS_PLATFORM_DATABASE",
+    "SHARED_PRISMA_CLIENT"
+  ],
+  "externalProviders": [],
+  "externalProvidersStatus": "NOT_ASSIGNED",
+  "allowedNetworkDestinations": [
+    { "configurationKey": "GLOBAL_ECOSYSTEM_BASE_URL", "destination": "NOT_ASSIGNED", "status": "NOT_VERIFIED" }
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["git ls-files", "backend/src/app/server.ts", "backend/src/platform/routes.ts", "backend/prisma/schema.prisma", "docs/PLATFORM_BOUNDARIES.md"],
+    "decisionClassification": "ARCHITECTURE_BOUNDARY"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "REGISTRATION_READINESS",
+  "artifactVersion": "1.0.0",
+  "status": "READY_FOR_ENTERPRISE_AUDIT",
+  "readinessPercent": 85,
+  "localFoundationReady": true,
+  "enterpriseRegistrationComplete": false,
+  "sprint0Authorized": false,
+  "blockingItems": [
+    "AUTHORITATIVE GLOBAL API CONTRACT NOT AVAILABLE",
+    "AUTHORITATIVE GLOBAL EVENT CONTRACT NOT AVAILABLE",
+    "ENTERPRISE REGISTRATION ID NOT ASSIGNED",
+    "SERVICE REGISTRY ID NOT ASSIGNED",
+    "ENTERPRISE AUDIT REQUIRED"
+  ],
+  "requiredActions": [
+    "Supply approved authoritative Global API and event contracts",
+    "Perform Enterprise Audit",
+    "Assign enterprise registration and service registry identifiers",
+    "Issue explicit Sprint 0 authorization"
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["governance/platform-passport.v1.json", "governance/platform-dependencies.v1.json", "AAT-YTOS-GATE0B-IMP-2026-001"],
+    "decisionClassification": "READY_WITH_BLOCKERS"
+  }
+}

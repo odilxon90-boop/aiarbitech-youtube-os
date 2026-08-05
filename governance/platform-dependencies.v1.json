@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "PLATFORM_DEPENDENCY_DECLARATION",
+  "artifactVersion": "1.0.0",
+  "globalApis": [
+    { "id": "GLOBAL_ECOSYSTEM_API", "requiredVersion": "v1", "compatibility": "NOT_VERIFIED", "contractStatus": "AUTHORITATIVE CONTRACT NOT AVAILABLE", "localEvidence": "contracts/api/global-ecosystem-api.v1.json" }
+  ],
+  "globalEvents": [
+    { "id": "GLOBAL_ECOSYSTEM_EVENTS", "requiredVersion": "v1", "compatibility": "NOT_VERIFIED", "contractStatus": "AUTHORITATIVE CONTRACT NOT AVAILABLE", "localEvidence": "contracts/events/global-ecosystem-events.v1.json" }
+  ],
+  "missingContracts": [
+    "AUTHORITATIVE_GLOBAL_ECOSYSTEM_API_V1",
+    "AUTHORITATIVE_GLOBAL_ECOSYSTEM_EVENTS_V1",
+    "SERVICE_AUTHENTICATION_CONTRACT",
+    "AUTHORIZATION_SCOPE_CONTRACT",
+    "COMPATIBILITY_POLICY",
+    "OPERATIONAL_SLO_CONTRACT"
+  ],
+  "networkContactPerformed": false,
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["contracts/api/global-ecosystem-api.v1.json", "contracts/events/global-ecosystem-events.v1.json", "docs/GLOBAL_ECOSYSTEM_INTEGRATION.md"],
+    "decisionClassification": "DECLARED_DEPENDENCY"
+  }
+}
