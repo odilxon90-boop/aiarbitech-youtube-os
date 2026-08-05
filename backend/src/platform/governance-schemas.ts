@@ -32,7 +32,11 @@ export const platformPassportSchema = z.object({
 }).strict();
 
 const registryItem = evidenceRecord;
-export const boundaryRegistrySchema = z.object({ ...header, artifactType: z.literal('PLATFORM_BOUNDARY_REGISTRY'), platformInternalModules: z.array(registryItem), platformOwnedDatabaseObjects: z.array(registryItem), platformPublicApis: z.array(z.string()), platformPublicEvents: z.array(z.string()), platformPublicEventsStatus: z.string(), consumedGlobalApis: z.array(registryItem), consumedGlobalEvents: z.array(registryItem), forbiddenDependencies: z.array(z.string()), forbiddenDatabaseAccess: z.array(z.string()), externalProviders: z.array(z.string()), externalProvidersStatus: z.string(), allowedNetworkDestinations: z.array(registryItem), approvedArchitectureDecisions: z.record(z.string(), z.unknown()).optional(), evidence }).strict();
+const boundaryInventoryItem = z.object({ id: z.string().min(1), classification: z.string().min(1), status: z.string().min(1), origin: z.string().min(1) }).strict();
+const databaseBoundaryItem = z.object({ name: z.string().min(1), prismaModel: z.string().min(1), classification: z.literal('PLATFORM_OWNED'), status: z.literal('DECLARED'), origin: z.string().min(1) }).strict();
+const publicApiBoundary = z.object({ method: z.literal('GET'), path: z.string().startsWith('/api/v1/'), origin: z.string().min(1) }).strict();
+const globalContractBoundary = z.object({ id: z.string().min(1), direction: z.enum(['CONSUMED_API', 'CONSUMED_EVENT']), status: z.literal('AUTHORITATIVE_CONTRACT_NOT_AVAILABLE'), origin: z.string().min(1) }).strict();
+export const boundaryRegistrySchema = z.object({ ...header, artifactType: z.literal('PLATFORM_BOUNDARY_REGISTRY'), platformId: z.literal('PLATFORM_YOUTUBE_OS'), currentSprint: z.literal('AAT-YTOS-SPRINT-0.0.4'), platformInternalModules: z.array(boundaryInventoryItem).min(1), platformOwnedDatabaseObjects: z.array(databaseBoundaryItem), platformPublicApis: z.array(publicApiBoundary).min(1), platformPublicEvents: z.array(z.string().min(1)), consumedGlobalApis: z.array(globalContractBoundary), consumedGlobalEvents: z.array(globalContractBoundary), forbiddenDependencies: z.array(z.string().min(1)).min(1), forbiddenDatabaseAccess: z.array(z.string().min(1)).min(1), externalProviders: z.array(boundaryInventoryItem).max(0), allowedNetworkDestinations: z.array(boundaryInventoryItem).max(0), documentation: z.literal('docs/PLATFORM_BOUNDARIES.md'), evidence }).strict();
 export const featureRegistrySchema = z.object({ ...header, artifactType: z.literal('FEATURE_REGISTRY'), features: z.array(registryItem), evidence }).strict();
 export const capabilityLifecycleValues = ['REGISTERED', 'PLANNED', 'AUTHORIZED', 'NOT_IMPLEMENTED', 'IMPLEMENTED', 'VERIFIED', 'DEPRECATED'] as const;
 export const capabilityRecordSchema = z.object({
@@ -73,3 +77,4 @@ export type GovernanceArtifactName = keyof typeof governanceSchemas;
 export type PlatformPassport = z.infer<typeof platformPassportSchema>;
 export type CapabilityRecord = z.infer<typeof capabilityRecordSchema>;
 export type CapabilityRegistry = z.infer<typeof capabilityRegistrySchema>;
+export type BoundaryRegistry = z.infer<typeof boundaryRegistrySchema>;

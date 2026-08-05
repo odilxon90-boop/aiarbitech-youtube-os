@@ -1,5 +1,67 @@
 # Platform Boundaries
 
+`governance/platform-boundary-registry.v1.json` is the authoritative, schema-validated, read-only inventory for Sprint `AAT-YTOS-SPRINT-0.0.4`. Entries require a repository origin. Missing evidence is not inferred.
+
+## Boundary Classification
+
+Boundaries are classified as platform-internal modules, platform-owned persistence, public platform contracts, consumed Global contracts, prohibited dependencies or database access, external providers, and allowed network destinations. Classification documents architecture only and does not activate runtime behavior.
+
+## Platform Internal Modules
+
+Only tracked foundation modules with an existing repository path are registered. Business modules are absent because no business runtime is authorized.
+
+## Platform-Owned Database Objects
+
+`PlatformRuntimeMetadata`, mapped to `platform_runtime_metadata`, is the sole Prisma model. It contains independent platform infrastructure metadata; no business model is present.
+
+## Platform Public APIs
+
+The registry lists every repository-declared Fastify endpoint. Every registered method is `GET`. Boundary registry resources are `/api/v1/platform/boundaries`, `/summary`, and `/validation`.
+
+## Platform Public Events
+
+Empty. No event publication declaration or runtime exists.
+
+## Consumed Global APIs
+
+`GLOBAL_ECOSYSTEM_API_V1` remains `AUTHORITATIVE_CONTRACT_NOT_AVAILABLE`. The local adapter is a mock contract boundary and performs no network request.
+
+## Consumed Global Events
+
+`GLOBAL_ECOSYSTEM_EVENTS_V1` remains `AUTHORITATIVE_CONTRACT_NOT_AVAILABLE`. No event consumer is activated.
+
+## Forbidden Dependencies
+
+Global source imports/package links, Global service duplication, unapproved provider SDKs, YouTube business runtime, and unversioned cross-platform integration are prohibited. Package manifests are validated for prohibited Google/YouTube and Global source dependencies.
+
+## Forbidden Database Access
+
+Global Ecosystem database access, cross-platform database access, and shared Prisma clients are prohibited. Only the platform-owned Prisma schema may define owned data.
+
+## External Providers
+
+Empty. No external provider package or integration is registered.
+
+## Allowed Network Destinations
+
+Empty. No outbound destination is approved or activated.
+
+## Boundary Validation Rules
+
+Validation checks schema strictness, module origin existence, API path inventory, Prisma model/table ownership, dependency integrity, absence of public event publication, empty external/network boundaries, and required documentation sections. Validation reads local files only and reports `networkRequestPerformed: false`.
+
+## Dependency Rules
+
+Cross-platform integration requires an authoritative versioned API/event contract. A declaration with unavailable contract status is not permission to call a service.
+
+## Ownership Rules
+
+YouTube OS owns this repository, deployment, frontend/backend foundation, governance artifacts, and its metadata table. Global services and databases remain outside this ownership boundary.
+
+## Network Boundary Definitions
+
+An allowed network destination requires explicit future authorization and repository evidence. Environment placeholders do not constitute approval and therefore are not registry entries.
+
 ## Owned by YouTube OS
 
 - Independent repository, release, and deployment lifecycle.

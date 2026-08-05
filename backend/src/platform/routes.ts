@@ -5,6 +5,7 @@ import { successResponse } from '../contracts/api.js';
 import type { GlobalEcosystemApiClient } from '../integrations/global-ecosystem/contracts.js';
 import { createRequestMetadata } from '../integrations/global-ecosystem/mock-adapter.js';
 import { getCapabilityById, getCapabilityRegistry, getCapabilitySummary, getCapabilityValidationResult } from './capability-service.js';
+import { getBoundaryRegistry, getBoundarySummary, validateBoundaryRegistry } from './boundary-service.js';
 import { discoverContractCompatibility } from './contract-discovery.js';
 import { loadGovernanceArtifact } from './governance-loader.js';
 import { getArchitectureCompliance, getHealthSummary, getPlatformHealthManifest, getReadiness } from './health-service.js';
@@ -21,7 +22,9 @@ export function registerPlatformRoutes(app: FastifyInstance, config: Environment
     return successResponse({ platformId: manifest.platformId, contractVersion: 'v1', integrationConfigured: isGlobalEcosystemConfigured(config), networkRequestPerformed: false, status: compatibility.ok ? compatibility.value.status : compatibility.error.code, capabilities: manifest.globalEcosystemCompatibility.capabilities, checkedAt: new Date().toISOString() }, request.correlationId);
   });
   expose(app, '/api/v1/platform/passport', 'passport');
-  expose(app, '/api/v1/platform/boundaries', 'boundaries');
+  app.get('/api/v1/platform/boundaries', async (request) => successResponse(await getBoundaryRegistry(), request.correlationId));
+  app.get('/api/v1/platform/boundaries/summary', async (request) => successResponse(await getBoundarySummary(), request.correlationId));
+  app.get('/api/v1/platform/boundaries/validation', async (request) => successResponse(await validateBoundaryRegistry(), request.correlationId));
   expose(app, '/api/v1/platform/features', 'features');
   app.get('/api/v1/platform/capabilities', async (request) => successResponse(await getCapabilityRegistry(), request.correlationId));
   app.get('/api/v1/platform/capabilities/summary', async (request) => successResponse(await getCapabilitySummary(), request.correlationId));
