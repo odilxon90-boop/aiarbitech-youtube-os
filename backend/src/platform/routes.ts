@@ -7,6 +7,7 @@ import { createRequestMetadata } from '../integrations/global-ecosystem/mock-ada
 import { getCapabilityById, getCapabilityRegistry, getCapabilitySummary, getCapabilityValidationResult } from './capability-service.js';
 import { getBoundaryRegistry, getBoundarySummary, validateBoundaryRegistry } from './boundary-service.js';
 import { discoverContractCompatibility } from './contract-discovery.js';
+import { getApiContractRegistry, getApiVersionMatrix, getContractRegistrySummary, getEventContractRegistry, validateContractRegistries } from './contract-registry-service.js';
 import { loadGovernanceArtifact } from './governance-loader.js';
 import { getArchitectureCompliance, getHealthSummary, getPlatformHealthManifest, getReadiness } from './health-service.js';
 import { loadPlatformManifest } from './manifest.js';
@@ -39,4 +40,9 @@ export function registerPlatformRoutes(app: FastifyInstance, config: Environment
   expose(app, '/api/v1/platform/registration-readiness', 'registrationReadiness');
   expose(app, '/api/v1/platform/dependencies', 'dependencies');
   app.get('/api/v1/platform/contracts/compatibility', async (request) => successResponse(await discoverContractCompatibility(), request.correlationId));
+  app.get('/api/v1/platform/contracts/apis', async (request) => successResponse(await getApiContractRegistry(), request.correlationId));
+  app.get('/api/v1/platform/contracts/events', async (request) => successResponse(await getEventContractRegistry(), request.correlationId));
+  app.get('/api/v1/platform/contracts/versions', async (request) => successResponse(await getApiVersionMatrix(), request.correlationId));
+  app.get('/api/v1/platform/contracts/validation', async (request) => successResponse(await validateContractRegistries(), request.correlationId));
+  app.get('/api/v1/platform/contracts/summary', async (request) => successResponse(await getContractRegistrySummary(), request.correlationId));
 }
