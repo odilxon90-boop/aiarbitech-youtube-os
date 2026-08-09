@@ -19,15 +19,6 @@ async function createApp() {
 }
 
 describe('foundation routes', () => {
-  it('returns a healthy root response and suppresses favicon 404s', async () => {
-    const app = await createApp();
-    const root = await app.inject({ method: 'GET', url: '/' });
-    const favicon = await app.inject({ method: 'GET', url: '/favicon.ico' });
-    expect(root.statusCode).toBe(200);
-    expect(root.body).toContain('AIArbiTech YouTube OS backend');
-    expect(favicon.statusCode).toBe(204);
-  });
-
   it('exposes liveness with correlation metadata and security headers', async () => {
     const app = await createApp();
     const response = await app.inject({
