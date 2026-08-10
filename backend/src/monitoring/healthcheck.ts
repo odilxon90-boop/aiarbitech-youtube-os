@@ -9,7 +9,6 @@ export function registerMonitoringHealthRoutes(
   cacheWarming: CacheWarmingService,
 ): void {
   app.get('/', async (request) => successResponse({ status: 'ok' }, request.correlationId));
-  app.get('/health', async () => ({ status: 'ok' }));
   app.get('/health/db', async (request) => successResponse({ status: 'UP', connectivity: 'MOCK_CONNECTED' }, request.correlationId));
   app.get('/health/gateway', async (request) => successResponse({ status: 'UP', connectivity: 'MOCK_CONNECTED', networkRequestPerformed: false }, request.correlationId));
   app.get('/health/cache', async (request) => successResponse(await cacheWarming.health(), request.correlationId));
