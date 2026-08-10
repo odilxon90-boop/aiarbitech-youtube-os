@@ -8,6 +8,7 @@ export function registerMonitoringHealthRoutes(
   metrics: MetricsCollector,
   cacheWarming: CacheWarmingService,
 ): void {
+  app.get('/', async (request) => successResponse({ status: 'ok' }, request.correlationId));
   app.get('/health', async (request) => successResponse({ status: 'ok' }, request.correlationId));
   app.get('/health/db', async (request) => successResponse({ status: 'UP', connectivity: 'MOCK_CONNECTED' }, request.correlationId));
   app.get('/health/gateway', async (request) => successResponse({ status: 'UP', connectivity: 'MOCK_CONNECTED', networkRequestPerformed: false }, request.correlationId));
