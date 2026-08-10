@@ -4,6 +4,9 @@
   "private": true,
   "description": "AIArbiTech YouTube OS independent platform frontend foundation",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0 <21"
+  },
   "scripts": {
     "dev": "vite --port 5174",
     "typecheck": "tsc --noEmit",
