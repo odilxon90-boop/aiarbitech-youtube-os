@@ -64,6 +64,6 @@ export class HttpPlatformFoundationClient implements PlatformFoundationClient {
 export function createPlatformFoundationClient(): PlatformFoundationClient {
   const configuredBaseUrl =
     import.meta.env.VITE_PLATFORM_API_BASE_URL?.trim() ||
-    import.meta.env.VITE_GLOBAL_API_BASE_URL?.trim();
+    'https://aiarbitech-youtube-os-production.up.railway.app/api/v1';
   return new HttpPlatformFoundationClient(configuredBaseUrl || '/api/v1');
 }
