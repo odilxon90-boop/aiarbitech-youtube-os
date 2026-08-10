@@ -29,4 +29,4 @@ export interface RegistrationEvidence { status:'VERIFIED'|'NOT_VERIFIED'; confid
 export interface RegistrationMetadata { platformId:string; platformName:string; platformVersion:string; currentGate:string; currentSprint:string; currentPhase:string; compatibilityStatus:'VERIFIED'|'NOT_VERIFIED'; registrationMode:'LOCAL_ONLY'; evidence:RegistrationEvidence }
 export interface RegistrationReadiness { ready:boolean; status:RegistrationStatus; blockingItems:readonly string[]; evidence:RegistrationEvidence }
 export interface RegistrationSummary { status:RegistrationStatus; readiness:RegistrationReadiness; metadata:RegistrationMetadata }
-export interface PlatformFoundationStatus { manifest:PlatformManifest; health:HealthStatus; connection:GlobalEcosystemConnectionStatus; governance:Gate0BGovernance; registration:RegistrationSummary }
+export interface PlatformFoundationStatus { manifest:PlatformManifest; health:HealthStatus; connection:GlobalEcosystemConnectionStatus; governance?:Gate0BGovernance; registration?:RegistrationSummary }
