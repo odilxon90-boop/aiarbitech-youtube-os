@@ -1,0 +1,1 @@
+export function StepNavigation({ canGoBack, onBack, onNext }: { canGoBack: boolean; onBack: () => void; onNext: () => void }) { return <div className="onboarding-navigation">{canGoBack && <button type="button" onClick={onBack}>Back</button>}<button type="button" onClick={onNext}>Save and continue</button></div>; }

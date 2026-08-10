@@ -1,0 +1,2 @@
+import { useState } from 'react';
+export function RoleAssignment() { const [assigned, setAssigned] = useState(false); return <section className="card governance-card" aria-labelledby="governance-assignment-title"><p className="section-kicker">Mock assignment</p><h2 id="governance-assignment-title">Role permissions</h2><button type="button" onClick={() => setAssigned(true)}>Assign mock permissions</button>{assigned && <p role="status">Mock permissions assigned.</p>}</section>; }

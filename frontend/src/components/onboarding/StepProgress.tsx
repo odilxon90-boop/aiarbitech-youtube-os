@@ -1,0 +1,1 @@
+export function StepProgress({ current, total }: { current: number; total: number }) { const progress = Math.round((current / total) * 100); return <section className="onboarding-progress" aria-label={`${progress}% onboarding progress`}><span style={{ width: `${progress}%` }} /><p>{current} of {total} steps · {progress}%</p></section>; }

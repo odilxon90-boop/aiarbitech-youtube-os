@@ -21,11 +21,26 @@ const environmentSchema = z
       .refine((value) => /^postgres(?:ql)?:\/\//.test(value), 'DATABASE_URL must use PostgreSQL'),
     CORS_ORIGIN: z.string().min(1).default('http://localhost:5174'),
     REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().max(120_000).default(10_000),
+    JWT_SECRET: z.string().min(32).optional(),
+    JWT_EXPIRES_IN: z.string().regex(/^\d+[smhd]$/).default('7d'),
+    JWT_REFRESH_EXPIRES_IN: z.string().regex(/^\d+[smhd]$/).default('30d'),
+    AUTH_BOOTSTRAP_ADMIN_EMAIL: z.string().email().default('admin@youtubeos.local'),
+    AUTH_BOOTSTRAP_ADMIN_PASSWORD: z.string().min(12).optional(),
+    REDIS_URL: optionalUrl,
+    CACHE_WARMING_ENABLED: z.coerce.boolean().default(true),
+    CACHE_WARMING_INTERVAL_SECONDS: z.coerce.number().int().min(60).max(3_600).refine((value) => value % 60 === 0, 'CACHE_WARMING_INTERVAL_SECONDS must be a whole number of minutes').default(900),
+    CACHE_WARMING_MAX_ITEMS: z.coerce.number().int().min(1).max(1_000).default(100),
+    CACHE_WARMING_RETRY_ATTEMPTS: z.coerce.number().int().min(1).max(5).default(3),
     GLOBAL_ECOSYSTEM_BASE_URL: optionalUrl,
     GLOBAL_ECOSYSTEM_CLIENT_ID: optionalNonEmpty,
     GLOBAL_ECOSYSTEM_CLIENT_SECRET: optionalNonEmpty,
     GLOBAL_ECOSYSTEM_TIMEOUT_MS: z.coerce.number().int().positive().max(60_000).default(5_000),
     GLOBAL_ECOSYSTEM_MAX_RETRIES: z.coerce.number().int().min(0).max(5).default(2),
+    YOUTUBE_API_KEY: optionalNonEmpty,
+    YOUTUBE_CLIENT_ID: optionalNonEmpty,
+    YOUTUBE_CLIENT_SECRET: optionalNonEmpty,
+    YOUTUBE_ACCESS_TOKEN: optionalNonEmpty,
+    YOUTUBE_REFRESH_TOKEN: optionalNonEmpty,
   })
   .superRefine((config, context) => {
     const hasClientId = Boolean(config.GLOBAL_ECOSYSTEM_CLIENT_ID);
@@ -38,6 +53,45 @@ const environmentSchema = z
         message: 'Global Ecosystem client ID and secret must be configured together',
       });
     }
+    if (config.NODE_ENV === 'production' && !config.JWT_SECRET) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['JWT_SECRET'],
+        message: 'JWT_SECRET is required in production',
+      });
+    }
+    if (config.NODE_ENV === 'production' && !config.AUTH_BOOTSTRAP_ADMIN_PASSWORD) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['AUTH_BOOTSTRAP_ADMIN_PASSWORD'],
+        message: 'AUTH_BOOTSTRAP_ADMIN_PASSWORD is required in production',
+      });
+    }
+    const hasYoutubeClientId = Boolean(config.YOUTUBE_CLIENT_ID);
+    const hasYoutubeClientSecret = Boolean(config.YOUTUBE_CLIENT_SECRET);
+    const hasYoutubeToken = Boolean(config.YOUTUBE_ACCESS_TOKEN);
+    const hasYoutubeRefreshToken = Boolean(config.YOUTUBE_REFRESH_TOKEN);
+    if (hasYoutubeClientId !== hasYoutubeClientSecret) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['YOUTUBE_CLIENT_ID'],
+        message: 'YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET must be configured together',
+      });
+    }
+    if (hasYoutubeToken && !hasYoutubeClientId) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['YOUTUBE_CLIENT_ID'],
+        message: 'YOUTUBE_CLIENT_ID is required when YOUTUBE_ACCESS_TOKEN is configured',
+      });
+    }
+    if (hasYoutubeRefreshToken !== hasYoutubeClientId && hasYoutubeRefreshToken) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['YOUTUBE_REFRESH_TOKEN'],
+        message: 'YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET are required when YOUTUBE_REFRESH_TOKEN is configured',
+      });
+    }
   });
 
 export type EnvironmentConfig = z.infer<typeof environmentSchema>;
@@ -47,6 +101,17 @@ export class EnvironmentValidationError extends Error {
     super(issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; '));
     this.name = 'EnvironmentValidationError';
   }
+}
+
+export function getJwtSecret(config: EnvironmentConfig): string {
+  return config.JWT_SECRET ?? 'development-only-jwt-secret-must-be-replaced';
+}
+
+export function getBootstrapAdminCredentials(config: EnvironmentConfig): { email: string; password: string } {
+  return {
+    email: config.AUTH_BOOTSTRAP_ADMIN_EMAIL,
+    password: config.AUTH_BOOTSTRAP_ADMIN_PASSWORD ?? 'ChangeMeAdminPassword!',
+  };
 }
 
 export function loadEnvironment(

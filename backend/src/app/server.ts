@@ -1,15 +1,44 @@
 import Fastify, { type FastifyInstance } from 'fastify';
+import 'dotenv/config';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import { pathToFileURL } from 'node:url';
-import { loadEnvironment, isGlobalEcosystemConfigured, type EnvironmentConfig } from '../config/environment.js';
+import { getBootstrapAdminCredentials, getJwtSecret, loadEnvironment, isGlobalEcosystemConfigured, type EnvironmentConfig } from '../config/environment.js';
+import { AuthController } from '../auth/auth.controller.js';
+import { registerJwtAuthentication } from '../auth/auth.middleware.js';
+import { registerAuthRoutes } from '../auth/auth.routes.js';
+import { JwtService } from '../auth/jwt.service.js';
+import { registerAdminRoutes } from '../admin/admin-routes.js';
+import { registerAISyncRoutes } from '../ai-sync/ai-sync-routes.js';
+import { registerWorkflowRoutes } from '../workflow/workflow-routes.js';
+import { registerPromptRoutes } from '../prompt-registry/prompt-routes.js';
+import { registerOnboardingRoutes } from '../onboarding/onboarding-routes.js';
+import { registerSuccessScoreRoutes } from '../success-score/success-routes.js';
+import { registerTwinRoutes } from '../creator-twin/twin-routes.js';
+import { registerGatewayRoutes } from '../integration-gateway/gateway-routes.js';
+import { registerPermissionRoutes } from '../governance/permission-routes.js';
+import { registerJourneyRoutes } from '../journey/routes.js';
+import { registerYouTubeRoutes } from '../youtube/youtube-routes.js';
+import { registerMonitoringHealthRoutes } from '../monitoring/healthcheck.js';
+import { registerMonitoringMiddleware } from '../monitoring/monitoring-middleware.js';
+import { MetricsCollector } from '../monitoring/metrics.js';
+import { registerCacheMiddleware } from '../middleware/cache.middleware.js';
+import { registerCompressionMiddleware } from '../middleware/compression.middleware.js';
+import { getCacheWarmingConfig } from '../cache/warming.config.js';
+import { CacheWarmingScheduler } from '../cache/warming.scheduler.js';
+import { CacheWarmingService, RedisCacheStore } from '../cache/warming.service.js';
 import { registerHealthRoutes } from '../health/routes.js';
 import { MockGlobalEcosystemApiClient } from '../integrations/global-ecosystem/mock-adapter.js';
 import { registerPlatformRoutes } from '../platform/routes.js';
+import { registerQualityRoutes } from '../quality/quality-routes.js';
+import { registerPresidentRoutes } from '../president/president-routes.js';
+import { registerGoalsRoutes } from '../goals/goals-routes.js';
+import { registerVideoRoutes } from '../video/video-routes.js';
+import { registerMusicRoutes } from '../music/music-routes.js';
+import { registerGenreRoutes } from '../genre/genre-routes.js';
 import { registerCorrelationIds } from '../shared/correlation-id.js';
 import { registerErrorHandler } from '../shared/errors.js';
 import { NoopLogger, StructuredConsoleLogger, type PlatformLogger } from '../shared/logger.js';
-import { registerRequestLogging } from '../shared/request-logging.js';
 
 export interface BuildAppOptions {
   config?: EnvironmentConfig;
@@ -29,17 +58,55 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
     origin: config.CORS_ORIGIN,
     credentials: false,
   });
+  await registerCompressionMiddleware(app);
+  registerCacheMiddleware(app);
 
   registerCorrelationIds(app);
-  registerRequestLogging(app, logger);
+  const jwtService = new JwtService(getJwtSecret(config), config.JWT_EXPIRES_IN, config.JWT_REFRESH_EXPIRES_IN);
+  registerJwtAuthentication(app, jwtService, config.NODE_ENV === 'test');
+  const metrics = new MetricsCollector();
+  registerMonitoringMiddleware(app, logger, metrics);
   registerErrorHandler(app, logger);
+  const cacheWarming = new CacheWarmingService(
+    getCacheWarmingConfig(config),
+    config.REDIS_URL ? new RedisCacheStore(config.REDIS_URL) : undefined,
+    logger,
+  );
+  const cacheWarmingScheduler = new CacheWarmingScheduler(cacheWarming, config.CACHE_WARMING_INTERVAL_SECONDS, logger);
+  app.addHook('onReady', async () => {
+    await cacheWarming.warmOnStartup();
+    cacheWarmingScheduler.start();
+  });
+  app.addHook('onClose', async () => {
+    cacheWarmingScheduler.stop();
+    await cacheWarming.close();
+  });
 
   const globalEcosystemClient = new MockGlobalEcosystemApiClient(
     isGlobalEcosystemConfigured(config),
   );
 
   registerHealthRoutes(app, config);
+  registerAuthRoutes(app, new AuthController(jwtService, getBootstrapAdminCredentials(config)));
   registerPlatformRoutes(app, config, globalEcosystemClient);
+  registerQualityRoutes(app);
+  registerPresidentRoutes(app);
+  registerGoalsRoutes(app);
+  registerVideoRoutes(app);
+  registerMusicRoutes(app);
+  registerGenreRoutes(app);
+  registerAdminRoutes(app);
+  registerAISyncRoutes(app);
+  registerWorkflowRoutes(app);
+  registerPromptRoutes(app);
+  registerOnboardingRoutes(app);
+  registerSuccessScoreRoutes(app);
+  registerTwinRoutes(app);
+  registerGatewayRoutes(app);
+  registerPermissionRoutes(app);
+  registerJourneyRoutes(app);
+  registerYouTubeRoutes(app);
+  registerMonitoringHealthRoutes(app, metrics, cacheWarming);
 
   return app;
 }

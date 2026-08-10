@@ -1,0 +1,39 @@
+services:
+  loki:
+    image: grafana/loki:3.1.1
+    restart: unless-stopped
+    user: "0:0"
+    command: -config.file=/etc/loki/config.yml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./grafana-loki.yml:/etc/loki/config.yml:ro
+      - loki_data:/var/lib/loki
+    networks:
+      - monitoring
+
+  vector:
+    image: timberio/vector:0.42.0-alpine
+    restart: unless-stopped
+    command: --config /etc/vector/vector.toml
+    environment:
+      ENVIRONMENT: production
+      LOKI_URL: http://loki:3100
+    ports:
+      - "8686:8686"
+    volumes:
+      - ./vector.toml:/etc/vector/vector.toml:ro
+      - vector_data:/var/lib/vector
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+
+volumes:
+  loki_data:
+  vector_data:
+
+networks:
+  monitoring:
+    external: true
+    name: youtube-os-monitoring

@@ -1,0 +1,75 @@
+# Set LOKI_URL to the internal Grafana Loki endpoint, for example
+# http://loki:3100. Run Vector with ENVIRONMENT=production.
+
+[sources.backend]
+type = "file"
+include = ["/var/log/youtube-os/backend.json.log"]
+read_from = "beginning"
+
+[sources.nginx_access]
+type = "file"
+include = ["/var/log/nginx/access.log"]
+read_from = "beginning"
+
+[sources.nginx_error]
+type = "file"
+include = ["/var/log/nginx/error.log"]
+read_from = "beginning"
+
+[sources.postgresql]
+type = "file"
+include = ["/var/log/postgresql/*.log"]
+read_from = "beginning"
+
+[sources.redis]
+type = "file"
+include = ["/var/log/redis/redis-server.log"]
+read_from = "beginning"
+
+[sources.frontend_errors]
+type = "http_server"
+address = "0.0.0.0:8686"
+encoding = "json"
+
+[transforms.normalize]
+type = "remap"
+inputs = ["backend", "nginx_access", "nginx_error", "postgresql", "redis", "frontend_errors"]
+source = '''
+  .environment = get_env_var!("ENVIRONMENT")
+  .service = if .file == "/var/log/youtube-os/backend.json.log" {
+    "backend"
+  } else if exists(.file) && starts_with(string!(.file), "/var/log/nginx/") {
+    "nginx"
+  } else if exists(.file) && starts_with(string!(.file), "/var/log/postgresql/") {
+    "postgresql"
+  } else if .file == "/var/log/redis/redis-server.log" {
+    "redis"
+  } else {
+    "frontend"
+  }
+  if exists(.level) {
+    .severity = downcase(string!(.level))
+  } else {
+    .severity = "info"
+  }
+  if exists(.correlationId) {
+    .request_id = .correlationId
+  }
+  if exists(.path) {
+    .endpoint = .path
+  }
+'''
+
+[sinks.loki]
+type = "loki"
+inputs = ["normalize"]
+endpoint = "${LOKI_URL}"
+encoding.codec = "json"
+labels.service = "{{ service }}"
+labels.environment = "{{ environment }}"
+labels.severity = "{{ severity }}"
+
+[sinks.loki.buffer]
+type = "disk"
+max_size = 1073741824
+when_full = "block"

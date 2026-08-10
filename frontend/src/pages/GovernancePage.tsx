@@ -1,0 +1,8 @@
+import { PermissionList } from '../components/governance/PermissionList';
+import { RoleAssignment } from '../components/governance/RoleAssignment';
+import { RoleList } from '../components/governance/RoleList';
+import { UserRoleTable } from '../components/governance/UserRoleTable';
+const roles = [['President', 'Full platform governance authority.'], ['Heir', 'Delegated governance continuity authority.'], ['Admin', 'Platform administration authority.'], ['Creator', 'Creator workspace authority.'], ['Viewer', 'Read-only platform access.']].map(([name, description], index) => ({ id: `role-${index}`, name: name!, description: description! }));
+const permissions = (['users', 'channels', 'videos', 'ai', 'governance'] as const).flatMap((resource) => (['create', 'read', 'update', 'delete', 'execute'] as const).map((action) => ({ id: `${resource}:${action}`, resource, action })));
+const users = ['Amina', 'Bob', 'Chloe', 'Diyor', 'Elena', 'Farid', 'Grace', 'Hasan', 'Iris', 'Jasur'].map((userName, index) => ({ userId: `user-${index}`, userName, role: roles[index % roles.length]!.name }));
+export function GovernancePage() { return <section className="governance-page" aria-labelledby="governance-page-title"><div className="governance-header"><div><p className="eyebrow">Mock data only</p><h2 id="governance-page-title">Governance Permission Matrix</h2></div><span className="foundation-badge">governance:access</span></div><div className="governance-grid"><RoleList roles={roles} /><PermissionList permissions={permissions} /><RoleAssignment /><UserRoleTable users={users} /></div></section>; }

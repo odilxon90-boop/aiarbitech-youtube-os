@@ -1,0 +1,2 @@
+export interface PromptListItem { id: string; name: string; model: string; }
+export function PromptList({ prompts }: { prompts: readonly PromptListItem[] }) { return <section className="card prompt-card" aria-labelledby="prompt-list-title"><p className="section-kicker">Mock registry</p><h2 id="prompt-list-title">Prompts</h2><ul className="prompt-list">{prompts.map((prompt) => <li key={prompt.id}><span>{prompt.name}</span><small>{prompt.model}</small></li>)}</ul></section>; }

@@ -1,0 +1,2 @@
+export interface WorkflowListItem { id: string; title: string; status: string; progress: number; }
+export function WorkflowList({ workflows }: { workflows: readonly WorkflowListItem[] }) { return <section className="card workflow-card" aria-labelledby="workflow-list-title"><p className="section-kicker">Mock workflows</p><h2 id="workflow-list-title">Workflows</h2><ul className="workflow-list">{workflows.map((workflow) => <li key={workflow.id}><span>{workflow.title}</span><small>{workflow.status} · {workflow.progress}%</small></li>)}</ul></section>; }

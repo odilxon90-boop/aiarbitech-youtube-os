@@ -1,0 +1,205 @@
+{
+  "info": {
+    "_postman_id": "b7299cf8-b747-46ca-82f6-7c1f3b7e81fd",
+    "name": "AIArbiTech YouTube OS API",
+    "description": "API collection using an HS256 JWT bearer token. Run Authentication > Login before protected requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.environment.set('auth_token', body.data.token);",
+                  "pm.environment.set('refresh_token', body.data.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@youtubeos.local\",\n  \"password\": \"{{bootstrap_admin_password}}\"\n}" },
+            "url": "{{base_url}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}" },
+            "url": "{{base_url}}/api/v1/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": { "method": "POST", "header": [], "url": "{{base_url}}/api/v1/auth/logout" }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Liveness",
+          "request": { "method": "GET", "header": [], "url": "{{base_url}}/api/v1/health/live" }
+        },
+        {
+          "name": "Application Health",
+          "request": { "method": "GET", "header": [], "url": "{{base_url}}/api/v1/health" }
+        }
+      ]
+    },
+    {
+      "name": "Creator Journey",
+      "item": [
+        {
+          "name": "Dashboard Summary",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "dashboard:access" }], "url": "{{base_url}}/api/v1/dashboard/summary" }
+        },
+        {
+          "name": "Analytics Overview",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "analytics:access" }], "url": "{{base_url}}/api/v1/analytics/overview" }
+        },
+        {
+          "name": "Send AI Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-permissions", "value": "ai:access" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Suggest a title for my next video\"\n}" },
+            "url": "{{base_url}}/api/v1/ai/chat/send"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quality Gate",
+      "item": [
+        {
+          "name": "Video Score",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "quality:read" }], "url": "{{base_url}}/api/v1/quality/score/{{video_id}}" }
+        },
+        {
+          "name": "Video Retention",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "quality:read" }], "url": "{{base_url}}/api/v1/quality/retention/{{video_id}}" }
+        },
+        {
+          "name": "Publish Checklist",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "quality:read" }], "url": "{{base_url}}/api/v1/quality/checklist/{{video_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "Workflow",
+      "item": [
+        {
+          "name": "Start Workflow",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "x-permissions", "value": "workflow:access" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"title\": \"Launch new video\"\n}" },
+            "url": "{{base_url}}/api/v1/workflow/start"
+          }
+        },
+        {
+          "name": "Workflow History",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "workflow:access" }], "url": "{{base_url}}/api/v1/workflow/history?userId={{user_id}}" }
+        },
+        {
+          "name": "Workflow Status",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "workflow:access" }], "url": "{{base_url}}/api/v1/workflow/status/{{workflow_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "Success Score",
+      "item": [
+        {
+          "name": "Current Score",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "success:access" }], "url": "{{base_url}}/api/v1/success-score/current" }
+        },
+        {
+          "name": "Score Breakdown",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "success:access" }], "url": "{{base_url}}/api/v1/success-score/breakdown" }
+        },
+        {
+          "name": "Improvement Suggestions",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "success:access" }], "url": "{{base_url}}/api/v1/success-score/improvements" }
+        }
+      ]
+    },
+    {
+      "name": "Creator Twin",
+      "item": [
+        {
+          "name": "Twin Status",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "twin:access" }], "url": "{{base_url}}/api/v1/twin/status" }
+        },
+        {
+          "name": "Activate Twin",
+          "request": { "method": "POST", "header": [{ "key": "x-permissions", "value": "twin:access" }], "url": "{{base_url}}/api/v1/twin/activate" }
+        },
+        {
+          "name": "Recommendations",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "twin:access" }], "url": "{{base_url}}/api/v1/twin/recommendations" }
+        }
+      ]
+    },
+    {
+      "name": "Integration Gateway",
+      "item": [
+        {
+          "name": "Gateway Status",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "gateway:access" }], "url": "{{base_url}}/api/v1/gateway/status" }
+        },
+        {
+          "name": "Endpoint Registry",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "gateway:access" }], "url": "{{base_url}}/api/v1/gateway/endpoints" }
+        },
+        {
+          "name": "Gateway Health",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "gateway:access" }], "url": "{{base_url}}/api/v1/gateway/health" }
+        }
+      ]
+    },
+    {
+      "name": "Administration",
+      "item": [
+        {
+          "name": "List Users",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "admin:access" }], "url": "{{base_url}}/api/v1/admin/users" }
+        },
+        {
+          "name": "List Channels",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "admin:access" }], "url": "{{base_url}}/api/v1/admin/channels?userId={{user_id}}&channelId={{channel_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "Governance",
+      "item": [
+        {
+          "name": "List Roles",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "governance:access" }], "url": "{{base_url}}/api/v1/governance/roles" }
+        },
+        {
+          "name": "List Permissions",
+          "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "governance:access" }], "url": "{{base_url}}/api/v1/governance/permissions" }
+        }
+      ]
+    }
+  ]
+}

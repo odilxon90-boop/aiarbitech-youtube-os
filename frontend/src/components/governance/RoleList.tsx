@@ -1,0 +1,2 @@
+export interface GovernanceRole { id: string; name: string; description: string; }
+export function RoleList({ roles }: { roles: readonly GovernanceRole[] }) { return <section className="card governance-card" aria-labelledby="governance-roles-title"><p className="section-kicker">Mock RBAC</p><h2 id="governance-roles-title">Roles</h2><ul className="governance-list">{roles.map((role) => <li key={role.id}><span>{role.name}</span><small>{role.description}</small></li>)}</ul></section>; }

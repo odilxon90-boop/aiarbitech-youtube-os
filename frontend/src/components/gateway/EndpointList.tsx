@@ -1,0 +1,2 @@
+export interface GatewayEndpoint { key: string; name: string; rateLimitPerMinute: number; }
+export function EndpointList({ endpoints }: { endpoints: readonly GatewayEndpoint[] }) { return <section className="card gateway-card" aria-labelledby="gateway-endpoints-title"><p className="section-kicker">Mock registry</p><h2 id="gateway-endpoints-title">Endpoints</h2><ul className="gateway-list">{endpoints.map((item) => <li key={item.key}><span>{item.name}</span><small>{item.rateLimitPerMinute}/min</small></li>)}</ul></section>; }

@@ -1,0 +1,2 @@
+export interface UserRole { userId: string; userName: string; role: string; }
+export function UserRoleTable({ users }: { users: readonly UserRole[] }) { return <section className="card governance-card governance-card--wide" aria-labelledby="governance-users-title"><p className="section-kicker">Mock user assignments</p><h2 id="governance-users-title">User roles</h2><ul className="governance-list">{users.map((user) => <li key={user.userId}><span>{user.userName}</span><strong>{user.role}</strong></li>)}</ul></section>; }

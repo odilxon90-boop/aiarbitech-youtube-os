@@ -1,0 +1,1 @@
+export function HealthCard({ metrics }: { metrics: readonly { name: string; status: string; detail: string }[] }) { return <article><h3>Platform Health</h3>{metrics.map((metric) => <p key={metric.name}><strong>{metric.status}</strong> {metric.name}: {metric.detail}</p>)}</article>; }

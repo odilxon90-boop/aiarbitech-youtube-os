@@ -1,0 +1,1 @@
+export function RiskList({ risks }: { risks: readonly { id: string; title: string; severity: string; detail: string }[] }) { return <article><h3>Risk Alerts</h3>{risks.map((risk) => <p key={risk.id}><strong>{risk.severity}</strong> {risk.title}: {risk.detail}</p>)}</article>; }

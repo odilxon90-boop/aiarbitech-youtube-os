@@ -1,0 +1,9 @@
+import { CategoryBreakdown } from '../components/success/CategoryBreakdown';
+import { HistoryChart } from '../components/success/HistoryChart';
+import { ImprovementList } from '../components/success/ImprovementList';
+import { ScoreCard } from '../components/success/ScoreCard';
+const categorySeeds: readonly [string, number][] = [['AI usage', 78], ['Content quality', 81], ['Growth', 68], ['Revenue', 64], ['Monetization readiness', 70], ['Consistency', 75], ['KPI achievement', 69]];
+const categories = categorySeeds.map(([name, score], index) => ({ id: `category-${index}`, name, score }));
+const history = Array.from({ length: 30 }, (_, index) => ({ date: `2026-08-${String(index + 1).padStart(2, '0')}`, score: 64 + Math.min(index, 8) + (index % 3) }));
+const suggestions = [['Use AI Director for every new content brief.', 'HIGH', '+5 AI usage points'], ['Improve thumbnails before quality review.', 'HIGH', '+4 content quality points'], ['Maintain a three-post weekly mock cadence.', 'MEDIUM', '+3 consistency points'], ['Create a mock monetization readiness checklist.', 'MEDIUM', '+3 monetization points'], ['Review mock growth KPIs every week.', 'LOW', '+2 growth points']].map(([suggestion, priority, expectedImpact], index) => ({ id: `improve-${index}`, suggestion: suggestion!, priority: priority!, expectedImpact: expectedImpact! }));
+export function SuccessScorePage() { return <section className="success-page" aria-labelledby="success-page-title"><div className="success-header"><div><p className="eyebrow">Mock data only</p><h2 id="success-page-title">Creator Success</h2></div><span className="foundation-badge">GROWING</span></div><div className="success-grid"><ScoreCard score={72} /><HistoryChart points={history} /><CategoryBreakdown categories={categories} /><ImprovementList suggestions={suggestions} /></div></section>; }

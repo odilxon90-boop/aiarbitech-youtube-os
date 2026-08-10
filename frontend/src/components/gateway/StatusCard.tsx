@@ -1,0 +1,1 @@
+export function StatusCard({ status }: { status: string }) { return <section className="card gateway-card" aria-labelledby="gateway-status-title"><p className="section-kicker">Mock gateway</p><h2 id="gateway-status-title">Gateway status</h2><strong className="gateway-status">{status}</strong></section>; }
