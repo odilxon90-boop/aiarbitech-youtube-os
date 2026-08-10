@@ -10,11 +10,11 @@ export function AIAssistantPage() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages((currentMessages) => [...currentMessages, { role: 'user', text: input }]);
+    setMessages([...messages, { role: 'user', text: input }]);
     setInput('');
     setTimeout(() => {
-      setMessages((currentMessages) => [
-        ...currentMessages,
+      setMessages((previousMessages) => [
+        ...previousMessages,
         { role: 'ai', text: 'That is a great question! Let me analyze your channel data...' },
       ]);
     }, 1000);
@@ -30,7 +30,7 @@ export function AIAssistantPage() {
       <div className="flex h-[calc(100vh-180px)] flex-col rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm">
         <div className="flex-1 space-y-4 overflow-y-auto p-6">
           {messages.map((message, index) => (
-            <div key={`${message.role}-${index}`} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[80%] rounded-2xl px-5 py-3 text-sm ${message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}`}>
                 {message.text}
               </div>
@@ -42,7 +42,6 @@ export function AIAssistantPage() {
           <div className="flex gap-3">
             <input
               type="text"
-              aria-label="AI message"
               value={input}
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={(event) => event.key === 'Enter' && handleSend()}
