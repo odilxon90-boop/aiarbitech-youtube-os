@@ -245,3 +245,6 @@ if (entrypoint === import.meta.url && process.env.NODE_ENV !== 'test') {
 }
 
 export { NoopLogger };
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
