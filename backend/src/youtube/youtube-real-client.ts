@@ -211,7 +211,7 @@ export class YouTubeRealClient {
         'Content-Type': input.mimeType,
         'Content-Length': String(input.content.byteLength),
       },
-      body: input.content,
+      body: Buffer.from(input.content),
     });
     if (!uploadResponse.ok) {
       throw await this.toPlatformError(uploadResponse, 'YOUTUBE_UPLOAD_FAILED');

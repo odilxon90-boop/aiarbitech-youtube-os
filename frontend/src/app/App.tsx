@@ -1,26 +1,11 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+﻿import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { AppShell } from './AppShell';
 import { createPlatformFoundationClient, type PlatformFoundationClient } from '../platform/platform-client';
 import type { PlatformFoundationStatus } from '../platform/types';
-import { CapabilityRegistryPage } from '../platform/CapabilityRegistryPage';
 import { GlobalEcosystemStatusPage } from '../platform/GlobalEcosystemStatusPage';
 import { HealthStatusPage } from '../platform/HealthStatusPage';
-import { PlatformBoundaryRegistryDashboard } from '../platform/PlatformBoundaryRegistryDashboard';
-import { PlatformHealthDashboard } from '../platform/PlatformHealthDashboard';
 import { PlatformIdentityPage } from '../platform/PlatformIdentityPage';
-<<<<<<< HEAD
-import { PlatformRegistrationPage } from '../platform/PlatformRegistrationPage';
-import { Gate0BDashboard } from '../platform/Gate0BDashboard';
 import { DashboardPage } from '../pages/DashboardPage';
-import { AIAssistantPage } from '../pages/AIAssistantPage';
-import { AnalyticsPage } from '../pages/AnalyticsPage';
-import { IntelligencePage } from '../pages/IntelligencePage';
-import { GenrePage } from '../pages/GenrePage';
-import { AdminPanelPage } from '../pages/AdminPanelPage';
-import { GatewayPage } from '../pages/GatewayPage';
-=======
-import { DashboardPage } from '../pages/DashboardPage';
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/AsyncStates';
 import { errorState, loadingState, successState, type AsyncState } from '../shared/async-state';
 
@@ -71,27 +56,16 @@ export function App({ client }: AppProps) {
       {state.status === 'empty' && <EmptyState />}
       {state.status === 'success' && state.data && (
         <div className="dashboard-grid">
-          <PlatformHealthDashboard manifest={state.data.governance.healthManifest} />
-          <PlatformBoundaryRegistryDashboard registry={state.data.governance.boundaries} />
-          <PlatformRegistrationPage registration={state.data.registration} />
-          <CapabilityRegistryPage registry={state.data.governance.capabilities} />
           <PlatformIdentityPage manifest={state.data.manifest} />
           <HealthStatusPage health={state.data.health} />
           <GlobalEcosystemStatusPage
-            status={{ ...state.data.connection, capabilities: state.data.manifest.globalEcosystemCompatibility.capabilities }}
+            status={{
+              ...state.data.connection,
+              capabilities: state.data.manifest.globalEcosystemCompatibility.capabilities,
+            }}
           />
-          <Gate0BDashboard governance={state.data.governance} />
         </div>
       )}
-<<<<<<< HEAD
-      <DashboardPage />
-      <AnalyticsPage />
-      <AIAssistantPage />
-      <IntelligencePage />
-      <GenrePage />
-      <AdminPanelPage />
-      <GatewayPage />
-=======
         <QualityGatePage />
         <AdminPanelPage />
         <AISyncPage />
@@ -104,7 +78,6 @@ export function App({ client }: AppProps) {
         <GovernancePage />
         <PresidentPanelPage />
       </Suspense>
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
     </AppShell>
   );
 }

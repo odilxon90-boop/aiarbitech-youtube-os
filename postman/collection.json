@@ -1,182 +1,5 @@
-{
+﻿{
   "info": {
-<<<<<<< HEAD
-    "_postman_id": "aiarbitech-youtube-os-api-v1",
-    "name": "AIArbiTech YouTube OS — API v1",
-    "description": "Complete API testing collection for all 13 YouTube OS backend modules. Use the matching environment file to set baseUrl and tokens.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3100" },
-    { "key": "creatorToken", "value": "mock-creator-token" },
-    { "key": "adminToken", "value": "mock-admin-token" },
-    { "key": "viewerToken", "value": "mock-viewer-token" }
-  ],
-  "item": [
-    {
-      "name": "00 — Health",
-      "item": [
-        {
-          "name": "GET /health",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "01 — Dashboard",
-      "item": [
-        {
-          "name": "GET summary",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","summary"] }
-          }
-        },
-        {
-          "name": "GET kpi",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/kpi", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","kpi"] }
-          }
-        },
-        {
-          "name": "GET recommendations",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/recommendations", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","recommendations"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "02 — Analytics",
-      "item": [
-        {
-          "name": "GET summary",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/analytics/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","analytics","summary"] }
-          }
-        },
-        {
-          "name": "GET trends",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/analytics/trends", "host": ["{{baseUrl}}"], "path": ["api","v1","analytics","trends"] }
-          }
-        },
-        {
-          "name": "GET performance",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/analytics/performance", "host": ["{{baseUrl}}"], "path": ["api","v1","analytics","performance"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "03 — AI Assistant",
-      "item": [
-        {
-          "name": "POST chat/send",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"message\": \"What should I publish next?\",\n  \"sessionId\": \"session-001\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/ai/chat/send", "host": ["{{baseUrl}}"], "path": ["api","v1","ai","chat","send"] }
-          }
-        },
-        {
-          "name": "GET chat/history",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai/chat/history", "host": ["{{baseUrl}}"], "path": ["api","v1","ai","chat","history"] }
-          }
-        },
-        {
-          "name": "GET chat/:sessionId",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai/chat/session-001", "host": ["{{baseUrl}}"], "path": ["api","v1","ai","chat","session-001"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "04 — Goals",
-      "item": [
-        {
-          "name": "GET list",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/goals/list", "host": ["{{baseUrl}}"], "path": ["api","v1","goals","list"] }
-          }
-        },
-        {
-          "name": "GET recommendations",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/goals/recommendations", "host": ["{{baseUrl}}"], "path": ["api","v1","goals","recommendations"] }
-          }
-        },
-        {
-          "name": "POST create",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Reach 20,000 subscribers\",\n  \"target\": 20000,\n  \"unit\": \"subscribers\",\n  \"dueDate\": \"2026-12-31\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/goals/create", "host": ["{{baseUrl}}"], "path": ["api","v1","goals","create"] }
-          }
-        },
-        {
-          "name": "PUT :goalId/progress",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"current\": 18500\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/goals/goal-1/progress", "host": ["{{baseUrl}}"], "path": ["api","v1","goals","goal-1","progress"] }
-          }
-        },
-        {
-          "name": "DELETE :goalId",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/goals/goal-1", "host": ["{{baseUrl}}"], "path": ["api","v1","goals","goal-1"] }
-          }
-=======
     "_postman_id": "b7299cf8-b747-46ca-82f6-7c1f3b7e81fd",
     "name": "AIArbiTech YouTube OS API",
     "description": "API collection using an HS256 JWT bearer token. Run Authentication > Login before protected requests.",
@@ -224,67 +47,10 @@
         {
           "name": "Logout",
           "request": { "method": "POST", "header": [], "url": "{{base_url}}/api/v1/auth/logout" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "05 — Memory",
-      "item": [
-        {
-          "name": "GET summary",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/memory/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","memory","summary"] }
-          }
-        },
-        {
-          "name": "GET preferences",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/memory/preferences", "host": ["{{baseUrl}}"], "path": ["api","v1","memory","preferences"] }
-          }
-        },
-        {
-          "name": "PUT preferences",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"uploadFrequency\": \"3x per week\",\n  \"contentStyle\": \"tutorial\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/memory/preferences", "host": ["{{baseUrl}}"], "path": ["api","v1","memory","preferences"] }
-          }
-        },
-        {
-          "name": "GET decisions",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/memory/decisions", "host": ["{{baseUrl}}"], "path": ["api","v1","memory","decisions"] }
-          }
-        },
-        {
-          "name": "POST learn",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"insight\": \"Shorts published on Tuesday perform 30% better\",\n  \"category\": \"scheduling\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/memory/learn", "host": ["{{baseUrl}}"], "path": ["api","v1","memory","learn"] }
-=======
       "name": "Health",
       "item": [
         {
@@ -315,55 +81,11 @@
             "header": [{ "key": "x-permissions", "value": "ai:access" }, { "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"message\": \"Suggest a title for my next video\"\n}" },
             "url": "{{base_url}}/api/v1/ai/chat/send"
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
           }
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "06 — Intelligence",
-      "item": [
-        {
-          "name": "GET profile",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/intelligence/profile", "host": ["{{baseUrl}}"], "path": ["api","v1","intelligence","profile"] }
-          }
-        },
-        {
-          "name": "GET skills",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/intelligence/skills", "host": ["{{baseUrl}}"], "path": ["api","v1","intelligence","skills"] }
-          }
-        },
-        {
-          "name": "GET strengths",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/intelligence/strengths", "host": ["{{baseUrl}}"], "path": ["api","v1","intelligence","strengths"] }
-          }
-        },
-        {
-          "name": "GET weaknesses",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/intelligence/weaknesses", "host": ["{{baseUrl}}"], "path": ["api","v1","intelligence","weaknesses"] }
-          }
-        },
-        {
-          "name": "GET recommendations",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/intelligence/recommendations", "host": ["{{baseUrl}}"], "path": ["api","v1","intelligence","recommendations"] }
-          }
-=======
       "name": "Quality Gate",
       "item": [
         {
@@ -377,61 +99,10 @@
         {
           "name": "Publish Checklist",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "quality:read" }], "url": "{{base_url}}/api/v1/quality/checklist/{{video_id}}" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "07 — Video Studio",
-      "item": [
-        {
-          "name": "GET ideas",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/video/ideas", "host": ["{{baseUrl}}"], "path": ["api","v1","video","ideas"] }
-          }
-        },
-        {
-          "name": "GET scripts/:id",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/video/scripts/script-1", "host": ["{{baseUrl}}"], "path": ["api","v1","video","scripts","script-1"] }
-          }
-        },
-        {
-          "name": "POST generate",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{creatorToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"topic\": \"Top 5 AI Automation Tools 2026\",\n  \"style\": \"tutorial\",\n  \"length\": \"10 minutes\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/video/generate", "host": ["{{baseUrl}}"], "path": ["api","v1","video","generate"] }
-          }
-        },
-        {
-          "name": "GET projects",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/video/projects", "host": ["{{baseUrl}}"], "path": ["api","v1","video","projects"] }
-          }
-        },
-        {
-          "name": "GET projects/:id",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/video/projects/proj-1", "host": ["{{baseUrl}}"], "path": ["api","v1","video","projects","proj-1"] }
-          }
-=======
       "name": "Workflow",
       "item": [
         {
@@ -450,54 +121,10 @@
         {
           "name": "Workflow Status",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "workflow:access" }], "url": "{{base_url}}/api/v1/workflow/status/{{workflow_id}}" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "08 — Genre",
-      "item": [
-        {
-          "name": "GET trends",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/genre/trends", "host": ["{{baseUrl}}"], "path": ["api","v1","genre","trends"] }
-          }
-        },
-        {
-          "name": "GET recommendations",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/genre/recommendations", "host": ["{{baseUrl}}"], "path": ["api","v1","genre","recommendations"] }
-          }
-        },
-        {
-          "name": "GET popularity",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/genre/popularity", "host": ["{{baseUrl}}"], "path": ["api","v1","genre","popularity"] }
-          }
-        },
-        {
-          "name": "GET :id/details (lo-fi)",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/genre/genre-lofi/details", "host": ["{{baseUrl}}"], "path": ["api","v1","genre","genre-lofi","details"] }
-          }
-        },
-        {
-          "name": "GET :id/details (404 test)",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{creatorToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/genre/genre-unknown/details", "host": ["{{baseUrl}}"], "path": ["api","v1","genre","genre-unknown","details"] }
-          }
-=======
       "name": "Success Score",
       "item": [
         {
@@ -511,62 +138,10 @@
         {
           "name": "Improvement Suggestions",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "success:access" }], "url": "{{base_url}}/api/v1/success-score/improvements" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "09 — President",
-      "item": [
-        {
-          "name": "GET dashboard",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/dashboard", "host": ["{{baseUrl}}"], "path": ["api","v1","president","dashboard"] }
-          }
-        },
-        {
-          "name": "GET health",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/health", "host": ["{{baseUrl}}"], "path": ["api","v1","president","health"] }
-          }
-        },
-        {
-          "name": "GET revenue",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/revenue", "host": ["{{baseUrl}}"], "path": ["api","v1","president","revenue"] }
-          }
-        },
-        {
-          "name": "GET channels",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/channels", "host": ["{{baseUrl}}"], "path": ["api","v1","president","channels"] }
-          }
-        },
-        {
-          "name": "GET ai-status",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/ai-status", "host": ["{{baseUrl}}"], "path": ["api","v1","president","ai-status"] }
-          }
-        },
-        {
-          "name": "GET risks",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-president-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/president/risks", "host": ["{{baseUrl}}"], "path": ["api","v1","president","risks"] }
-          }
-=======
       "name": "Creator Twin",
       "item": [
         {
@@ -580,54 +155,10 @@
         {
           "name": "Recommendations",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "twin:access" }], "url": "{{base_url}}/api/v1/twin/recommendations" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "10 — Heir",
-      "item": [
-        {
-          "name": "GET dashboard",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-heir-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/heir/dashboard", "host": ["{{baseUrl}}"], "path": ["api","v1","heir","dashboard"] }
-          }
-        },
-        {
-          "name": "GET health",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-heir-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/heir/health", "host": ["{{baseUrl}}"], "path": ["api","v1","heir","health"] }
-          }
-        },
-        {
-          "name": "GET revenue",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-heir-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/heir/revenue", "host": ["{{baseUrl}}"], "path": ["api","v1","heir","revenue"] }
-          }
-        },
-        {
-          "name": "GET channels",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-heir-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/heir/channels", "host": ["{{baseUrl}}"], "path": ["api","v1","heir","channels"] }
-          }
-        },
-        {
-          "name": "GET ai-status",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-heir-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/heir/ai-status", "host": ["{{baseUrl}}"], "path": ["api","v1","heir","ai-status"] }
-          }
-=======
       "name": "Integration Gateway",
       "item": [
         {
@@ -641,99 +172,10 @@
         {
           "name": "Gateway Health",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "gateway:access" }], "url": "{{base_url}}/api/v1/gateway/health" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "11 — Admin",
-      "item": [
-        {
-          "name": "GET users",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/users", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users"] }
-          }
-        },
-        {
-          "name": "PUT users/:id/status",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"SUSPENDED\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/users/usr-5/status", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users","usr-5","status"] }
-          }
-        },
-        {
-          "name": "GET channels",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/channels", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","channels"] }
-          }
-        },
-        {
-          "name": "PUT channels/:id/moderate",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"APPROVED\",\n  \"note\": \"Issue resolved after review.\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/channels/chn-4/moderate", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","channels","chn-4","moderate"] }
-          }
-        },
-        {
-          "name": "GET ai-config",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/ai-config", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","ai-config"] }
-          }
-        },
-        {
-          "name": "PUT ai-config",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"temperature\": 0.5,\n  \"maxTokens\": 1024,\n  \"recommendationsPerDay\": 8\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/ai-config", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","ai-config"] }
-          }
-        },
-        {
-          "name": "GET audit-logs",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/audit-logs", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","audit-logs"] }
-          }
-        },
-        {
-          "name": "GET health",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/admin/health", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","health"] }
-          }
-=======
       "name": "Administration",
       "item": [
         {
@@ -743,190 +185,10 @@
         {
           "name": "List Channels",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "admin:access" }], "url": "{{base_url}}/api/v1/admin/channels?userId={{user_id}}&channelId={{channel_id}}" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     },
     {
-<<<<<<< HEAD
-      "name": "12 — AI Sync",
-      "item": [
-        {
-          "name": "GET status",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-ai-sync-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/status", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","status"] }
-          }
-        },
-        {
-          "name": "GET history",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-ai-sync-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/history", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","history"] }
-          }
-        },
-        {
-          "name": "POST force-sync",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer mock-ai-sync-token" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": { "mode": "raw", "raw": "{}" },
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/force-sync", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","force-sync"] }
-          }
-        },
-        {
-          "name": "GET conflicts",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-ai-sync-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/conflicts", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","conflicts"] }
-          }
-        },
-        {
-          "name": "POST resolve/:conflictId",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer mock-ai-sync-token" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"resolution\": \"GLOBAL\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/resolve/c-1", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","resolve","c-1"] }
-          }
-        },
-        {
-          "name": "GET models",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer mock-ai-sync-token" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/ai-sync/models", "host": ["{{baseUrl}}"], "path": ["api","v1","ai-sync","models"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "13 — Integration Gateway",
-      "item": [
-        {
-          "name": "GET status",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/status", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","status"] }
-          }
-        },
-        {
-          "name": "GET endpoints",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/endpoints", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","endpoints"] }
-          }
-        },
-        {
-          "name": "POST call/ep-identity",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"payload\": { \"token\": \"mock-identity-token\" }\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/call/ep-identity", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","call","ep-identity"] }
-          }
-        },
-        {
-          "name": "POST call/ep-ai-core",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"payload\": { \"prompt\": \"Recommend a topic\" }\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/call/ep-ai-core", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","call","ep-ai-core"] }
-          }
-        },
-        {
-          "name": "POST call/ep-unknown (404)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": { "mode": "raw", "raw": "{}" },
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/call/ep-unknown", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","call","ep-unknown"] }
-          }
-        },
-        {
-          "name": "GET logs",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/logs", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","logs"] }
-          }
-        },
-        {
-          "name": "GET health",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/health", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","health"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "99 — Auth Tests",
-      "item": [
-        {
-          "name": "401 — no token",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","summary"] }
-          }
-        },
-        {
-          "name": "401 — bad token",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer invalid-token-xyz" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","summary"] }
-          }
-        },
-        {
-          "name": "403 — viewer lacks permission",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{viewerToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/summary", "host": ["{{baseUrl}}"], "path": ["api","v1","dashboard","summary"] }
-          }
-        },
-        {
-          "name": "429 — rate limit (repeat 30x)",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "description": "Send this request 201+ times quickly to trigger the rate limiter (200 req/min limit).",
-            "url": { "raw": "{{baseUrl}}/api/v1/gateway/status", "host": ["{{baseUrl}}"], "path": ["api","v1","gateway","status"] }
-          }
-=======
       "name": "Governance",
       "item": [
         {
@@ -936,7 +198,6 @@
         {
           "name": "List Permissions",
           "request": { "method": "GET", "header": [{ "key": "x-permissions", "value": "governance:access" }], "url": "{{base_url}}/api/v1/governance/permissions" }
->>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
         }
       ]
     }

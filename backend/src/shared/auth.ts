@@ -1,9 +1,10 @@
 import type { FastifyRequest } from 'fastify';
 import { PlatformError } from './errors.js';
+import type { JwtClaims } from '../auth/jwt.service.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    auth?: Principal;
+    auth?: Principal | JwtClaims;
   }
 }
 

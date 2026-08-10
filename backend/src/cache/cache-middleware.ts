@@ -20,6 +20,11 @@ const debugLog = (message: string, context?: Record<string, unknown>) => {
   }
 };
 
+const authSubject = (request: FastifyRequest): string => {
+  const auth = request.auth;
+  return auth && 'subject' in auth ? auth.subject : auth?.sub ?? 'anon';
+};
+
 // ─── Cache metadata ─────────────────────────────────────────────────────────
 
 interface CacheConfig {
@@ -30,21 +35,21 @@ interface CacheConfig {
 const CACHE_CONFIGS: Record<string, CacheConfig> = {
   // Dashboard
   'GET /api/v1/dashboard/summary': {
-    key: (req) => `cache:dashboard:summary:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:dashboard:summary:${authSubject(req)}`,
     ttl: 60,
   },
   'GET /api/v1/dashboard/metrics': {
-    key: (req) => `cache:dashboard:metrics:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:dashboard:metrics:${authSubject(req)}`,
     ttl: 60,
   },
 
   // Analytics
   'GET /api/v1/analytics/trends': {
-    key: (req) => `cache:analytics:trends:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:analytics:trends:${authSubject(req)}`,
     ttl: 180,
   },
   'GET /api/v1/analytics/performance': {
-    key: (req) => `cache:analytics:performance:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:analytics:performance:${authSubject(req)}`,
     ttl: 180,
   },
 
@@ -54,35 +59,35 @@ const CACHE_CONFIGS: Record<string, CacheConfig> = {
     ttl: 300,
   },
   'GET /api/v1/genre/recommendations': {
-    key: (req) => `cache:genre:recommendations:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:genre:recommendations:${authSubject(req)}`,
     ttl: 300,
   },
 
   // Intelligence
   'GET /api/v1/intelligence/profile': {
-    key: (req) => `cache:intelligence:profile:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:intelligence:profile:${authSubject(req)}`,
     ttl: 120,
   },
   'GET /api/v1/intelligence/analysis': {
-    key: (req) => `cache:intelligence:analysis:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:intelligence:analysis:${authSubject(req)}`,
     ttl: 120,
   },
 
   // Memory
   'GET /api/v1/memory/summary': {
-    key: (req) => `cache:memory:summary:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:memory:summary:${authSubject(req)}`,
     ttl: 180,
   },
 
   // Goals (read-only)
   'GET /api/v1/goals/list': {
-    key: (req) => `cache:goals:list:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:goals:list:${authSubject(req)}`,
     ttl: 180,
   },
 
   // Video
   'GET /api/v1/video/suggestions': {
-    key: (req) => `cache:video:suggestions:${req.auth?.subject || 'anon'}`,
+    key: (req) => `cache:video:suggestions:${authSubject(req)}`,
     ttl: 180,
   },
 

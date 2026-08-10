@@ -2,18 +2,12 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { JwtClaims, JwtService } from './jwt.service.js';
 import { PlatformError } from '../shared/errors.js';
 
-declare module 'fastify' {
-  interface FastifyRequest {
-    auth: JwtClaims | null;
-  }
-}
-
 export function registerJwtAuthentication(
   app: FastifyInstance,
   jwtService: JwtService,
   allowLegacyTestTokens = false,
 ): void {
-  app.decorateRequest('auth', null);
+  app.decorateRequest('auth', undefined);
   app.addHook('onRequest', async (request) => {
     if (request.url.startsWith('/api/v1/auth/login') || request.url.startsWith('/api/v1/auth/refresh')) return;
     const authorization = request.headers.authorization;
@@ -43,6 +37,6 @@ export function registerJwtAuthentication(
 }
 
 export function requireAuthenticated(request: FastifyRequest): JwtClaims {
-  if (!request.auth) throw new PlatformError(401, 'UNAUTHENTICATED', 'A bearer token is required.');
+  if (!request.auth || !('sub' in request.auth)) throw new PlatformError(401, 'UNAUTHENTICATED', 'A bearer token is required.');
   return request.auth;
 }
