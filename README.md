@@ -43,6 +43,13 @@ npx prisma validate
 npx prisma generate
 ```
 
+## Deployment endpoints
+
+- Global Ecosystem API: https://aiarbitech-global-ecosystem-production.up.railway.app
+- Global Ecosystem frontend: https://aiarbitech-frontend-production.up.railway.app
+- YouTube OS frontend: https://aiarbitech-youtube-os.vercel.app
+- YouTube OS backend: https://aiarbitech-youtube-os-production.up.railway.app
+
 ## Local PostgreSQL
 
 ```bash
