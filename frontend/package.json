@@ -10,7 +10,6 @@
     "test": "vitest run",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 5174",
-    "start": "node ./scripts/serve-dist.mjs",
     "analyze": "tsc --noEmit && vite build --mode analyze"
   },
   "dependencies": {
