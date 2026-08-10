@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "PLATFORM_HEALTH_MANIFEST",
+  "artifactVersion": "2.0.0",
+  "currentGate": "GATE_0B",
+  "currentSprint": "AAT-YTOS-SPRINT-0.0.3",
+  "currentPhase": "Platform Capability Health & Readiness Manifest",
+  "requiredGovernanceArtifacts": [
+    "passport",
+    "boundaries",
+    "features",
+    "capabilities",
+    "knowledge",
+    "aiPolicies",
+    "dependencies",
+    "registrationReadiness"
+  ],
+  "requiredRepositoryFiles": [
+    "platform.manifest.json",
+    "backend/src/app/server.ts",
+    "backend/src/platform/routes.ts",
+    "backend/src/platform/health-service.ts",
+    "backend/src/tests/platform-health.test.ts",
+    "frontend/src/platform/PlatformHealthDashboard.tsx",
+    "frontend/src/tests/platform-health.test.tsx",
+    "docs/PLATFORM_HEALTH_AND_READINESS.md"
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": [
+      "governance/platform-health-manifest.v1.json",
+      "backend/src/platform/health-service.ts",
+      "AAT-YTOS-SPRINT-0.0.3"
+    ],
+    "decisionClassification": "REPOSITORY_DERIVED_HEALTH_SPECIFICATION"
+  }
+}

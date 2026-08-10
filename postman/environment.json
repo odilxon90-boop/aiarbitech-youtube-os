@@ -1,4 +1,61 @@
 {
+<<<<<<< HEAD
+  "id": "aiarbitech-youtube-os-env",
+  "name": "AIArbiTech YouTube OS — Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3100",
+      "type": "default",
+      "enabled": true,
+      "description": "Backend base URL. Change to http://localhost:3000 for Docker or your production URL."
+    },
+    {
+      "key": "creatorToken",
+      "value": "mock-creator-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for CREATOR role. Has permissions: dashboard:read, analytics:read, goals:*, memory:*, intelligence:read, video:*, genre:read."
+    },
+    {
+      "key": "adminToken",
+      "value": "mock-admin-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for ADMIN role. Has all creator permissions plus admin:access, gateway:access, president:access."
+    },
+    {
+      "key": "presidentToken",
+      "value": "mock-president-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for PRESIDENT/ADMIN role. Has president:access and admin:access."
+    },
+    {
+      "key": "heirToken",
+      "value": "mock-heir-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for HEIR role. Has heir:access."
+    },
+    {
+      "key": "aiSyncToken",
+      "value": "mock-ai-sync-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for AI Sync module. Has ai-sync:access."
+    },
+    {
+      "key": "viewerToken",
+      "value": "mock-viewer-token",
+      "type": "secret",
+      "enabled": true,
+      "description": "Token for VIEWER role. Has no permissions — useful for testing 403 responses."
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-08-09T00:00:00.000Z"
+=======
   "id": "9c2afb7c-6e75-4dd6-b26b-0dfca5c45333",
   "name": "YouTube OS Local",
   "values": [
@@ -15,4 +72,5 @@
   "_postman_variable_scope": "environment",
   "_postman_exported_at": "2026-08-09T14:12:14.480Z",
   "_postman_exported_using": "GitHub Copilot"
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 }

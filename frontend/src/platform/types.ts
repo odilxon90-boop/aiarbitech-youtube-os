@@ -1,44 +1,32 @@
-export interface PlatformManifest {
-  platformId: 'PLATFORM_YOUTUBE_OS';
-  platformName: string;
-  platformVersion: string;
-  architectureModel: 'INDEPENDENT_PLATFORM_SERVICE';
-  integrationModel: 'API_AND_EVENT_CONTRACTS';
-  deploymentModel: 'INDEPENDENT';
-  dataOwnership: 'PLATFORM_OWNED';
-  repositoryType: 'INDEPENDENT';
-  globalDatabaseAccess: 'PROHIBITED';
-  crossPlatformDatabaseAccess: 'PROHIBITED';
-  status: 'FOUNDATION_INITIALIZED';
-  globalEcosystemCompatibility: {
-    overall: 'NOT_VERIFIED';
-    capabilities: readonly CapabilityCompatibility[];
-  };
-}
-
-export interface CapabilityCompatibility {
-  name: string;
-  compatibility: 'NOT_VERIFIED';
-}
-
-export interface HealthStatus {
-  live: 'ALIVE' | 'UNKNOWN';
-  ready: 'READY' | 'UNKNOWN';
-  environment: 'VALID' | 'UNKNOWN';
-}
-
-export type ConnectionCompatibility = 'NOT_CONFIGURED' | 'NOT_VERIFIED' | 'COMPATIBLE' | 'INCOMPATIBLE';
-
-export interface GlobalEcosystemConnectionStatus {
-  integrationConfigured: boolean;
-  networkRequestPerformed: boolean;
-  status: ConnectionCompatibility;
-  contractVersion: 'v1';
-  capabilities: readonly CapabilityCompatibility[];
-}
-
-export interface PlatformFoundationStatus {
-  manifest: PlatformManifest;
-  health: HealthStatus;
-  connection: GlobalEcosystemConnectionStatus;
-}
+export interface PlatformManifest { platformId:'PLATFORM_YOUTUBE_OS'; platformName:string; platformVersion:string; architectureModel:'INDEPENDENT_PLATFORM_SERVICE'; integrationModel:'API_AND_EVENT_CONTRACTS'; deploymentModel:'INDEPENDENT'; dataOwnership:'PLATFORM_OWNED'; repositoryType:'INDEPENDENT'; globalDatabaseAccess:'PROHIBITED'; crossPlatformDatabaseAccess:'PROHIBITED'; status:'FOUNDATION_INITIALIZED'; globalEcosystemCompatibility:{ overall:'NOT_VERIFIED'; capabilities:readonly CapabilityCompatibility[] } }
+export interface CapabilityCompatibility { name:string; compatibility:'NOT_VERIFIED' }
+export interface HealthStatus { live:'ALIVE'|'UNKNOWN'; ready:'READY'|'UNKNOWN'; environment:'VALID'|'UNKNOWN' }
+export type ConnectionCompatibility='NOT_CONFIGURED'|'NOT_VERIFIED'|'COMPATIBLE'|'INCOMPATIBLE';
+export interface GlobalEcosystemConnectionStatus { integrationConfigured:boolean; networkRequestPerformed:boolean; status:ConnectionCompatibility; contractVersion:'v1'; capabilities:readonly CapabilityCompatibility[] }
+export interface EvidenceMetadata { status:string; confidence:string; origin:readonly string[]; decisionClassification:string }
+export interface GovernanceArtifact { artifactType:string; artifactVersion?:string; schemaVersion:string; evidence?:EvidenceMetadata; [key:string]:unknown }
+export interface HealthCheck { id:string; passed:boolean; origin:string }
+export interface DerivedHealthScore { value:number; passed:number; total:number; status:'VALID'|'INVALID'; basis:string; checks:readonly HealthCheck[] }
+export interface ReadinessHealthScore extends DerivedHealthScore { readinessStatus:'READY'|'BLOCKED'; blockingItems:readonly string[] }
+export interface PlatformHealthManifest extends GovernanceArtifact { artifactType:'PLATFORM_HEALTH_MANIFEST'; artifactVersion:string; architectureComplianceScore:DerivedHealthScore; repositoryHealthScore:DerivedHealthScore; foundationCompletion:DerivedHealthScore; currentGate:'GATE_0B'; currentSprint:'AAT-YTOS-SPRINT-0.0.3'; currentPhase:string; overallReadiness:DerivedHealthScore; readiness:ReadinessHealthScore; validationStatus:'VALID'|'INVALID'; lastValidationTimestamp:string; networkRequestPerformed:false }
+export interface BoundaryItem { id:string; classification:string; status:string; origin:string }
+export interface PlatformBoundaryRegistry extends GovernanceArtifact { artifactType:'PLATFORM_BOUNDARY_REGISTRY'; platformId:'PLATFORM_YOUTUBE_OS'; currentSprint:'AAT-YTOS-SPRINT-0.0.4'; platformInternalModules:readonly BoundaryItem[]; platformOwnedDatabaseObjects:readonly { name:string; prismaModel:string; classification:'PLATFORM_OWNED'; status:'DECLARED'; origin:string }[]; platformPublicApis:readonly { method:'GET'; path:string; origin:string }[]; platformPublicEvents:readonly string[]; consumedGlobalApis:readonly { id:string; direction:'CONSUMED_API'; status:string; origin:string }[]; consumedGlobalEvents:readonly { id:string; direction:'CONSUMED_EVENT'; status:string; origin:string }[]; forbiddenDependencies:readonly string[]; forbiddenDatabaseAccess:readonly string[]; externalProviders:readonly BoundaryItem[]; allowedNetworkDestinations:readonly BoundaryItem[] }
+export type CapabilityLifecycleStatus='REGISTERED'|'PLANNED'|'AUTHORIZED'|'NOT_IMPLEMENTED'|'IMPLEMENTED'|'VERIFIED'|'DEPRECATED';
+export interface CapabilityRecord { capabilityId:string; capabilityName:string; capabilityDescription:string; capabilityCategory:'FOUNDATION_GOVERNANCE'|'GLOBAL_DEPENDENCY'|'YOUTUBE_BUSINESS'; capabilityOwner:'PLATFORM'|'GLOBAL_ECOSYSTEM'; platformId:'PLATFORM_YOUTUBE_OS'; currentStatus:'AVAILABLE'|'NOT_VERIFIED'; lifecycleStatus:CapabilityLifecycleStatus; version:string; evidenceStatus:'VERIFIED'|'NOT_VERIFIED'; confidenceLevel:'HIGH'|'MEDIUM'|'LOW'; origin:readonly string[]; dependencies:readonly string[]; requiredGlobalServices:readonly string[]; requiredContracts:readonly string[]; implementationStatus:'IMPLEMENTED'|'NOT_IMPLEMENTED'; certificationStatus:'CERTIFIED'|'NOT_VERIFIED'; lastUpdated:string }
+export interface CapabilityRegistry extends GovernanceArtifact { artifactType:'CAPABILITY_REGISTRY'; artifactVersion:string; platformId:'PLATFORM_YOUTUBE_OS'; capabilities:readonly CapabilityRecord[] }
+export interface ContractCompatibility extends GovernanceArtifact { overallCompatibility:string; networkRequestPerformed:boolean; matrix:readonly Record<string,unknown>[]; missingContractsReport:{ status:string; items:readonly string[] }; versionReport:Record<string,string> }
+export type ContractLifecycle='ACTIVE'|'PLACEHOLDER';
+export type ContractCompatibilityStatus='VERIFIED'|'BLOCKED_MISSING_AUTHORITATIVE_CONTRACT';
+export interface ContractRecord { contractId:string; kind:'API'|'EVENT'; ownership:'OWNED'|'CONSUMED'; direction:'PROVIDED'|'CONSUMED'; version:string; lifecycle:ContractLifecycle; compatibility:ContractCompatibilityStatus; repositoryEvidence:'VERIFIED'; origin:string; relatedFiles:readonly string[]; method?:'GET'; path?:string }
+export interface ContractRegistry { registryType:'API_CONTRACT_REGISTRY'|'EVENT_CONTRACT_REGISTRY'; platformId:'PLATFORM_YOUTUBE_OS'; currentSprint:'AAT-YTOS-SPRINT-0.0.5'; contracts:readonly ContractRecord[]; networkRequestPerformed:false }
+export interface VersionMatrixRow { contractId:string; kind:'API'|'EVENT'; ownership:'OWNED'|'CONSUMED'; version:string; requiredVersion:string; lifecycle:ContractLifecycle; compatibility:ContractCompatibilityStatus; origin:string }
+export interface VersionMatrix { matrix:readonly VersionMatrixRow[]; overallCompatibility:'PARTIAL'; networkRequestPerformed:false }
+export interface ContractValidation { valid:boolean; checks:readonly { id:string; valid:boolean; evidence:string }[]; errors:readonly string[]; networkRequestPerformed:false }
+export interface ContractRegistrySummary { apiContracts:number; eventContracts:number; ownedContracts:number; consumedContracts:number; blockedContracts:number; overallCompatibility:string; validationStatus:'VALID'|'INVALID'; networkRequestPerformed:false }
+export interface Gate0BGovernance { passport:GovernanceArtifact; features:GovernanceArtifact; capabilities:CapabilityRegistry; knowledge:GovernanceArtifact; aiPolicies:GovernanceArtifact; boundaries:PlatformBoundaryRegistry; healthManifest:PlatformHealthManifest; registrationReadiness:GovernanceArtifact; contractCompatibility:ContractCompatibility; dependencies:GovernanceArtifact }
+export type RegistrationStatus='NOT_REGISTERED'|'READY'|'BLOCKED'|'REGISTERED';
+export interface RegistrationEvidence { status:'VERIFIED'|'NOT_VERIFIED'; confidence:'HIGH'|'MEDIUM'|'LOW'; origin:readonly string[] }
+export interface RegistrationMetadata { platformId:string; platformName:string; platformVersion:string; currentGate:string; currentSprint:string; currentPhase:string; compatibilityStatus:'VERIFIED'|'NOT_VERIFIED'; registrationMode:'LOCAL_ONLY'; evidence:RegistrationEvidence }
+export interface RegistrationReadiness { ready:boolean; status:RegistrationStatus; blockingItems:readonly string[]; evidence:RegistrationEvidence }
+export interface RegistrationSummary { status:RegistrationStatus; readiness:RegistrationReadiness; metadata:RegistrationMetadata }
+export interface PlatformFoundationStatus { manifest:PlatformManifest; health:HealthStatus; connection:GlobalEcosystemConnectionStatus; governance:Gate0BGovernance; registration:RegistrationSummary }

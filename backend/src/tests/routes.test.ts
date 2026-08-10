@@ -63,4 +63,40 @@ describe('foundation routes', () => {
       status: 'NOT_CONFIGURED',
     });
   });
+
+  it('exposes every Gate 0B governance artifact through GET-only routes', async () => {
+    const app = await createApp();
+    const routes = [
+      '/api/v1/platform/passport',
+      '/api/v1/platform/boundaries',
+      '/api/v1/platform/features',
+      '/api/v1/platform/capabilities',
+      '/api/v1/platform/knowledge',
+      '/api/v1/platform/ai-policies',
+      '/api/v1/platform/health-manifest',
+      '/api/v1/platform/registration-readiness',
+      '/api/v1/platform/contracts/compatibility',
+      '/api/v1/platform/dependencies',
+    ];
+
+    for (const url of routes) {
+      const getResponse = await app.inject({ method: 'GET', url });
+      expect(getResponse.statusCode, url).toBe(200);
+      expect(getResponse.json().data.schemaVersion, url).toBe('1.0.0');
+
+      const postResponse = await app.inject({ method: 'POST', url, payload: {} });
+      expect(postResponse.statusCode, url).toBe(404);
+    }
+  });
+
+  it('exposes complete GET-only capability registry endpoints', async () => {
+    const app = await createApp();
+    const routes = ['/api/v1/platform/capabilities','/api/v1/platform/capabilities/summary','/api/v1/platform/capabilities/validation','/api/v1/platform/capabilities/CHANNEL_MANAGEMENT'];
+    for (const url of routes) {
+      expect((await app.inject({ method:'GET', url })).statusCode, url).toBe(200);
+      for (const method of ['POST','PUT','PATCH','DELETE'] as const) expect((await app.inject({ method, url, payload:{} })).statusCode, `${method} ${url}`).toBe(404);
+    }
+    expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).statusCode).toBe(404);
+    expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).json().error.code).toBe('CAPABILITY_NOT_FOUND');
+  });
 });

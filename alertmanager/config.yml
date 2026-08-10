@@ -1,0 +1,163 @@
+# Alertmanager Configuration
+# Handles alert routing, grouping, and delivery (email, Slack, webhook)
+
+global:
+  # Default send timeout
+  resolve_timeout: 5m
+
+  # SMTP configuration for email notifications
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_auth_username: '${ALERTMANAGER_EMAIL_USERNAME:-alert@example.com}'
+  smtp_auth_password: '${ALERTMANAGER_EMAIL_PASSWORD:-password}'
+  smtp_require_tls: true
+  smtp_from: '${ALERTMANAGER_EMAIL_FROM:-youtube-os-alerts@example.com}'
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+route:
+  # Root routing rule
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'service', 'severity']
+  group_wait: 10s       # Wait 10s before sending first alert group
+  group_interval: 10s   # Wait 10s before sending next alert group
+  repeat_interval: 12h  # Repeat unchanged alerts every 12 hours
+
+  # Child routes for different services and severities
+  routes:
+    # Critical alerts: immediate notification to ops channel
+    - match:
+        severity: critical
+      receiver: 'critical-pagerduty'
+      continue: true
+      group_wait: 0s           # Send immediately
+      repeat_interval: 4h      # Repeat every 4 hours
+
+    # Warning alerts: grouped notification
+    - match:
+        severity: warning
+      receiver: 'warning-slack'
+      group_wait: 30s
+      repeat_interval: 24h     # Repeat every 24 hours
+
+    # Info alerts: digest only
+    - match:
+        severity: info
+      receiver: 'info-digest'
+      group_wait: 5m           # Wait 5 minutes before sending
+      repeat_interval: 72h     # Repeat every 3 days
+
+    # Backend service alerts
+    - match:
+        service: backend
+      receiver: 'backend-webhook'
+      continue: true
+
+    # Redis service alerts
+    - match:
+        service: redis
+      receiver: 'infra-slack'
+      continue: true
+
+    # PostgreSQL service alerts
+    - match:
+        service: postgres
+      receiver: 'infra-slack'
+      continue: true
+
+# Receivers define where and how to send alerts
+receivers:
+  # Default receiver: email + Slack
+  - name: 'default-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_EMAIL_TO:-ops@example.com}'
+        headers:
+          Subject: '[{{ .GroupLabels.service }}] Alert: {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${ALERTMANAGER_SLACK_WEBHOOK_URL:-}'
+        channel: '#youtube-os-alerts'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+  # Critical alerts: PagerDuty + email
+  - name: 'critical-pagerduty'
+    email_configs:
+      - to: '${ALERTMANAGER_EMAIL_CRITICAL:-ops@example.com}'
+        headers:
+          Subject: '[CRITICAL] {{ .GroupLabels.alertname }}'
+    pagerduty_configs:
+      - service_key: '${ALERTMANAGER_PAGERDUTY_KEY:-}'
+        description: '{{ .GroupLabels.alertname }}: {{ (index .Alerts 0).Annotations.description }}'
+
+  # Warning alerts: Slack notification
+  - name: 'warning-slack'
+    slack_configs:
+      - api_url: '${ALERTMANAGER_SLACK_WEBHOOK_URL:-}'
+        channel: '#youtube-os-warnings'
+        title: '⚠️  {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        actions:
+          - type: button
+            text: 'View Dashboard'
+            url: 'http://grafana:3000/d/youtube-os-backend'
+
+  # Info alerts: Telegram digest
+  - name: 'info-digest'
+    telegram_configs:
+      - bot_token: '${ALERTMANAGER_TELEGRAM_TOKEN:-}'
+        chat_id: '${ALERTMANAGER_TELEGRAM_CHAT_ID:-}'
+        message: |
+          <b>{{ .GroupLabels.alertname }}</b>
+          Service: {{ .GroupLabels.service }}
+          {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+
+  # Backend service webhook
+  - name: 'backend-webhook'
+    webhook_configs:
+      - url: 'http://backend:3000/webhooks/alerts'
+        send_resolved: true
+
+  # Infrastructure Slack channel
+  - name: 'infra-slack'
+    slack_configs:
+      - api_url: '${ALERTMANAGER_SLACK_WEBHOOK_URL:-}'
+        channel: '#youtube-os-infra'
+        title: '{{ .GroupLabels.service }} - {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+# Inhibition rules suppress alerts based on other alerts
+inhibit_rules:
+  # Don't alert on high latency if the service is down
+  - source_match:
+      alertname: 'BackendDown'
+    target_match:
+      service: 'backend'
+    equal: ['service']
+
+  # Don't alert on database connection issues if the service is down
+  - source_match:
+      alertname: 'PostgresDown'
+    target_match:
+      service: 'postgres'
+    equal: ['service']
+
+  # Don't alert on Redis issues if Redis is down
+  - source_match:
+      alertname: 'RedisDown'
+    target_match:
+      service: 'redis'
+    equal: ['service']
+
+  # Don't alert on high memory if the service is down
+  - source_match:
+      alertname: 'BackendDown'
+    target_match:
+      alertname: 'HighMemoryUsage'
+    equal: ['instance']
+
+  # Don't alert on high CPU if the service is down
+  - source_match:
+      alertname: 'BackendDown'
+    target_match:
+      alertname: 'HighCPUUsage'
+    equal: ['instance']

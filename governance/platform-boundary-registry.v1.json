@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "PLATFORM_BOUNDARY_REGISTRY",
+  "artifactVersion": "2.0.0",
+  "platformId": "PLATFORM_YOUTUBE_OS",
+  "currentSprint": "AAT-YTOS-SPRINT-0.0.4",
+  "platformInternalModules": [
+    { "id": "APP_SERVER", "classification": "BACKEND_FOUNDATION", "status": "IMPLEMENTED", "origin": "backend/src/app/server.ts" },
+    { "id": "HEALTH_API", "classification": "BACKEND_FOUNDATION", "status": "IMPLEMENTED", "origin": "backend/src/health/routes.ts" },
+    { "id": "PLATFORM_API", "classification": "BACKEND_FOUNDATION", "status": "IMPLEMENTED", "origin": "backend/src/platform/routes.ts" },
+    { "id": "REGISTRATION_API", "classification": "BACKEND_FOUNDATION", "status": "IMPLEMENTED", "origin": "backend/src/registration/routes.ts" },
+    { "id": "GLOBAL_ECOSYSTEM_MOCK_ADAPTER", "classification": "LOCAL_CONTRACT_ADAPTER", "status": "IMPLEMENTED", "origin": "backend/src/integrations/global-ecosystem/mock-adapter.ts" },
+    { "id": "PLATFORM_DASHBOARD", "classification": "FRONTEND_FOUNDATION", "status": "IMPLEMENTED", "origin": "frontend/src/app/App.tsx" },
+    { "id": "PLATFORM_GOVERNANCE", "classification": "LOCAL_GOVERNANCE", "status": "IMPLEMENTED", "origin": "governance" }
+  ],
+  "platformOwnedDatabaseObjects": [
+    { "name": "platform_runtime_metadata", "prismaModel": "PlatformRuntimeMetadata", "classification": "PLATFORM_OWNED", "status": "DECLARED", "origin": "backend/prisma/schema.prisma" }
+  ],
+  "platformPublicApis": [
+    { "method": "GET", "path": "/api/v1/health/live", "origin": "backend/src/health/routes.ts" },
+    { "method": "GET", "path": "/api/v1/health/ready", "origin": "backend/src/health/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/manifest", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/compatibility", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/passport", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/boundaries", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/boundaries/summary", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/boundaries/validation", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/features", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/capabilities", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/capabilities/summary", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/capabilities/validation", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/capabilities/:capabilityId", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/knowledge", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/ai-policies", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/health-manifest", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/health/summary", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/health/readiness", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/health/architecture-compliance", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/registration-readiness", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/dependencies", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/compatibility", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/apis", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/events", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/versions", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/validation", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/contracts/summary", "origin": "backend/src/platform/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/registration", "origin": "backend/src/registration/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/registration/status", "origin": "backend/src/registration/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/registration/readiness", "origin": "backend/src/registration/routes.ts" },
+    { "method": "GET", "path": "/api/v1/platform/registration/metadata", "origin": "backend/src/registration/routes.ts" }
+  ],
+  "platformPublicEvents": [],
+  "consumedGlobalApis": [
+    { "id": "GLOBAL_ECOSYSTEM_API_V1", "direction": "CONSUMED_API", "status": "AUTHORITATIVE_CONTRACT_NOT_AVAILABLE", "origin": "contracts/api/global-ecosystem-api.v1.json" }
+  ],
+  "consumedGlobalEvents": [
+    { "id": "GLOBAL_ECOSYSTEM_EVENTS_V1", "direction": "CONSUMED_EVENT", "status": "AUTHORITATIVE_CONTRACT_NOT_AVAILABLE", "origin": "contracts/events/global-ecosystem-events.v1.json" }
+  ],
+  "forbiddenDependencies": [
+    "GLOBAL_ECOSYSTEM_SOURCE_IMPORT",
+    "GLOBAL_ECOSYSTEM_PACKAGE_LINK",
+    "GLOBAL_CORE_SERVICE_DUPLICATION",
+    "UNAPPROVED_EXTERNAL_PROVIDER_SDK",
+    "YOUTUBE_BUSINESS_RUNTIME",
+    "UNVERSIONED_CROSS_PLATFORM_INTEGRATION"
+  ],
+  "forbiddenDatabaseAccess": [
+    "GLOBAL_ECOSYSTEM_DATABASE",
+    "CROSS_PLATFORM_DATABASE",
+    "SHARED_PRISMA_CLIENT"
+  ],
+  "externalProviders": [],
+  "allowedNetworkDestinations": [],
+  "documentation": "docs/PLATFORM_BOUNDARIES.md",
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["git ls-files", "backend/src/app/server.ts", "backend/src/health/routes.ts", "backend/src/platform/routes.ts", "backend/src/registration/routes.ts", "backend/prisma/schema.prisma", "backend/package.json", "frontend/package.json", "docs/PLATFORM_BOUNDARIES.md"],
+    "decisionClassification": "REPOSITORY_DERIVED_BOUNDARY_INVENTORY"
+  }
+}

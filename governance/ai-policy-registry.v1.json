@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "AI_POLICY_REGISTRY",
+  "artifactVersion": "1.0.0",
+  "policies": [
+    { "id": "AI_RUNTIME_PROHIBITED_GATE0B", "effect": "DENY", "scope": "AI_RUNTIME", "status": "ENFORCED_BY_SCOPE", "origin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "AI_DIRECTOR_PROHIBITED_GATE0B", "effect": "DENY", "scope": "AI_DIRECTOR", "status": "ENFORCED_BY_SCOPE", "origin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "AI_AGENTS_PROHIBITED_GATE0B", "effect": "DENY", "scope": "AI_AGENTS", "status": "ENFORCED_BY_SCOPE", "origin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "GLOBAL_AI_REQUESTS_PROHIBITED_GATE0B", "effect": "DENY", "scope": "GLOBAL_AI_REQUESTS", "status": "ENFORCED_BY_SCOPE", "origin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "FUTURE_AI_POLICY", "effect": "NOT_ASSIGNED", "scope": "BUSINESS_AI", "status": "NOT_VERIFIED", "origin": "NOT_ASSIGNED" }
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["AAT-YTOS-GATE0B-IMP-2026-001", "backend/src/integrations/global-ecosystem/mock-adapter.ts"],
+    "decisionClassification": "AI_GOVERNANCE"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "PLATFORM_PASSPORT",
+  "artifactVersion": "1.0.0",
+  "platformId": "PLATFORM_YOUTUBE_OS",
+  "platformName": "AIArbiTech YouTube OS",
+  "platformVersion": "0.1.0",
+  "repository": {
+    "name": "aiarbitech-youtube-os",
+    "type": "INDEPENDENT",
+    "defaultBranch": "main",
+    "remote": "https://github.com/odilxon90-boop/aiarbitech-youtube-os.git"
+  },
+  "architectureModel": "INDEPENDENT_PLATFORM_SERVICE",
+  "integrationModel": "API_AND_EVENT_CONTRACTS",
+  "deploymentModel": "INDEPENDENT",
+  "dataOwnership": "PLATFORM_OWNED",
+  "globalDatabaseAccess": "PROHIBITED",
+  "crossPlatformDatabaseAccess": "PROHIBITED",
+  "enterpriseRegistrationId": "NOT_ASSIGNED",
+  "serviceRegistryId": "NOT_ASSIGNED",
+  "compatibility": "NOT_VERIFIED",
+  "currentGate": "GATE_0B",
+  "currentSprint": "NOT_ASSIGNED",
+  "currentPhase": "ENTERPRISE_PLATFORM_REGISTRATION_AND_CONTRACT_DISCOVERY",
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["platform.manifest.json", ".git/config", "docs/ARCHITECTURE.md"],
+    "decisionClassification": "REPOSITORY_EVIDENCE"
+  }
+}

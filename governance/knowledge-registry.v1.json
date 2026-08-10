@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "KNOWLEDGE_REGISTRY",
+  "artifactVersion": "1.0.0",
+  "knowledge": [
+    { "id": "ARCHITECTURE", "title": "Independent Platform Architecture", "status": "VERIFIED", "origin": "docs/ARCHITECTURE.md", "classification": "PLATFORM_GOVERNANCE" },
+    { "id": "PLATFORM_BOUNDARIES", "title": "Platform Boundaries", "status": "VERIFIED", "origin": "docs/PLATFORM_BOUNDARIES.md", "classification": "PLATFORM_GOVERNANCE" },
+    { "id": "GLOBAL_ECOSYSTEM_INTEGRATION", "title": "Global Ecosystem Integration", "status": "VERIFIED", "origin": "docs/GLOBAL_ECOSYSTEM_INTEGRATION.md", "classification": "INTEGRATION_GOVERNANCE" },
+    { "id": "GATE0_BASELINE", "title": "Gate 0 Baseline", "status": "VERIFIED", "origin": "docs/GATE0_BASELINE.md", "classification": "AUDIT_EVIDENCE" },
+    { "id": "AUTHORITATIVE_GLOBAL_API_CONTRACT", "title": "Authoritative Global API Contract", "status": "NOT_VERIFIED", "origin": "AUTHORITATIVE CONTRACT NOT AVAILABLE", "classification": "MISSING_EVIDENCE" },
+    { "id": "AUTHORITATIVE_GLOBAL_EVENT_CONTRACT", "title": "Authoritative Global Event Contract", "status": "NOT_VERIFIED", "origin": "AUTHORITATIVE CONTRACT NOT AVAILABLE", "classification": "MISSING_EVIDENCE" }
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["docs", "contracts"],
+    "decisionClassification": "KNOWLEDGE_PROVENANCE"
+  }
+}

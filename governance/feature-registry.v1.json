@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "FEATURE_REGISTRY",
+  "artifactVersion": "1.0.0",
+  "features": [
+    { "id": "FOUNDATION_DASHBOARD", "name": "Foundation Dashboard", "classification": "FOUNDATION_GOVERNANCE", "status": "IMPLEMENTED", "evidenceOrigin": "frontend/src/app/App.tsx" },
+    { "id": "FOUNDATION_READ_ONLY_APIS", "name": "Foundation Read-only APIs", "classification": "FOUNDATION_GOVERNANCE", "status": "IMPLEMENTED", "evidenceOrigin": "backend/src/platform/routes.ts" },
+    { "id": "CHANNEL_MANAGEMENT", "name": "Channel Management", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "VIDEO_MANAGEMENT", "name": "Video Management", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "PUBLISHING", "name": "Publishing", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "ANALYTICS", "name": "Analytics", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "REVENUE", "name": "Revenue", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "SEO", "name": "SEO", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" },
+    { "id": "CONTENT_GENERATION", "name": "Content Generation", "classification": "BUSINESS", "status": "NOT_IMPLEMENTED", "evidenceOrigin": "AAT-YTOS-GATE0B-IMP-2026-001" }
+  ],
+  "evidence": {
+    "status": "VERIFIED",
+    "confidence": "HIGH",
+    "origin": ["frontend/src", "backend/src", "AAT-YTOS-GATE0B-IMP-2026-001"],
+    "decisionClassification": "SCOPE_CONTROL"
+  }
+}
