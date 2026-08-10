@@ -15,6 +15,7 @@ coverage/
 backend/.env
 !.env.example
 *.local
+performance-review/env
 *.log
 
 # Editors and operating systems
