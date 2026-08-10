@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { GoalsController } from './goals-controller.js';
 import { GoalsService, type CreateGoalInput, type UpdateGoalInput } from './goals-service.js';

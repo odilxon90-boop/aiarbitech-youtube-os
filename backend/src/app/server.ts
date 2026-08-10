@@ -1,4 +1,4 @@
-﻿import Fastify, { type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
 import 'dotenv/config';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';

@@ -1,1 +1,1 @@
-﻿export function RevenueCard({ monthly, total, trendPercent }: { monthly: number; total: number; trendPercent: number }) { return <article><h3>Revenue</h3><p>Monthly: ${monthly.toLocaleString()}</p><p>Total: ${total.toLocaleString()} ({trendPercent}% trend)</p></article>; }
+export function RevenueCard({ monthly, total, trendPercent }: { monthly: number; total: number; trendPercent: number }) { return <article><h3>Revenue</h3><p>Monthly: ${monthly.toLocaleString()}</p><p>Total: ${total.toLocaleString()} ({trendPercent}% trend)</p></article>; }

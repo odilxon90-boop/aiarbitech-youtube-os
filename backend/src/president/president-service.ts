@@ -1,4 +1,4 @@
-﻿export class PresidentService {
+export class PresidentService {
   dashboard() { return { platformHealth: 'HEALTHY', activeChannels: 42, monthlyRevenue: 28450, riskCount: 5 }; }
   health() { return ['API', 'Database', 'AI Core', 'YouTube'].map((name, index) => ({ name, status: index === 2 ? 'YELLOW' : 'GREEN', detail: index === 2 ? 'Model queue is elevated.' : 'Operating normally.' })); }
   revenue() { return { total: 184200, monthly: 28450, trendPercent: 12, trend: [19000, 21400, 23100, 25400, 28450] }; }

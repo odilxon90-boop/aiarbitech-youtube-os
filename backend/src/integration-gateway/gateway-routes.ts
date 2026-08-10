@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { GatewayController } from './gateway-controller.js';
 import { GatewayService } from './gateway-service.js';

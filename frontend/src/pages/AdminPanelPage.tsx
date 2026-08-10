@@ -1,4 +1,4 @@
-﻿import { AIConfigForm } from '../components/admin/AIConfigForm';
+import { AIConfigForm } from '../components/admin/AIConfigForm';
 import { AuditLogList } from '../components/admin/AuditLogList';
 import { ChannelModeration } from '../components/admin/ChannelModeration';
 import { HealthCard } from '../components/admin/HealthCard';

@@ -1,4 +1,4 @@
-﻿import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import { requirePermission } from '../auth/permission.middleware.js';
 import { PlatformError } from '../shared/errors.js';
 import type { CreateGoalInput, GoalStatus, GoalsService, UpdateGoalInput } from './goals-service.js';

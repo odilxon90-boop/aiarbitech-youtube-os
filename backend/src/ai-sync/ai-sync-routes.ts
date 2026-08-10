@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { AISyncController } from './ai-sync-controller.js';
 import type { ConflictResolution } from './ai-sync-service.js';

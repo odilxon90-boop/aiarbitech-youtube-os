@@ -1,4 +1,4 @@
-﻿# User Acceptance Test Cases
+# User Acceptance Test Cases
 
 ## Execution rules
 

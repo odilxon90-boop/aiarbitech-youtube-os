@@ -1,4 +1,4 @@
-﻿# Post-Launch Performance Review
+# Post-Launch Performance Review
 
 | Field | Value |
 | --- | --- |

@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { PresidentController } from './president-controller.js';
 import { PresidentService } from './president-service.js';

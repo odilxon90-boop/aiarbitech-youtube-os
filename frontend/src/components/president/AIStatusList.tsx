@@ -1,1 +1,1 @@
-﻿export function AIStatusList({ statuses }: { statuses: readonly { name: string; status: string; detail: string }[] }) { return <article><h3>AI Director</h3>{statuses.map((item) => <p key={item.name}>{item.status}: {item.name} - {item.detail}</p>)}</article>; }
+export function AIStatusList({ statuses }: { statuses: readonly { name: string; status: string; detail: string }[] }) { return <article><h3>AI Director</h3>{statuses.map((item) => <p key={item.name}>{item.status}: {item.name} - {item.detail}</p>)}</article>; }

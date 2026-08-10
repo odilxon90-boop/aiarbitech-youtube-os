@@ -1,2 +1,2 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 export function AIAssistantPage() { const [response, setResponse] = useState(''); return <section className="card journey-page" aria-labelledby="assistant-title"><p className="section-kicker">Mock AI only</p><h2 id="assistant-title">AI Assistant</h2><form onSubmit={(event) => { event.preventDefault(); setResponse('Mock AI response: Start with a focused opening hook.'); }}><input aria-label="AI message" defaultValue="Help me plan a video" /><button type="submit">Send message</button></form>{response && <p role="status">{response}</p>}</section>; }

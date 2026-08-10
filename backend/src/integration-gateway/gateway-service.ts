@@ -1,4 +1,4 @@
-﻿export type GatewayStatus = 'ACTIVE' | 'DEGRADED' | 'DOWN';
+export type GatewayStatus = 'ACTIVE' | 'DEGRADED' | 'DOWN';
 export interface GatewayEndpoint { key: string; name: string; capability: 'Identity' | 'Security' | 'AI Core' | 'Wallet' | 'Payment'; rateLimitPerMinute: number; }
 export interface GatewayLog { id: string; timestamp: string; endpoint: string; status: 'SUCCESS' | 'THROTTLED' | 'FALLBACK'; latencyMs: number; retryCount: number; circuitState: 'CLOSED' | 'OPEN'; }
 export interface GatewayHealth { metric: string; value: string; status: 'HEALTHY' | 'WARNING'; }

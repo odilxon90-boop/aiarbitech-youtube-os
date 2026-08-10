@@ -1,4 +1,4 @@
-﻿import { CallForm } from '../components/gateway/CallForm';
+import { CallForm } from '../components/gateway/CallForm';
 import { EndpointList } from '../components/gateway/EndpointList';
 import { HealthChart } from '../components/gateway/HealthChart';
 import { LogList } from '../components/gateway/LogList';

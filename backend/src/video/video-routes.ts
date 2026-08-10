@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { VideoController } from './video-controller.js';
 import { VideoService } from './video-service.js';

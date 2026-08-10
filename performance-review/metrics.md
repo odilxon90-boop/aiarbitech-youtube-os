@@ -1,4 +1,4 @@
-﻿# Post-Launch Metrics Catalog
+# Post-Launch Metrics Catalog
 
 ## API performance
 

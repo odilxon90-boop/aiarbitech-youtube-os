@@ -1,4 +1,4 @@
-﻿# User Acceptance Test Scenarios
+# User Acceptance Test Scenarios
 
 | ID | Scenario | User outcome | Priority |
 | --- | --- | --- | --- |

@@ -1,4 +1,4 @@
-﻿import { ConflictList } from '../components/ai-sync/ConflictList';
+import { ConflictList } from '../components/ai-sync/ConflictList';
 import { ModelVersionList } from '../components/ai-sync/ModelVersionList';
 import { StatusCard } from '../components/ai-sync/StatusCard';
 import { SyncHistory } from '../components/ai-sync/SyncHistory';

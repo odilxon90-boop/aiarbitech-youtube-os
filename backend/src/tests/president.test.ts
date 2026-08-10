@@ -1,4 +1,4 @@
-﻿import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { buildApp, NoopLogger } from '../app/server.js';
 import { loadEnvironment } from '../config/environment.js';
 import { JwtService } from '../auth/jwt.service.js';

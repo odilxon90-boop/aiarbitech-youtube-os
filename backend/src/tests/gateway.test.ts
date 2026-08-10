@@ -1,4 +1,4 @@
-﻿import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { buildApp, NoopLogger } from '../app/server.js';
 import { loadEnvironment } from '../config/environment.js';
 const config = loadEnvironment({ NODE_ENV: 'test', DATABASE_URL: 'postgresql://localhost:5432/youtube_os' }); const headers = { authorization: 'Bearer mock-token', 'x-permissions': 'gateway:access' }; const apps: Awaited<ReturnType<typeof buildApp>>[] = [];

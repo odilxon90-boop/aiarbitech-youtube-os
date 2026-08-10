@@ -1,4 +1,4 @@
-﻿# UAT Release Sign-off
+# UAT Release Sign-off
 
 ## Release details
 

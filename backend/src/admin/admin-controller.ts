@@ -1,4 +1,4 @@
-﻿import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import { requirePermission } from '../auth/permission.middleware.js';
 import type { AdminService, AIConfiguration, ModerationStatus, UserStatus } from './admin-service.js';
 

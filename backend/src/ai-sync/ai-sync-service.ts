@@ -1,4 +1,4 @@
-﻿export type SyncStatus = 'ACTIVE' | 'IDLE' | 'ERROR' | 'DISCONNECTED';
+export type SyncStatus = 'ACTIVE' | 'IDLE' | 'ERROR' | 'DISCONNECTED';
 export type ConflictResolution = 'UNRESOLVED' | 'ACCEPT_LOCAL' | 'ACCEPT_GLOBAL' | 'MANUAL_OVERRIDE';
 
 export interface SyncEvent {

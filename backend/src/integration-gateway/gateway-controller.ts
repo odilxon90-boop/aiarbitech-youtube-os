@@ -1,4 +1,4 @@
-﻿import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import { requireGatewayAccess } from './gateway-middleware.js';
 import type { GatewayService } from './gateway-service.js';
 export class GatewayController {

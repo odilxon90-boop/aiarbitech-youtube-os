@@ -1,4 +1,4 @@
-﻿export interface VideoIdea {
+export interface VideoIdea {
   id: string;
   title: string;
   genre: string;

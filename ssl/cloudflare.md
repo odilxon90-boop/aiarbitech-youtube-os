@@ -1,4 +1,4 @@
-﻿# Cloudflare DNS and TLS Configuration
+# Cloudflare DNS and TLS Configuration
 
 ## DNS
 

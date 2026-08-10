@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 export interface AIConfig { model: string; temperature: number; maxTokens: number; }
 export function AIConfigForm({ initialConfig }: { initialConfig: AIConfig }) {
   const [config, setConfig] = useState(initialConfig);

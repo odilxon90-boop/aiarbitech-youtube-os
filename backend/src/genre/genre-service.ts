@@ -1,4 +1,4 @@
-﻿export interface GenreRecommendation {
+export interface GenreRecommendation {
   genre: string;
   score: number;
   rationale: string;

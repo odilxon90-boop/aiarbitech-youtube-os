@@ -1,4 +1,4 @@
-﻿import { randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { PlatformError } from '../shared/errors.js';
 
 export type GoalStatus = 'ACTIVE' | 'PAUSED' | 'COMPLETED';

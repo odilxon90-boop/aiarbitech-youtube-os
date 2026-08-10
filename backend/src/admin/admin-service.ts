@@ -1,4 +1,4 @@
-﻿export type UserRole = 'creator' | 'admin' | 'viewer';
+export type UserRole = 'creator' | 'admin' | 'viewer';
 export type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'PENDING';
 export type ModerationStatus = 'APPROVED' | 'PENDING_REVIEW' | 'RESTRICTED';
 export type HealthStatus = 'GREEN' | 'YELLOW' | 'RED';

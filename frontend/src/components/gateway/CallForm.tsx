@@ -1,2 +1,2 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 export function CallForm() { const [called, setCalled] = useState(false); return <section className="card gateway-card" aria-labelledby="gateway-call-title"><p className="section-kicker">Mock execution</p><h2 id="gateway-call-title">Call endpoint</h2><form onSubmit={(event) => { event.preventDefault(); setCalled(true); }}><label>Endpoint<select aria-label="Gateway endpoint" defaultValue="ai-core"><option value="ai-core">AI Core</option><option value="identity">Identity</option></select></label><button type="submit">Run mock call</button>{called && <p role="status">Mock call completed.</p>}</form></section>; }

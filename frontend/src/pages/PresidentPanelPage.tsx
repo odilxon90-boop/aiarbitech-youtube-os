@@ -1,4 +1,4 @@
-﻿import { HealthCard } from '../components/president/HealthCard';
+import { HealthCard } from '../components/president/HealthCard';
 import { RevenueCard } from '../components/president/RevenueCard';
 import { ChannelList } from '../components/president/ChannelList';
 import { AIStatusList } from '../components/president/AIStatusList';

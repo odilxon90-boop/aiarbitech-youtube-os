@@ -1,4 +1,4 @@
-﻿import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import { requireAISyncAccess } from './ai-sync-middleware.js';
 import type { AISyncService, ConflictResolution } from './ai-sync-service.js';
 

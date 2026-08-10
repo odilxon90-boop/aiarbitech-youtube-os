@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { AppShell } from './AppShell';
 import { createPlatformFoundationClient, type PlatformFoundationClient } from '../platform/platform-client';
 import type { PlatformFoundationStatus } from '../platform/types';

@@ -1,4 +1,4 @@
-﻿import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
 import { AdminController } from './admin-controller.js';
 import type { AIConfiguration, ModerationStatus, UserStatus } from './admin-service.js';
