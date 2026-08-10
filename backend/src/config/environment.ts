@@ -10,15 +10,20 @@ const optionalNonEmpty = z.preprocess(
   z.string().min(1).optional(),
 );
 
+const defaultDatabaseUrl = 'postgresql://localhost:5432/youtube_os';
+
 const environmentSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     PORT: z.coerce.number().int().positive().default(3100),
     HOST: z.string().min(1).default('0.0.0.0'),
-    DATABASE_URL: z
-      .string()
-      .min(1)
-      .refine((value) => /^postgres(?:ql)?:\/\//.test(value), 'DATABASE_URL must use PostgreSQL'),
+    DATABASE_URL: z.preprocess(
+      (value) => (value === '' || value === undefined ? defaultDatabaseUrl : value),
+      z
+        .string()
+        .min(1)
+        .refine((value) => /^postgres(?:ql)?:\/\//.test(value), 'DATABASE_URL must use PostgreSQL'),
+    ),
     CORS_ORIGIN: z.string().min(1).default('http://localhost:5174'),
     REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().max(120_000).default(10_000),
     JWT_SECRET: z.string().min(32).optional(),
