@@ -1,62 +1,57 @@
 import { useEffect, useState } from 'react';
 import { createPlatformApiClient, type CreatorStats } from '../platform-client';
 
-const apiClient = createPlatformApiClient();
-const chartBars = [42, 58, 50, 76, 64, 88, 72, 96, 81, 100, 92, 112];
-type VideoRow = [string, string, string, string];
+const api = createPlatformApiClient();
+const chart = [34, 48, 42, 68, 57, 82, 65, 94, 76, 100];
+
+function NetworkOrb() {
+  return <div className="relative mx-auto h-[310px] w-[310px] sm:h-[420px] sm:w-[420px]">
+    <div className="absolute inset-10 rounded-full bg-violet-600/20 blur-3xl" />
+    <div className="absolute inset-12 rounded-full border border-cyan-300/30 bg-[radial-gradient(circle_at_35%_25%,rgba(99,102,241,.8),rgba(8,20,58,.9)_55%,rgba(2,7,20,.98))] shadow-[0_0_90px_rgba(63,94,251,.35)]" />
+    <div className="absolute inset-20 rounded-full opacity-70 [background-image:radial-gradient(circle,rgba(103,232,249,.8)_1px,transparent_1px)] [background-size:9px_9px] [mask-image:radial-gradient(circle,#000,transparent_72%)]" />
+    <div className="absolute inset-4 rounded-full border border-cyan-300/20 [transform:rotateX(64deg)_rotateZ(-18deg)]" />
+    <div className="absolute inset-0 rounded-full border border-violet-300/20 [transform:rotateY(63deg)_rotateZ(20deg)]" />
+    <div className="absolute inset-0 flex items-center justify-center text-7xl font-black tracking-[-.2em] text-white/90">A<span className="text-cyan-300">I</span></div>
+    {['left-3 top-20', 'right-0 top-28', 'bottom-12 left-8', 'bottom-20 right-4'].map((position, index) => <span key={position} className={`absolute ${position} flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-slate-950/90 text-cyan-200 shadow-[0_0_22px_rgba(34,211,238,.35)]`}>{['▶', '▣', '♬', '✦'][index]}</span>)}
+  </div>;
+}
 
 export function CreatorDashboard() {
-  const [activeTab, setActiveTab] = useState('Overview');
-  const [directorPrompt, setDirectorPrompt] = useState('');
-  const [notice, setNotice] = useState('');
   const [stats, setStats] = useState<CreatorStats>();
-  const [videos, setVideos] = useState<VideoRow[]>([]);
-  const [revenue, setRevenue] = useState(0);
+  const [notice, setNotice] = useState('');
+  const [prompt, setPrompt] = useState('');
 
   useEffect(() => {
-    const loadDashboard = async () => {
-      const [creatorStats, revenueData, videoData] = await Promise.all([
-        apiClient.getCreatorStats(),
-        apiClient.getRevenue(),
-        apiClient.getVideos(),
-      ]);
-      setStats(creatorStats);
-      setRevenue(revenueData.points.reduce((total, point) => total + point.value, 0));
-      setVideos(videoData.videos.map((video) => [video.title, 'Published', `${video.views.toLocaleString()} views`, `${video.ctr}%`] as VideoRow));
-    };
-    void loadDashboard().catch((error: unknown) => setNotice(error instanceof Error ? error.message : 'Unable to load creator data.'));
+    Promise.all([api.getCreatorStats(), api.getRevenue(), api.getVideos()])
+      .then(([creatorStats]) => setStats(creatorStats))
+      .catch((error: unknown) => setNotice(error instanceof Error ? error.message : 'Unable to load creator data.'));
   }, []);
 
-  const createDraft = async () => {
-    if (!directorPrompt.trim()) return;
-    const plan = await apiClient.createVideoPlan(directorPrompt);
-    setNotice(`AI Director ${plan.status.toLowerCase()} your video brief.`);
-    setDirectorPrompt('');
+  const planVideo = async () => {
+    if (!prompt.trim()) return;
+    const plan = await api.createVideoPlan(prompt);
+    setNotice(`AI Director ${plan.status.toLowerCase()} your production plan.`);
+    setPrompt('');
   };
 
-  return (
-    <div className="min-h-screen bg-[#070b16] text-white">
-      <header className="border-b border-white/10 bg-[#070b16]/90 px-6 py-5 backdrop-blur-xl lg:px-10">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between">
-          <a href="/" className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/40 bg-cyan-400/10 font-black text-cyan-200">AI</span><span><strong className="block text-sm">Creator Dashboard</strong><small className="text-[9px] uppercase tracking-[.3em] text-slate-500">YouTube OS</small></span></a>
-          <a href="/" className="text-sm text-slate-400 hover:text-white">← Ecosystem</a>
-        </div>
-      </header>
-      <main className="mx-auto max-w-[1440px] px-6 py-8 lg:px-10">
-        <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="mb-2 text-xs font-bold uppercase tracking-[.3em] text-cyan-300">Creator command center</p><h1 className="text-3xl font-black tracking-tight sm:text-5xl">Turn attention into <span className="text-cyan-300">momentum.</span></h1><p className="mt-3 max-w-xl text-slate-400">One workspace for your audience, revenue, videos, and AI production pipeline.</p></div><button className="rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-3 text-sm font-bold shadow-[0_0_24px_rgba(56,189,248,.2)]">+ Upload video</button></div>
-        <nav className="mb-6 flex gap-2 overflow-x-auto border-b border-white/10 pb-px">{['Overview', 'Analytics', 'Revenue', 'Videos', 'AI Director'].map((tab) => <button key={tab} onClick={() => setActiveTab(tab)} className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold ${activeTab === tab ? 'border-cyan-300 text-cyan-200' : 'border-transparent text-slate-500 hover:text-white'}`}>{tab}</button>)}</nav>
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {(stats?.kpis ?? []).map((metric, index) => <div key={metric.label} className="rounded-2xl border border-white/10 bg-white/[.04] p-5"><p className="text-xs text-slate-500">{metric.label}</p><p className={`mt-3 text-3xl font-black ${['text-cyan-300', 'text-violet-300', 'text-emerald-300', 'text-amber-300'][index % 4]}`}>{metric.value}</p><p className="mt-2 text-xs text-emerald-300">+{metric.delta}% <span className="text-slate-500">vs last month</span></p></div>)}
-        </section>
-        <section className="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-          <div className="rounded-2xl border border-white/10 bg-white/[.04] p-6"><div className="flex items-center justify-between"><div><h2 className="font-bold">Audience analytics</h2><p className="mt-1 text-sm text-slate-500">Views and retention · Last 30 days</p></div><span className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Last 30 days⌄</span></div><div className="mt-8 flex h-48 items-end gap-2 border-b border-white/10">{chartBars.map((height, index) => <div key={index} className="group relative flex-1"><div style={{ height: `${height}%` }} className="rounded-t-md bg-gradient-to-t from-violet-600 to-cyan-300 opacity-80 transition group-hover:opacity-100" /></div>)}</div><div className="mt-3 flex justify-between text-[10px] text-slate-600"><span>May 12</span><span>May 26</span><span>Jun 10</span></div></div>
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-400/10 to-cyan-400/[.03] p-6"><div className="flex items-center justify-between"><h2 className="font-bold">Revenue split</h2><span className="text-xs text-emerald-300">70 / 30</span></div><div className="mt-8 flex items-center gap-6"><div className="relative flex h-36 w-36 shrink-0 items-center justify-center rounded-full" style={{ background: 'conic-gradient(#34d399 0deg 252deg, #475569 252deg 360deg)' }}><div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#101827] text-center"><span className="text-xl font-black">${revenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}<small className="block text-[9px] font-normal text-slate-500">this month</small></span></div></div><div className="grid gap-4 text-sm"><p><i className="mr-2 inline-block h-2 w-2 rounded-full bg-emerald-400" />You <strong className="ml-2">70%</strong></p><p><i className="mr-2 inline-block h-2 w-2 rounded-full bg-slate-500" />Platform <strong className="ml-2">30%</strong></p><p className="text-xs text-slate-500">Next payout <span className="block font-semibold text-slate-300">Based on API schedule</span></p></div></div></div>
-        </section>
-        <section className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <div className="rounded-2xl border border-white/10 bg-white/[.04] p-6"><div className="mb-5 flex items-center justify-between"><h2 className="font-bold">Your videos</h2><button className="text-sm text-cyan-300 hover:text-white">View all →</button></div><div className="grid gap-3">{videos.map(([title, status, views, ctr]) => <div key={title} className="flex items-center gap-4 rounded-xl border border-white/10 bg-black/20 p-3"><div className="flex h-12 w-20 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600/60 to-cyan-500/30 text-lg">▶</div><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{title}</p><p className="mt-1 text-xs text-slate-500">{status} · {views} views · {ctr} CTR</p></div><span className={`hidden rounded-full px-2 py-1 text-[10px] sm:block ${status === 'Published' ? 'bg-emerald-400/10 text-emerald-300' : 'bg-amber-400/10 text-amber-300'}`}>{status}</span></div>)}</div></div>
-          <div className="rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/15 to-cyan-500/[.04] p-6"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/20 text-violet-200">✦</span><div><h2 className="font-bold">AI Director</h2><p className="text-xs text-slate-500">Create your next story</p></div></div><p className="mt-6 text-sm leading-6 text-slate-300">Describe a video and your AI production team will prepare the outline, hook, scenes, and publishing plan.</p><textarea value={directorPrompt} onChange={(event) => setDirectorPrompt(event.target.value)} placeholder="I want to make a video about..." className="mt-5 h-24 w-full resize-none rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400" /><button onClick={createDraft} className="mt-3 w-full rounded-xl bg-violet-600 px-4 py-3 text-sm font-bold hover:bg-violet-500">Generate production plan ✦</button>{notice && <p className="mt-3 text-center text-xs text-emerald-300">{notice}</p>}</div>
-        </section>
-      </main>
-    </div>
-  );
+  return <div className="min-h-screen overflow-hidden bg-[#070b16] text-white">
+    <nav className="border-b border-white/10 bg-[#070b16]/90 backdrop-blur-xl"><div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-5 lg:px-10">
+      <a href="/" className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/40 bg-gradient-to-br from-cyan-400/20 to-violet-500/30 text-xl font-black text-cyan-200">AI</span><span><strong className="block text-sm tracking-wide">AIArbiTechnology</strong><small className="block text-[9px] uppercase tracking-[.3em] text-slate-400">Creator Dashboard</small></span></a>
+      <div className="hidden items-center gap-8 text-sm text-slate-300 md:flex"><a href="#overview" className="text-white">Overview</a><a href="#analytics" className="hover:text-white">Analytics</a><a href="#videos" className="hover:text-white">Videos</a><a href="#director" className="hover:text-white">AI Director</a></div>
+      <div className="flex items-center gap-3"><span className="hidden text-sm text-slate-300 sm:inline">◎ EN⌄</span><a href="/" className="rounded-lg border border-white/15 px-4 py-2 text-sm">Ecosystem</a><button className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-bold">Upload Video</button></div>
+    </div></nav>
+    <main id="overview" className="!p-0">
+      <section className="relative mx-auto grid max-w-[1380px] items-center gap-4 px-6 pb-8 pt-12 lg:grid-cols-[.9fr_1.1fr] lg:px-10 lg:pb-10 lg:pt-16">
+        <div className="pointer-events-none absolute -left-40 top-0 h-[480px] w-[480px] rounded-full bg-violet-700/15 blur-[120px]" />
+        <div className="relative z-10"><p className="mb-5 text-xs font-bold uppercase tracking-[.32em] text-cyan-300">Your creator command center</p><h1 className="max-w-xl text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl"><span className="bg-gradient-to-r from-violet-400 via-cyan-300 to-white bg-clip-text text-transparent">Create.</span> Grow.<br />Earn globally.</h1><p className="mt-6 max-w-lg text-base leading-7 text-slate-400">Analytics, revenue, videos, and AI production tools connected in one future-ready workspace.</p><div className="mt-8 flex gap-3"><a href="#analytics" className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-5 py-3 text-sm font-bold shadow-[0_0_26px_rgba(56,189,248,.25)]">View analytics →</a><a href="#director" className="rounded-lg border border-cyan-300/30 px-5 py-3 text-sm font-semibold text-cyan-200">Create with AI</a></div></div>
+        <NetworkOrb />
+      </section>
+      <section className="mx-auto grid max-w-[1380px] grid-cols-2 gap-3 px-6 pb-8 sm:grid-cols-4 lg:px-10">{(stats?.kpis ?? []).slice(0, 4).map((metric, index) => <div key={metric.label} className="border-r border-white/10 px-4 py-3 last:border-0"><p className="text-2xl font-black text-white">{metric.value}</p><p className="mt-1 text-xs text-slate-500">{metric.label}</p><p className="mt-2 text-xs text-emerald-300">+{metric.delta}% growth</p></div>)}</section>
+      <section id="analytics" className="mx-6 rounded-2xl border border-white/10 bg-[#101827]/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,.2)] lg:mx-auto lg:max-w-[1380px] lg:p-7"><div className="flex items-center justify-between"><div><h2 className="text-lg font-bold">Creator analytics</h2><p className="mt-1 text-sm text-slate-500">Your channel momentum · Last 30 days</p></div><span className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Live API data</span></div><div className="mt-7 flex h-36 items-end gap-2 border-b border-white/10">{chart.map((height, index) => <div key={index} className="flex-1 rounded-t-md bg-gradient-to-t from-violet-600 to-cyan-300 opacity-80" style={{ height: `${height}%` }} />)}</div></section>
+      <section id="videos" className="mx-auto mt-6 grid max-w-[1380px] gap-6 px-6 pb-12 lg:grid-cols-[1.2fr_.8fr] lg:px-10"><div className="rounded-2xl border border-white/10 bg-[#101827]/80 p-6"><div className="flex items-center justify-between"><h2 className="font-bold">Video intelligence</h2><span className="text-xs text-cyan-300">From Global API</span></div><div className="mt-5 grid gap-3">{(stats?.kpis ?? []).length === 0 ? <p className="text-sm text-slate-500">Loading creator videos...</p> : ['Your latest upload performance', 'Audience retention opportunity', 'Next recommended publishing slot'].map((item) => <div key={item} className="flex items-center gap-4 rounded-xl border border-white/10 bg-black/20 p-3"><span className="flex h-11 w-16 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600/60 to-cyan-500/30">▶</span><div><p className="text-sm font-semibold">{item}</p><p className="mt-1 text-xs text-slate-500">Optimized by YouTube OS intelligence</p></div></div>)}</div></div>
+        <div id="director" className="rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/15 to-cyan-500/[.04] p-6"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/20 text-violet-200">✦</span><div><h2 className="font-bold">AI Director</h2><p className="text-xs text-slate-500">Global production intelligence</p></div></div><p className="mt-5 text-sm leading-6 text-slate-300">Describe your next story. The AI Director prepares the hook, scenes, and publishing plan.</p><textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="I want to create a video about..." className="mt-5 h-24 w-full resize-none rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400" /><button onClick={() => void planVideo()} className="mt-3 w-full rounded-xl bg-violet-600 px-4 py-3 text-sm font-bold hover:bg-violet-500">Generate production plan ✦</button>{notice && <p className="mt-3 text-center text-xs text-emerald-300">{notice}</p>}</div>
+      </section>
+    </main>
+    <footer className="border-t border-white/10 px-6 py-6 text-center text-xs text-slate-500">One ecosystem. Unlimited platforms. One shared future.</footer>
+  </div>;
 }
