@@ -63,7 +63,7 @@ export class HttpPlatformFoundationClient implements PlatformFoundationClient {
 
 export function createPlatformFoundationClient(): PlatformFoundationClient {
   const configuredBaseUrl =
-    import.meta.env.VITE_GLOBAL_API_BASE_URL?.trim() ||
-    import.meta.env.VITE_PLATFORM_API_BASE_URL?.trim();
+    import.meta.env.VITE_PLATFORM_API_BASE_URL?.trim() ||
+    import.meta.env.VITE_GLOBAL_API_BASE_URL?.trim();
   return new HttpPlatformFoundationClient(configuredBaseUrl || '/api/v1');
 }
