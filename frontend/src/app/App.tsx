@@ -6,6 +6,7 @@ import { GlobalEcosystemStatusPage } from '../platform/GlobalEcosystemStatusPage
 import { HealthStatusPage } from '../platform/HealthStatusPage';
 import { PlatformIdentityPage } from '../platform/PlatformIdentityPage';
 import { DashboardPage } from '../pages/DashboardPage';
+import { GlobalEcosystemHomePage } from '../pages/GlobalEcosystemHomePage';
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/AsyncStates';
 import { errorState, loadingState, successState, type AsyncState } from '../shared/async-state';
 
@@ -47,6 +48,7 @@ export function App({ client }: AppProps) {
 
   return (
     <AppShell>
+      <GlobalEcosystemHomePage />
       <DashboardPage />
       <Suspense fallback={<LoadingState />}>
         <AnalyticsPage />
