@@ -3,3 +3,6 @@ YOUTUBE_CLIENT_ID=200749201197-pceq1ka99lfa2qrbqjrhg27o5gvt4sqh.apps.googleuserc
 YOUTUBE_CLIENT_SECRET=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
 YOUTUBE_ACCESS_TOKEN="ya29.a0ARGnu0YtdmcXj92WHnvC0ttd8a_NqDFhbVXs19d429xK6vQwnOkVX0Ig2LJwId_f5Lnj-4t44njitbbnFd_xhuWEmiy29LzGnr8dQULTedjpzwPgLdn6KLOe_OsnpHLiRGPVd0yp4ulTKkIum_HPl9Z7GnUBd4T5SqrFBcg6a7cnn5waokgMgBlcv3-ykvn2sCLDv98aCgYKATUSARQSFQHGX2MiNRoSNb_6bFBWXnV3YvQtWw0206"
 YOUTUBE_REFRESH_TOKEN="refresh_token_expires_in": 604799,
+git add .
+git commit -m "Final cleanup before deploy"
+git push origin main
