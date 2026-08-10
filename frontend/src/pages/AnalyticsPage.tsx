@@ -1,1 +1,56 @@
-export function AnalyticsPage() { return <section className="card journey-page" aria-labelledby="analytics-title"><p className="section-kicker">Mock analytics</p><h2 id="analytics-title">Analytics</h2><svg className="journey-chart" viewBox="0 0 300 100" role="img" aria-label="Mock views chart"><polyline points="0,80 100,60 200,35 300,20" fill="none" stroke="currentColor" strokeWidth="4" /></svg><p className="muted">Retention 68% · Mock revenue $420</p></section>; }
+import React from 'react';
+
+export function AnalyticsPage() {
+  const metrics = [
+    ['Subscribers', '1.2M', '+12%'],
+    ['Views', '45.8M', '+8%'],
+    ['Watch Time', '1.4K h', '+5%'],
+    ['CTR', '8.2%', '+0.3%'],
+  ];
+  const bars = ['h-20', 'h-32', 'h-40', 'h-24', 'h-36', 'h-44'];
+  const videos = [
+    ['How to Start a YouTube Channel', '124K views'],
+    ['AI Video Editing Tutorial', '98K views'],
+    ['Top 10 AI Tools for Creators', '76K views'],
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black p-6 text-white">
+      <header className="mb-6 flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Analytics Center</h1>
+        <div className="rounded-full bg-gray-800 px-4 py-2 text-sm text-gray-300">Mock Data</div>
+      </header>
+
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        {metrics.map(([label, value, change]) => (
+          <div key={label} className="rounded-xl border border-gray-700 bg-gray-800/50 p-4 backdrop-blur-sm">
+            <p className="text-xs text-gray-400">{label}</p>
+            <p className="text-2xl font-bold text-white">{value}</p>
+            <p className="text-xs text-green-400">{change}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-6 rounded-2xl border border-gray-700 bg-gray-800/50 p-6 backdrop-blur-sm">
+        <h2 className="mb-4 text-lg font-medium text-gray-300">Views Over Time</h2>
+        <div className="flex h-48 items-end justify-between gap-2" role="img" aria-label="Mock views chart">
+          {bars.map((height) => <div key={height} className={`w-6 rounded-full bg-blue-500 ${height}`} />)}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-gray-700 bg-gray-800/50 p-6 backdrop-blur-sm">
+        <h2 className="mb-4 text-lg font-medium text-gray-300">Top Performing Videos</h2>
+        <div className="space-y-3">
+          {videos.map(([title, views]) => (
+            <div key={title} className="flex items-center justify-between rounded-xl border border-gray-700 bg-gray-900/50 p-3">
+              <span className="text-sm text-gray-200">{title}</span>
+              <span className="text-sm text-blue-400">{views}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default AnalyticsPage;
