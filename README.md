@@ -33,6 +33,7 @@ npm install
 npm run typecheck
 npm test
 npm run build
+npm run start
 
 cd ../backend
 npm install
@@ -50,3 +51,10 @@ docker compose up -d postgres
 ```
 
 Copy `.env.example` to the appropriate local runtime environment only when running services. Never commit secrets.
+
+## Railway hosting
+
+- Deploy `backend/` and `frontend/` as separate Railway services in the same project.
+- Frontend build command: `cd frontend && npm run build`
+- Frontend start command: `cd frontend && npm run start`
+- Frontend healthcheck path: `/`
