@@ -107,6 +107,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerJourneyRoutes(app);
   registerYouTubeRoutes(app);
   app.get('/health', async () => ({ status: 'ok' }));
+  app.get('/api/health', async () => ({ status: 'ok' }));
   registerMonitoringHealthRoutes(app, metrics, cacheWarming);
 
   return app;
