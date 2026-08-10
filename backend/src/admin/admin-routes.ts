@@ -18,5 +18,7 @@ export function registerAdminRoutes(app: FastifyInstance, controller = new Admin
     successResponse(controller.updateAIConfig(request), request.correlationId),
   );
   app.get('/api/v1/admin/audit-logs', async (request) => successResponse(controller.auditLogs(request), request.correlationId));
+  app.get('/api/v1/admin/logs', async (request) => successResponse(controller.logs(request), request.correlationId));
+  app.get('/api/v1/admin/platforms', async (request) => successResponse(controller.platforms(request), request.correlationId));
   app.get('/api/v1/admin/health', async (request) => successResponse(controller.health(request), request.correlationId));
 }

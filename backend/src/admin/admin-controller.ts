@@ -25,5 +25,16 @@ export class AdminController {
     return this.service.updateAIConfiguration(request.body);
   }
   auditLogs(request: FastifyRequest) { authorizeAdmin(request); return this.service.listAuditLogs(); }
+  logs(request: FastifyRequest) { return this.auditLogs(request); }
+  platforms(request: FastifyRequest) {
+    authorizeAdmin(request);
+    return [
+      { id: 'youtube-os', name: 'YouTube OS', status: 'ACTIVE', users: 184200 },
+      { id: 'ai-arbitrage', name: 'AI Arbitrage', status: 'ACTIVE', users: 42100 },
+      { id: 'market-pulse', name: 'AI Market Pulse Scalper', status: 'ACTIVE', users: 18700 },
+      { id: 'video-creator', name: 'AI Video Creator Studio', status: 'ACTIVE', users: 63200 },
+      { id: 'global-media', name: 'AIArbiTech TV Global Media', status: 'ACTIVE', users: 91500 },
+    ];
+  }
   health(request: FastifyRequest) { authorizeAdmin(request); return this.service.getHealth(); }
 }

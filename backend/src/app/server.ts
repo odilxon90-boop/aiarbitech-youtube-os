@@ -9,6 +9,7 @@ import { registerJwtAuthentication } from '../auth/auth.middleware.js';
 import { registerAuthRoutes } from '../auth/auth.routes.js';
 import { JwtService } from '../auth/jwt.service.js';
 import { registerAdminRoutes } from '../admin/admin-routes.js';
+import { registerCreatorRoutes } from '../creator/creator-routes.js';
 import { registerAISyncRoutes } from '../ai-sync/ai-sync-routes.js';
 import { registerWorkflowRoutes } from '../workflow/workflow-routes.js';
 import { registerPromptRoutes } from '../prompt-registry/prompt-routes.js';
@@ -97,6 +98,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerMusicRoutes(app);
   registerGenreRoutes(app);
   registerAdminRoutes(app);
+  registerCreatorRoutes(app);
   registerAISyncRoutes(app);
   registerWorkflowRoutes(app);
   registerPromptRoutes(app);
