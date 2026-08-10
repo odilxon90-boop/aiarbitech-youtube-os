@@ -50,3 +50,29 @@ docker compose up -d postgres
 ```
 
 Copy `.env.example` to the appropriate local runtime environment only when running services. Never commit secrets.
+
+## Monitoring & Observability
+
+YouTube OS includes a comprehensive monitoring stack with Prometheus, Grafana, and Alertmanager. See [MONITORING.md](docs/MONITORING.md) for complete setup and usage instructions.
+
+**Quick start:**
+
+```bash
+# Start main application
+docker compose up -d
+
+# In another terminal, start monitoring stack
+docker compose -f docker-compose.monitoring.yml up -d
+
+# Access dashboards
+# Prometheus: http://localhost:9090
+# Grafana: http://localhost:3001
+# Alertmanager: http://localhost:9093
+# Backend metrics: http://localhost:3000/metrics
+```
+
+**Key Features:**
+- Real-time metrics collection from backend, Redis, PostgreSQL, and system
+- Pre-built Grafana dashboards for API performance and infrastructure health
+- Automated alerting via email, Slack, PagerDuty, Telegram, and webhooks
+- 20+ alert rules covering API, database, Redis, and system metrics

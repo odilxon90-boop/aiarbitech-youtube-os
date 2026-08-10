@@ -1,0 +1,221 @@
+# Prometheus Alert Rules for YouTube OS
+# Rules define conditions that trigger alerts to Alertmanager
+
+groups:
+  - name: youtube_os_alerts
+    interval: 1m
+    rules:
+      # ───── Backend API Alerts ─────────────────────────────────────────────────
+
+      # High error rate on API endpoints
+      - alert: HighAPIErrorRate
+        expr: |
+          (sum(rate(http_request_total{job="youtube-os-backend", status=~"5.."}[5m])) /
+           sum(rate(http_request_total{job="youtube-os-backend"}[5m]))) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "High API error rate detected"
+          description: "Backend error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          dashboard: "http://grafana:3000/d/youtube-os-backend"
+
+      # High API latency (p95)
+      - alert: HighAPILatency
+        expr: |
+          histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="youtube-os-backend"}[5m])) by (le)) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High API latency detected"
+          description: "p95 latency is {{ $value | humanizeDuration }} (threshold: 1s)"
+          dashboard: "http://grafana:3000/d/youtube-os-backend"
+
+      # Backend service down
+      - alert: BackendDown
+        expr: up{job="youtube-os-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "YouTube OS Backend is down"
+          description: "Backend at {{ $labels.instance }} has been down for 2 minutes"
+
+      # High request count (potential DDoS or spike)
+      - alert: HighRequestVolume
+        expr: |
+          sum(rate(http_request_total{job="youtube-os-backend"}[5m])) > 500
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Unusually high request volume"
+          description: "Request rate is {{ $value | humanize }} req/s (threshold: 500 req/s)"
+
+      # ───── Redis Alerts ───────────────────────────────────────────────────────
+
+      # Redis down
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is down"
+          description: "Redis at {{ $labels.instance }} has been down for 1 minute"
+
+      # High Redis memory usage
+      - alert: HighRedisMemory
+        expr: |
+          (redis_memory_used_bytes / redis_memory_max_bytes) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }} (threshold: 90%)"
+
+      # Redis evictions (keys being removed due to memory pressure)
+      - alert: RedisEvictions
+        expr: |
+          increase(redis_evicted_keys_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis is evicting keys due to memory pressure"
+          description: "{{ $value | humanize }} keys evicted in last 5 minutes"
+
+      # Low Redis hit rate
+      - alert: LowRedisHitRate
+        expr: |
+          (redis_keyspace_hits_total / (redis_keyspace_hits_total + redis_keyspace_misses_total)) < 0.7
+        for: 5m
+        labels:
+          severity: info
+          service: redis
+        annotations:
+          summary: "Redis hit rate is low"
+          description: "Redis cache hit rate is {{ $value | humanizePercentage }} (threshold: 70%)"
+
+      # ───── PostgreSQL Alerts ──────────────────────────────────────────────────
+
+      # PostgreSQL down
+      - alert: PostgresDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: postgres
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL at {{ $labels.instance }} has been down for 1 minute"
+
+      # High database connection usage
+      - alert: HighDatabaseConnections
+        expr: |
+          (pg_stat_activity_count / 20) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+        annotations:
+          summary: "Database connection pool is nearly full"
+          description: "{{ $value | humanizePercentage }} of connection pool in use (max: 20)"
+
+      # Slow queries detected
+      - alert: SlowQueries
+        expr: |
+          rate(pg_slow_queries_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+        annotations:
+          summary: "Slow queries detected in PostgreSQL"
+          description: "{{ $value | humanize }} slow queries per second"
+
+      # High database replication lag
+      - alert: HighReplicationLag
+        expr: |
+          pg_replication_lag_seconds > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+        annotations:
+          summary: "Database replication lag is high"
+          description: "Replication lag is {{ $value | humanizeDuration }} (threshold: 10s)"
+
+      # ───── System Alerts ──────────────────────────────────────────────────────
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: |
+          (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance)) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          service: host
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanizePercentage }} (threshold: 85%)"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: host
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanizePercentage }} (threshold: 90%)"
+
+      # Disk space running out
+      - alert: LowDiskSpace
+        expr: |
+          (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"} / node_filesystem_size_bytes) < 0.15
+        for: 5m
+        labels:
+          severity: warning
+          service: host
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "{{ $value | humanizePercentage }} disk space available (threshold: 15%)"
+
+      # ───── Rate Limiting Alerts ───────────────────────────────────────────────
+
+      # High rate limit rejections
+      - alert: HighRateLimitRejections
+        expr: |
+          sum(rate(http_requests_rate_limited_total{job="youtube-os-backend"}[5m])) > 50
+        for: 5m
+        labels:
+          severity: info
+          service: backend
+        annotations:
+          summary: "High number of rate-limited requests"
+          description: "{{ $value | humanize }} requests/sec being rate limited"
+
+      # ───── Alertmanager Alerts ────────────────────────────────────────────────
+
+      # Alertmanager down
+      - alert: AlertmanagerDown
+        expr: up{job="alertmanager"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: alertmanager
+        annotations:
+          summary: "Alertmanager is down"
+          description: "Alertmanager at {{ $labels.instance }} has been down for 1 minute"
