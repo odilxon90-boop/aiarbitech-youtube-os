@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AIArbiTech YouTube OS — Internal API Contract
 # OpenAPI 3.0.3 | Status: COMPATIBILITY_PLACEHOLDER | NOT_VERIFIED
 # This file documents internal YouTube OS APIs. It is a controlled publication boundary
@@ -1203,12 +1204,74 @@ paths:
           required: true
           schema:
             type: string
+=======
+openapi: 3.0.3
+info:
+  title: AIArbiTech YouTube OS API
+  version: 1.0.0
+  description: Mock-only platform API contract. All protected operations require a bearer token and the documented permission.
+  license:
+    name: Proprietary
+    url: https://aiarbitech.com
+servers:
+  - url: /api/v1
+security:
+  - BearerToken: []
+tags:
+  - name: Authentication
+    description: JWT authentication operations.
+  - name: Admin
+    description: Platform administration operations.
+  - name: AI Sync
+    description: Mock AI Director synchronization operations.
+  - name: Workflow
+    description: Mock content workflow operations.
+  - name: Prompts
+    description: Prompt registry operations.
+  - name: Success Score
+    description: Creator performance score operations.
+  - name: Creator Twin
+    description: Mock autonomous creator twin operations.
+  - name: Integration Gateway
+    description: Mock Global Ecosystem gateway operations.
+paths:
+  /health/live:
+    get:
+      tags: [Platform]
+      summary: Liveness check
+      security: []
+      responses: { '200': { $ref: '#/components/responses/LivenessResponse' } }
+  /health/ready:
+    get:
+      tags: [Platform]
+      summary: Readiness check
+      security: []
+      responses: { '200': { $ref: '#/components/responses/ReadinessResponse' } }
+  /platform/manifest:
+    get:
+      tags: [Platform]
+      summary: Get platform manifest
+      security: []
+      responses: { '200': { $ref: '#/components/responses/PlatformManifestResponse' } }
+  /platform/compatibility:
+    get:
+      tags: [Platform]
+      summary: Get Global Ecosystem compatibility
+      security: []
+      responses: { '200': { $ref: '#/components/responses/CompatibilityResponse' } }
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login and receive JWT access and refresh tokens
+      security: []
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+<<<<<<< HEAD
               required: [resolution]
               properties:
                 resolution:
@@ -1371,12 +1434,32 @@ paths:
       security:
         - BearerToken: []
       x-permission: workflow:execute
+=======
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        LivenessResponse: { description: Liveness envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, properties: { status: { type: string }, platformId: { type: string }, timestamp: { type: string, format: date-time } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+        ReadinessResponse: { description: Readiness envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, properties: { status: { type: string }, checks: { type: object } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+        PlatformManifestResponse: { description: Platform manifest envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+        CompatibilityResponse: { description: Compatibility envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+        '200': { $ref: '#/components/responses/AuthLoginResponse' }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh an expired access token
+      security: []
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+<<<<<<< HEAD
               required: [workflowId]
               properties:
                 workflowId:
@@ -2788,3 +2871,352 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+=======
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200': { $ref: '#/components/responses/AuthRefreshResponse' }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Revoke the current JWT access token
+      responses:
+        '200': { $ref: '#/components/responses/LogoutResponse' }
+        '401': { $ref: '#/components/responses/Error' }
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List platform users
+      description: Requires admin:access.
+      responses: { '200': { $ref: '#/components/responses/UsersResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/users/{id}/status:
+    put:
+      tags: [Admin]
+      summary: Update a mock user status
+      description: Requires admin:access.
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, enum: [ACTIVE, SUSPENDED, PENDING] } } } } } }
+      responses: { '200': { $ref: '#/components/responses/UserResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/channels:
+    get:
+      tags: [Admin]
+      summary: List channels for moderation
+      description: Requires admin:access.
+      responses: { '200': { $ref: '#/components/responses/ChannelsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/channels/{id}/moderate:
+    put:
+      tags: [Admin]
+      summary: Moderate a mock channel
+      description: Requires admin:access.
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, enum: [APPROVED, PENDING_REVIEW, RESTRICTED] } } } } } }
+      responses: { '200': { $ref: '#/components/responses/ChannelResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/ai-config:
+    get:
+      tags: [Admin]
+      summary: Get AI Director configuration
+      description: Requires admin:access.
+      responses: { '200': { $ref: '#/components/responses/AIConfigResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+    put:
+      tags: [Admin]
+      summary: Update mock AI Director configuration
+      description: Requires admin:access.
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AIConfig' } } } }
+      responses: { '200': { $ref: '#/components/responses/AIConfigResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/audit-logs:
+    get:
+      tags: [Admin]
+      summary: List audit logs
+      description: Requires admin:access.
+      responses: { '200': { $ref: '#/components/responses/AuditLogsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /admin/health:
+    get:
+      tags: [Admin]
+      summary: Get platform health metrics
+      description: Requires admin:access.
+      responses: { '200': { $ref: '#/components/responses/HealthResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/status:
+    get:
+      tags: [AI Sync]
+      summary: Get AI Core synchronization status
+      description: Requires ai-sync:access.
+      responses: { '200': { $ref: '#/components/responses/SyncStatusResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/history:
+    get:
+      tags: [AI Sync]
+      summary: List synchronization history
+      description: Requires ai-sync:access.
+      responses: { '200': { $ref: '#/components/responses/SyncHistoryResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/force-sync:
+    post:
+      tags: [AI Sync]
+      summary: Trigger a mock synchronization
+      description: Requires ai-sync:access. Does not make external network calls.
+      responses: { '200': { $ref: '#/components/responses/ForceSyncResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/conflicts:
+    get:
+      tags: [AI Sync]
+      summary: List AI decision conflicts
+      description: Requires ai-sync:access.
+      responses: { '200': { $ref: '#/components/responses/ConflictsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/resolve/{conflictId}:
+    post:
+      tags: [AI Sync]
+      summary: Resolve a mock AI decision conflict
+      description: Requires ai-sync:access.
+      parameters: [{ name: conflictId, in: path, required: true, schema: { type: string } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [resolution], properties: { resolution: { type: string, enum: [ACCEPT_LOCAL, ACCEPT_GLOBAL, MANUAL_OVERRIDE] } } } } } }
+      responses: { '200': { $ref: '#/components/responses/ConflictResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /ai-sync/models:
+    get:
+      tags: [AI Sync]
+      summary: List active AI model versions
+      description: Requires ai-sync:access.
+      responses: { '200': { $ref: '#/components/responses/ModelsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/start:
+    post:
+      tags: [Workflow]
+      summary: Start a mock content workflow
+      description: Requires workflow:access.
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [userId, title], properties: { userId: { type: string }, title: { type: string } } } } } }
+      responses: { '200': { $ref: '#/components/responses/WorkflowResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/status/{workflowId}:
+    get:
+      tags: [Workflow]
+      summary: Get workflow status
+      description: Requires workflow:access.
+      parameters: [{ name: workflowId, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/WorkflowResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/history:
+    get:
+      tags: [Workflow]
+      summary: List workflow history
+      description: Requires workflow:access.
+      parameters: [{ name: userId, in: query, required: false, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/WorkflowHistoryResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/pause/{workflowId}:
+    post:
+      tags: [Workflow]
+      summary: Pause a workflow
+      description: Requires workflow:access.
+      parameters: [{ name: workflowId, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/WorkflowResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/resume/{workflowId}:
+    post:
+      tags: [Workflow]
+      summary: Resume a workflow
+      description: Requires workflow:access.
+      parameters: [{ name: workflowId, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/WorkflowResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /workflow/cancel/{workflowId}:
+    post:
+      tags: [Workflow]
+      summary: Cancel a workflow
+      description: Requires workflow:access.
+      parameters: [{ name: workflowId, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/WorkflowResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /prompts:
+    get:
+      tags: [Prompts]
+      summary: List prompt registry entries
+      description: Requires prompts:access.
+      responses: { '200': { $ref: '#/components/responses/PromptsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+    post:
+      tags: [Prompts]
+      summary: Create a mock prompt
+      description: Requires prompts:access.
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PromptInput' } } } }
+      responses: { '200': { $ref: '#/components/responses/PromptResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /prompts/performance:
+    get:
+      tags: [Prompts]
+      summary: List prompt performance metrics
+      description: Requires prompts:access.
+      responses: { '200': { $ref: '#/components/responses/PromptPerformanceResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /prompts/{id}:
+    get:
+      tags: [Prompts]
+      summary: Get a prompt
+      description: Requires prompts:access.
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      responses: { '200': { $ref: '#/components/responses/PromptResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+    put:
+      tags: [Prompts]
+      summary: Update a prompt and create a new version
+      description: Requires prompts:access.
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PromptInput' } } } }
+      responses: { '200': { $ref: '#/components/responses/PromptResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+    delete:
+      tags: [Prompts]
+      summary: Delete a mock prompt
+      description: Requires prompts:access.
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      responses: { '200': { $ref: '#/components/responses/DeleteResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /success-score/current:
+    get:
+      tags: [Success Score]
+      summary: Get current creator success score
+      description: Requires success:access.
+      responses: { '200': { $ref: '#/components/responses/SuccessCurrentResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /success-score/history:
+    get:
+      tags: [Success Score]
+      summary: Get 30-day success score history
+      description: Requires success:access.
+      responses: { '200': { $ref: '#/components/responses/SuccessHistoryResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /success-score/breakdown:
+    get:
+      tags: [Success Score]
+      summary: Get success score categories
+      description: Requires success:access.
+      responses: { '200': { $ref: '#/components/responses/SuccessBreakdownResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /success-score/improvements:
+    get:
+      tags: [Success Score]
+      summary: Get mock score improvement suggestions
+      description: Requires success:access.
+      responses: { '200': { $ref: '#/components/responses/ImprovementsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/status:
+    get:
+      tags: [Creator Twin]
+      summary: Get Creator Twin status
+      description: Requires twin:access.
+      responses: { '200': { $ref: '#/components/responses/TwinStatusResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/activate:
+    post:
+      tags: [Creator Twin]
+      summary: Activate mock Creator Twin
+      description: Requires twin:access.
+      responses: { '200': { $ref: '#/components/responses/TwinStatusResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/deactivate:
+    post:
+      tags: [Creator Twin]
+      summary: Deactivate mock Creator Twin
+      description: Requires twin:access.
+      responses: { '200': { $ref: '#/components/responses/TwinStatusResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/decisions:
+    get:
+      tags: [Creator Twin]
+      summary: List mock twin decisions
+      description: Requires twin:access.
+      responses: { '200': { $ref: '#/components/responses/TwinDecisionsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/learn:
+    post:
+      tags: [Creator Twin]
+      summary: Add mock learning input
+      description: Requires twin:access.
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [source, summary], properties: { source: { type: string }, summary: { type: string } } } } } }
+      responses: { '200': { $ref: '#/components/responses/TwinLearningResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /twin/recommendations:
+    get:
+      tags: [Creator Twin]
+      summary: List mock twin recommendations
+      description: Requires twin:access.
+      responses: { '200': { $ref: '#/components/responses/TwinRecommendationsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /gateway/status:
+    get:
+      tags: [Integration Gateway]
+      summary: Get mock integration gateway status
+      description: Requires gateway:access. No external network calls occur.
+      responses: { '200': { $ref: '#/components/responses/GatewayStatusResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /gateway/endpoints:
+    get:
+      tags: [Integration Gateway]
+      summary: List mock Global Ecosystem endpoints
+      description: Requires gateway:access.
+      responses: { '200': { $ref: '#/components/responses/GatewayEndpointsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /gateway/call/{endpoint}:
+    post:
+      tags: [Integration Gateway]
+      summary: Execute a mock gateway call
+      description: Requires gateway:access. The call is simulated and logged locally.
+      parameters: [{ name: endpoint, in: path, required: true, schema: { type: string, enum: [identity, security, ai-core, wallet, payment] } }]
+      responses: { '200': { $ref: '#/components/responses/GatewayLogResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /gateway/logs:
+    get:
+      tags: [Integration Gateway]
+      summary: List last 50 mock gateway calls
+      description: Requires gateway:access.
+      responses: { '200': { $ref: '#/components/responses/GatewayLogsResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+  /gateway/health:
+    get:
+      tags: [Integration Gateway]
+      summary: Get mock gateway health metrics
+      description: Requires gateway:access.
+      responses: { '200': { $ref: '#/components/responses/GatewayHealthResponse' }, '401': { $ref: '#/components/responses/Error' }, '403': { $ref: '#/components/responses/Error' } }
+components:
+  securitySchemes:
+    BearerToken: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: string } }
+  schemas:
+    Meta: { type: object, required: [correlationId, timestamp], properties: { correlationId: { type: string }, timestamp: { type: string, format: date-time } } }
+    ErrorBody: { type: object, required: [error], properties: { error: { type: object, required: [code, message, correlationId, retryable], properties: { code: { type: string }, message: { type: string }, correlationId: { type: string }, retryable: { type: boolean } } } } }
+    AuthUser: { type: object, required: [id, email, role, permissions], properties: { id: { type: string }, email: { type: string, format: email }, role: { type: string }, permissions: { type: array, items: { type: string } } } }
+    User: { type: object, required: [id, name, email, role, status], properties: { id: { type: string }, name: { type: string }, email: { type: string }, role: { type: string, enum: [creator, admin, viewer] }, status: { type: string, enum: [ACTIVE, SUSPENDED, PENDING] } } }
+    Channel: { type: object, required: [id, name, ownerId, status, availableActions], properties: { id: { type: string }, name: { type: string }, ownerId: { type: string }, status: { type: string, enum: [APPROVED, PENDING_REVIEW, RESTRICTED] }, availableActions: { type: array, items: { type: string, enum: [APPROVE, RESTRICT, REQUEST_CHANGES] } } } }
+    AIConfig: { type: object, required: [model, temperature, maxTokens, dailyVideoLimit], properties: { model: { type: string }, temperature: { type: number }, maxTokens: { type: integer }, dailyVideoLimit: { type: integer } } }
+    AuditLog: { type: object, required: [id, timestamp, actor, action, target, category], properties: { id: { type: string }, timestamp: { type: string, format: date-time }, actor: { type: string }, action: { type: string }, target: { type: string }, category: { type: string, enum: [USER, CHANNEL, SYSTEM] } } }
+    HealthMetric: { type: object, required: [name, status, detail], properties: { name: { type: string }, status: { type: string, enum: [GREEN, YELLOW, RED] }, detail: { type: string } } }
+    SyncStatus: { type: object, required: [status, connectionHealth, lastSynchronizedAt, networkRequestPerformed], properties: { status: { type: string, enum: [ACTIVE, IDLE, ERROR, DISCONNECTED] }, connectionHealth: { type: string }, lastSynchronizedAt: { type: string, format: date-time }, networkRequestPerformed: { type: boolean } } }
+    SyncEvent: { type: object, required: [id, timestamp, status, detail], properties: { id: { type: string }, timestamp: { type: string, format: date-time }, status: { type: string, enum: [SUCCESS, WARNING, FAILED] }, detail: { type: string } } }
+    Conflict: { type: object, required: [id, subject, localDecision, globalRecommendation, resolution], properties: { id: { type: string }, subject: { type: string }, localDecision: { type: string }, globalRecommendation: { type: string }, resolution: { type: string, enum: [UNRESOLVED, ACCEPT_LOCAL, ACCEPT_GLOBAL, MANUAL_OVERRIDE] } } }
+    Model: { type: object, required: [id, name, version, scope, active, releasedAt], properties: { id: { type: string }, name: { type: string }, version: { type: string }, scope: { type: string, enum: [LOCAL_DIRECTOR, GLOBAL_AI_CORE] }, active: { type: boolean }, releasedAt: { type: string, format: date-time } } }
+    Workflow: { type: object, required: [id, userId, title, status, currentStage, progress, stages, logs, createdAt], properties: { id: { type: string }, userId: { type: string }, title: { type: string }, status: { type: string, enum: [RUNNING, PAUSED, COMPLETED, CANCELLED, FAILED] }, currentStage: { type: string, enum: [IDEA, SCRIPT, MUSIC, VIDEO, THUMBNAIL, QUALITY, PUBLISH] }, progress: { type: integer, minimum: 0, maximum: 100 }, stages: { type: array, items: { type: object, required: [stage, status, estimatedExecutionSeconds], properties: { stage: { type: string }, status: { type: string }, estimatedExecutionSeconds: { type: integer, enum: [1, 2, 3] } } } }, logs: { type: array, items: { type: string } }, createdAt: { type: string, format: date-time } } }
+    WorkflowHistory: { type: object, required: [id, workflowId, timestamp, event, detail], properties: { id: { type: string }, workflowId: { type: string }, timestamp: { type: string, format: date-time }, event: { type: string }, detail: { type: string } } }
+    PromptInput: { type: object, required: [name, content, model, temperature, maxTokens], properties: { name: { type: string }, content: { type: string }, model: { type: string, enum: [gpt-4, gpt-3.5, claude] }, temperature: { type: number }, maxTokens: { type: integer } } }
+    Prompt: { allOf: [{ $ref: '#/components/schemas/PromptInput' }, { type: object, required: [id, versions, performance], properties: { id: { type: string }, versions: { type: array, items: { type: object, required: [version, content, createdAt], properties: { version: { type: integer }, content: { type: string }, createdAt: { type: string, format: date-time } } } }, performance: { type: object, required: [successRatePercent, averageTokens, averageLatencyMs], properties: { successRatePercent: { type: number }, averageTokens: { type: number }, averageLatencyMs: { type: number } } } } }] }
+    SuccessCurrent: { type: object, required: [overallScore, evaluatedAt, classification], properties: { overallScore: { type: integer, minimum: 0, maximum: 100 }, evaluatedAt: { type: string, format: date-time }, classification: { type: string } } }
+    SuccessCategory: { type: object, required: [id, name, score, weight, detail], properties: { id: { type: string }, name: { type: string }, score: { type: integer, minimum: 0, maximum: 100 }, weight: { type: integer }, detail: { type: string } } }
+    HistoryPoint: { type: object, required: [date, score], properties: { date: { type: string, format: date }, score: { type: integer, minimum: 0, maximum: 100 } } }
+    Improvement: { type: object, required: [id, priority, suggestion, expectedImpact], properties: { id: { type: string }, priority: { type: string, enum: [HIGH, MEDIUM, LOW] }, suggestion: { type: string }, expectedImpact: { type: string } } }
+    TwinStatus: { type: object, required: [status, autonomyEnabled, networkRequestPerformed], properties: { status: { type: string, enum: [INACTIVE, LEARNING, ACTIVE, ERROR] }, autonomyEnabled: { type: boolean }, networkRequestPerformed: { type: boolean } } }
+    TwinDecision: { type: object, required: [id, timestamp, decision, outcome, performanceNote], properties: { id: { type: string }, timestamp: { type: string, format: date-time }, decision: { type: string }, outcome: { type: string, enum: [SUCCESS, REVIEW, FAILED] }, performanceNote: { type: string } } }
+    TwinLearning: { type: object, required: [id, timestamp, source, summary], properties: { id: { type: string }, timestamp: { type: string, format: date-time }, source: { type: string }, summary: { type: string } } }
+    TwinRecommendation: { type: object, required: [id, idea, confidencePercent, rationale], properties: { id: { type: string }, idea: { type: string }, confidencePercent: { type: number, minimum: 0, maximum: 100 }, rationale: { type: string } } }
+    GatewayStatus: { type: object, required: [status, externalRequestPerformed, retryPolicy, circuitBreaker], properties: { status: { type: string, enum: [ACTIVE, DEGRADED, DOWN] }, externalRequestPerformed: { type: boolean }, retryPolicy: { type: string }, circuitBreaker: { type: string } } }
+    GatewayEndpoint: { type: object, required: [key, name, capability, rateLimitPerMinute], properties: { key: { type: string }, name: { type: string }, capability: { type: string, enum: [Identity, Security, AI Core, Wallet, Payment] }, rateLimitPerMinute: { type: integer } } }
+    GatewayLog: { type: object, required: [id, timestamp, endpoint, status, latencyMs, retryCount, circuitState], properties: { id: { type: string }, timestamp: { type: string, format: date-time }, endpoint: { type: string }, status: { type: string, enum: [SUCCESS, THROTTLED, FALLBACK] }, latencyMs: { type: integer }, retryCount: { type: integer }, circuitState: { type: string, enum: [CLOSED, OPEN] } } }
+    GatewayHealth: { type: object, required: [metric, value, status], properties: { metric: { type: string }, value: { type: string }, status: { type: string, enum: [HEALTHY, WARNING] } } }
+  responses:
+    Error: { description: "Authentication, authorization, or validation error", content: { application/json: { schema: { $ref: '#/components/schemas/ErrorBody' } } } }
+    AuthLoginResponse: { description: Authentication envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, required: [token, refreshToken, user], properties: { token: { type: string }, refreshToken: { type: string }, user: { $ref: '#/components/schemas/AuthUser' } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    AuthRefreshResponse: { description: Refreshed authentication envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, required: [token, refreshToken], properties: { token: { type: string }, refreshToken: { type: string } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    LogoutResponse: { description: Logout envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, required: [loggedOut], properties: { loggedOut: { type: boolean, enum: [true] } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    UsersResponse: { description: Users envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/User' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    UserResponse: { description: User envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/User' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ChannelsResponse: { description: Channels envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/Channel' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ChannelResponse: { description: Channel envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/Channel' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    AIConfigResponse: { description: AI configuration envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/AIConfig' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    AuditLogsResponse: { description: Audit log envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/AuditLog' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    HealthResponse: { description: Health envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/HealthMetric' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    SyncStatusResponse: { description: Sync status envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/SyncStatus' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    SyncHistoryResponse: { description: Sync history envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/SyncEvent' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ForceSyncResponse: { description: Mock force sync envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, required: [id, status, syncedAt, detail], properties: { id: { type: string }, status: { type: string, enum: [SUCCESS] }, syncedAt: { type: string, format: date-time }, detail: { type: string } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ConflictsResponse: { description: Conflicts envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/Conflict' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ConflictResponse: { description: Conflict envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/Conflict' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ModelsResponse: { description: Models envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/Model' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    WorkflowResponse: { description: Workflow envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/Workflow' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    WorkflowHistoryResponse: { description: Workflow history envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/WorkflowHistory' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    PromptsResponse: { description: Prompts envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/Prompt' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    PromptResponse: { description: Prompt envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/Prompt' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    PromptPerformanceResponse: { description: Prompt performance envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { type: object, required: [id, name, performance], properties: { id: { type: string }, name: { type: string }, performance: { type: object, required: [successRatePercent, averageTokens, averageLatencyMs], properties: { successRatePercent: { type: number }, averageTokens: { type: number }, averageLatencyMs: { type: number } } } } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    DeleteResponse: { description: Delete envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: object, required: [id, deleted], properties: { id: { type: string }, deleted: { type: boolean, enum: [true] } } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    SuccessCurrentResponse: { description: Current score envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/SuccessCurrent' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    SuccessHistoryResponse: { description: Score history envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/HistoryPoint' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    SuccessBreakdownResponse: { description: Score breakdown envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/SuccessCategory' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    ImprovementsResponse: { description: Improvement envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/Improvement' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    TwinStatusResponse: { description: Twin status envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/TwinStatus' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    TwinDecisionsResponse: { description: Twin decisions envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/TwinDecision' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    TwinLearningResponse: { description: Twin learning envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/TwinLearning' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    TwinRecommendationsResponse: { description: Twin recommendation envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/TwinRecommendation' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    GatewayStatusResponse: { description: Gateway status envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/GatewayStatus' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    GatewayEndpointsResponse: { description: Gateway endpoints envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/GatewayEndpoint' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    GatewayLogResponse: { description: Gateway log envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/GatewayLog' }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    GatewayLogsResponse: { description: Gateway logs envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/GatewayLog' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+    GatewayHealthResponse: { description: Gateway health envelope, content: { application/json: { schema: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/GatewayHealth' } }, meta: { $ref: '#/components/schemas/Meta' } } } } } }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

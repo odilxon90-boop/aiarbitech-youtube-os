@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { EcosystemEndpoint } from '../../gateway/types';
 
 const EP_STATUS_ICON: Record<EcosystemEndpoint['status'], string> = {
@@ -51,3 +52,7 @@ export function EndpointList({ endpoints, onCall }: EndpointListProps) {
     </section>
   );
 }
+=======
+export interface GatewayEndpoint { key: string; name: string; rateLimitPerMinute: number; }
+export function EndpointList({ endpoints }: { endpoints: readonly GatewayEndpoint[] }) { return <section className="card gateway-card" aria-labelledby="gateway-endpoints-title"><p className="section-kicker">Mock registry</p><h2 id="gateway-endpoints-title">Endpoints</h2><ul className="gateway-list">{endpoints.map((item) => <li key={item.key}><span>{item.name}</span><small>{item.rateLimitPerMinute}/min</small></li>)}</ul></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

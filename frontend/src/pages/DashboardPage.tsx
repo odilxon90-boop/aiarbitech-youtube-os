@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useMemo, useState } from 'react';
 import { createDashboardClient, type DashboardClient } from '../dashboard/dashboard-client';
 import type {
@@ -189,3 +190,6 @@ function Recommendations({ items }: { items: Recommendation[] }) {
     </section>
   );
 }
+=======
+export function DashboardPage() { return <section className="card journey-page" aria-labelledby="dashboard-title"><p className="section-kicker">Mock dashboard</p><h2 id="dashboard-title">Creator dashboard</h2><div className="journey-kpis"><strong>72<br /><small>Success score</small></strong><strong>2<br /><small>Active workflows</small></strong><strong>91<br /><small>Quality score</small></strong><strong>+12%<br /><small>Views trend</small></strong></div></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

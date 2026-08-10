@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { AppShell } from './AppShell';
 import { createPlatformFoundationClient, type PlatformFoundationClient } from '../platform/platform-client';
 import type { PlatformFoundationStatus } from '../platform/types';
@@ -8,6 +8,7 @@ import { HealthStatusPage } from '../platform/HealthStatusPage';
 import { PlatformBoundaryRegistryDashboard } from '../platform/PlatformBoundaryRegistryDashboard';
 import { PlatformHealthDashboard } from '../platform/PlatformHealthDashboard';
 import { PlatformIdentityPage } from '../platform/PlatformIdentityPage';
+<<<<<<< HEAD
 import { PlatformRegistrationPage } from '../platform/PlatformRegistrationPage';
 import { Gate0BDashboard } from '../platform/Gate0BDashboard';
 import { DashboardPage } from '../pages/DashboardPage';
@@ -17,8 +18,25 @@ import { IntelligencePage } from '../pages/IntelligencePage';
 import { GenrePage } from '../pages/GenrePage';
 import { AdminPanelPage } from '../pages/AdminPanelPage';
 import { GatewayPage } from '../pages/GatewayPage';
+=======
+import { DashboardPage } from '../pages/DashboardPage';
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 import { EmptyState, ErrorState, LoadingState } from '../shared/components/AsyncStates';
 import { errorState, loadingState, successState, type AsyncState } from '../shared/async-state';
+
+const AnalyticsPage = lazy(async () => ({ default: (await import('../pages/AnalyticsPage')).AnalyticsPage }));
+const AIAssistantPage = lazy(async () => ({ default: (await import('../pages/AIAssistantPage')).AIAssistantPage }));
+const QualityGatePage = lazy(async () => ({ default: (await import('../pages/QualityGatePage')).QualityGatePage }));
+const AdminPanelPage = lazy(async () => ({ default: (await import('../pages/AdminPanelPage')).AdminPanelPage }));
+const AISyncPage = lazy(async () => ({ default: (await import('../pages/AISyncPage')).AISyncPage }));
+const WorkflowPage = lazy(async () => ({ default: (await import('../pages/WorkflowPage')).WorkflowPage }));
+const PromptRegistryPage = lazy(async () => ({ default: (await import('../pages/PromptRegistryPage')).PromptRegistryPage }));
+const OnboardingPage = lazy(async () => ({ default: (await import('../pages/OnboardingPage')).OnboardingPage }));
+const SuccessScorePage = lazy(async () => ({ default: (await import('../pages/SuccessScorePage')).SuccessScorePage }));
+const TwinPage = lazy(async () => ({ default: (await import('../pages/TwinPage')).TwinPage }));
+const GatewayPage = lazy(async () => ({ default: (await import('../pages/GatewayPage')).GatewayPage }));
+const GovernancePage = lazy(async () => ({ default: (await import('../pages/GovernancePage')).GovernancePage }));
+const PresidentPanelPage = lazy(async () => ({ default: (await import('../pages/PresidentPanelPage')).PresidentPanelPage }));
 
 export interface AppProps {
   client?: PlatformFoundationClient;
@@ -44,6 +62,10 @@ export function App({ client }: AppProps) {
 
   return (
     <AppShell>
+      <DashboardPage />
+      <Suspense fallback={<LoadingState />}>
+        <AnalyticsPage />
+        <AIAssistantPage />
       {state.status === 'loading' && <LoadingState />}
       {state.status === 'error' && <ErrorState message={state.error ?? 'Unknown error'} />}
       {state.status === 'empty' && <EmptyState />}
@@ -61,6 +83,7 @@ export function App({ client }: AppProps) {
           <Gate0BDashboard governance={state.data.governance} />
         </div>
       )}
+<<<<<<< HEAD
       <DashboardPage />
       <AnalyticsPage />
       <AIAssistantPage />
@@ -68,6 +91,20 @@ export function App({ client }: AppProps) {
       <GenrePage />
       <AdminPanelPage />
       <GatewayPage />
+=======
+        <QualityGatePage />
+        <AdminPanelPage />
+        <AISyncPage />
+        <WorkflowPage />
+        <PromptRegistryPage />
+        <OnboardingPage />
+        <SuccessScorePage />
+        <TwinPage />
+        <GatewayPage />
+        <GovernancePage />
+        <PresidentPanelPage />
+      </Suspense>
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
     </AppShell>
   );
 }

@@ -1,0 +1,1 @@
+export function ScoreCard({ score }: { score: number }) { return <section className="card success-card" aria-labelledby="success-score-title"><p className="section-kicker">Mock performance</p><h2 id="success-score-title">Creator Success Score</h2><strong className="success-score">{score}<span>/100</span></strong></section>; }

@@ -1,0 +1,2 @@
+export interface SuccessCategory { id: string; name: string; score: number; }
+export function CategoryBreakdown({ categories }: { categories: readonly SuccessCategory[] }) { return <section className="card success-card" aria-labelledby="success-categories-title"><p className="section-kicker">Mock categories</p><h2 id="success-categories-title">Score breakdown</h2><ul className="success-list">{categories.map((category) => <li key={category.id}><span>{category.name}</span><strong>{category.score}</strong></li>)}</ul></section>; }

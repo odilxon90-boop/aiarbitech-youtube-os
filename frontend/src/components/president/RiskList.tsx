@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { RiskAlert } from '../../president/types';
 
 export interface RiskListProps {
@@ -27,3 +28,6 @@ export function RiskList({ risks }: RiskListProps) {
     </section>
   );
 }
+=======
+export function RiskList({ risks }: { risks: readonly { id: string; title: string; severity: string; detail: string }[] }) { return <article><h3>Risk Alerts</h3>{risks.map((risk) => <p key={risk.id}><strong>{risk.severity}</strong> {risk.title}: {risk.detail}</p>)}</article>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

@@ -1,0 +1,2 @@
+export interface OnboardingStepData { title: string; description: string; }
+export function StepContent({ step }: { step: OnboardingStepData }) { return <section className="card onboarding-card" aria-labelledby="onboarding-step-title"><p className="section-kicker">Creator setup</p><h2 id="onboarding-step-title">{step.title}</h2><p className="muted">{step.description}</p><label>Your mock response<input aria-label="Your mock response" defaultValue="" /></label></section>; }

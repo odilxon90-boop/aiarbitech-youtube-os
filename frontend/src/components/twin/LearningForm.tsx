@@ -1,0 +1,2 @@
+import { useState } from 'react';
+export function LearningForm() { const [saved, setSaved] = useState(false); return <section className="card twin-card" aria-labelledby="twin-learning-title"><p className="section-kicker">Mock learning</p><h2 id="twin-learning-title">Teach your twin</h2><form onSubmit={(event) => { event.preventDefault(); setSaved(true); }}><label>Preference<input aria-label="Preference" defaultValue="Prefer concise intros" /></label><button type="submit">Save mock learning</button>{saved && <p role="status">Mock learning saved.</p>}</form></section>; }

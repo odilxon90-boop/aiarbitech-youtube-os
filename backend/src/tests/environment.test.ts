@@ -13,6 +13,11 @@ describe('environment configuration', () => {
     expect(isGlobalEcosystemConfigured(config)).toBe(false);
   });
 
+  it('falls back to a local postgres url when DATABASE_URL is missing', () => {
+    const config = loadEnvironment({ NODE_ENV: 'test' });
+    expect(config.DATABASE_URL).toBe('postgresql://localhost:5432/youtube_os');
+  });
+
   it('rejects non-PostgreSQL platform databases', () => {
     expect(() => loadEnvironment({ ...validEnvironment, DATABASE_URL: 'mysql://localhost/db' })).toThrow(
       EnvironmentValidationError,

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # UAT Test Scenarios — YouTube OS
 
 Each scenario describes a real-world workflow a user would perform. Scenarios group related test cases in `cases.md`.
@@ -204,3 +205,19 @@ Priority: **P0** = Critical (must pass), **P1** = High, **P2** = Medium
 | SCN-PERF-07 | Rate limiting returns 429 (not 500) on threshold breach | P1 |
 
 **Business Value:** Performance directly affects creator productivity and platform perception at launch.
+=======
+# User Acceptance Test Scenarios
+
+| ID | Scenario | User outcome | Priority |
+| --- | --- | --- | --- |
+| SCN-AUTH | Login, logout, token refresh, and permission enforcement | Authorized users securely access permitted functions. | P0 |
+| SCN-DASH | Dashboard loading and data accuracy | Creators see a responsive, accurate summary. | P0 |
+| SCN-AI | AI Assistant responses and edge cases | Users receive useful, safe responses for valid requests. | P0 |
+| SCN-ANALYTICS | KPI cards, charts, and filtering | Users can understand and filter performance data. | P1 |
+| SCN-GOALS | Goal creation, update, and deletion | Users manage goals without losing unrelated data. | P1 |
+| SCN-VIDEO | Video library and metadata | Users can view and manage video records. | P1 |
+| SCN-MUSIC | Music browsing, search, and licensing | Users can find licensable music and see licensing status. | P2 |
+| SCN-GENRE | Genre recommendations and caching | Users receive relevant recommendations with repeatable performance. | P2 |
+| SCN-ADMIN | User management and moderation | Administrators safely manage users and moderation actions. | P0 |
+| SCN-PERF | Response time and load handling | Critical journeys remain responsive at the approved load. | P0 |
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

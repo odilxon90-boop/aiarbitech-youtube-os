@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { GatewayHealthResponse, GatewayHealthMetric } from '../../gateway/types';
 
 const STATUS_ICON: Record<GatewayHealthMetric['status'], string> = {
@@ -51,3 +52,7 @@ export function HealthChart({ health }: HealthChartProps) {
     </section>
   );
 }
+=======
+export interface GatewayHealth { metric: string; value: string; status: string; }
+export function HealthChart({ metrics }: { metrics: readonly GatewayHealth[] }) { return <section className="card gateway-card" aria-labelledby="gateway-health-title"><p className="section-kicker">Mock health checks</p><h2 id="gateway-health-title">Health</h2><ul className="gateway-list">{metrics.map((metric) => <li key={metric.metric}><span>{metric.metric}</span><strong>{metric.value} · {metric.status}</strong></li>)}</ul></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

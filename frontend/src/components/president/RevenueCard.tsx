@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { RevenueOverview } from '../../president/types';
 
 export interface RevenueCardProps {
@@ -26,3 +27,6 @@ export function RevenueCard({ revenue }: RevenueCardProps) {
     </section>
   );
 }
+=======
+export function RevenueCard({ monthly, total, trendPercent }: { monthly: number; total: number; trendPercent: number }) { return <article><h3>Revenue</h3><p>Monthly: ${monthly.toLocaleString()}</p><p>Total: ${total.toLocaleString()} ({trendPercent}% trend)</p></article>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

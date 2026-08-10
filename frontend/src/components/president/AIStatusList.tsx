@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { AIStatus } from '../../president/types';
 
 export interface AIStatusListProps {
@@ -24,3 +25,6 @@ export function AIStatusList({ aiStatus }: AIStatusListProps) {
     </section>
   );
 }
+=======
+export function AIStatusList({ statuses }: { statuses: readonly { name: string; status: string; detail: string }[] }) { return <article><h3>AI Director</h3>{statuses.map((item) => <p key={item.name}>{item.status}: {item.name} - {item.detail}</p>)}</article>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

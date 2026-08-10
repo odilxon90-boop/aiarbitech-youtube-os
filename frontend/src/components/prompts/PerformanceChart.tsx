@@ -1,0 +1,2 @@
+export interface PromptPerformanceItem { id: string; name: string; successRatePercent: number; }
+export function PerformanceChart({ items }: { items: readonly PromptPerformanceItem[] }) { return <section className="card prompt-card prompt-card--wide" aria-labelledby="prompt-performance-title"><p className="section-kicker">Mock performance</p><h2 id="prompt-performance-title">Performance metrics</h2><ul className="prompt-list">{items.map((item) => <li key={item.id}><span>{item.name}</span><strong>{item.successRatePercent}% success</strong></li>)}</ul></section>; }

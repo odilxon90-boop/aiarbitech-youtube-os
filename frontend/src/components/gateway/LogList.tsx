@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { GatewayLogEntry } from '../../gateway/types';
 
 const OUTCOME_CLASS: Record<GatewayLogEntry['outcome'], string> = {
@@ -40,3 +41,7 @@ export function LogList({ entries }: LogListProps) {
     </section>
   );
 }
+=======
+export interface GatewayLog { id: string; endpoint: string; status: string; latencyMs: number; }
+export function LogList({ logs }: { logs: readonly GatewayLog[] }) { return <section className="card gateway-card gateway-card--wide" aria-labelledby="gateway-logs-title"><p className="section-kicker">Last 50 mock calls</p><h2 id="gateway-logs-title">Request logs</h2><ul className="gateway-list">{logs.map((log) => <li key={log.id}><span>{log.endpoint}: {log.status}</span><small>{log.latencyMs}ms</small></li>)}</ul></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

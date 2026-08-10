@@ -1,0 +1,2 @@
+export interface TwinRecommendation { id: string; idea: string; confidencePercent: number; }
+export function RecommendationList({ recommendations }: { recommendations: readonly TwinRecommendation[] }) { return <section className="card twin-card twin-card--wide" aria-labelledby="twin-recommendations-title"><p className="section-kicker">Mock recommendations</p><h2 id="twin-recommendations-title">Content ideas</h2><ul className="twin-list">{recommendations.map((item) => <li key={item.id}><span>{item.idea}</span><strong>{item.confidencePercent}%</strong></li>)}</ul></section>; }

@@ -1,0 +1,2 @@
+export interface TwinDecision { id: string; decision: string; outcome: string; }
+export function DecisionHistory({ decisions }: { decisions: readonly TwinDecision[] }) { return <section className="card twin-card" aria-labelledby="twin-decisions-title"><p className="section-kicker">Mock history</p><h2 id="twin-decisions-title">Decisions</h2><ul className="twin-list">{decisions.map((item) => <li key={item.id}><span>{item.decision}</span><small>{item.outcome}</small></li>)}</ul></section>; }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { SyncStatusResponse } from '../../ai-sync/types';
 
 export interface StatusCardProps {
@@ -30,4 +31,8 @@ export function StatusCard({ status }: StatusCardProps) {
       <p className="muted">{status.message}</p>
     </section>
   );
+=======
+export function StatusCard({ status, lastSynchronizedAt }: { status: string; lastSynchronizedAt: string }) {
+  return <section className="card sync-card" aria-labelledby="sync-status-title"><p className="section-kicker">Mock connection</p><h2 id="sync-status-title">Sync status</h2><strong className="sync-status">{status}</strong><p className="muted">Last sync: {lastSynchronizedAt}</p></section>;
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 }

@@ -1,0 +1,2 @@
+export interface GovernancePermission { id: string; resource: string; action: string; }
+export function PermissionList({ permissions }: { permissions: readonly GovernancePermission[] }) { return <section className="card governance-card" aria-labelledby="governance-permissions-title"><p className="section-kicker">Mock permissions</p><h2 id="governance-permissions-title">Permissions</h2><ul className="governance-list">{permissions.map((permission) => <li key={permission.id}><span>{permission.resource}</span><small>{permission.action}</small></li>)}</ul></section>; }

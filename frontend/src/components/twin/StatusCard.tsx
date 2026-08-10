@@ -1,0 +1,1 @@
+export function StatusCard({ status }: { status: string }) { return <section className="card twin-card" aria-labelledby="twin-status-title"><p className="section-kicker">Mock creator twin</p><h2 id="twin-status-title">Twin status</h2><strong className="twin-status">{status}</strong></section>; }

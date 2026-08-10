@@ -1,0 +1,18 @@
+{
+  "uid": "youtube-os-overview",
+  "title": "YouTube OS - Overview",
+  "tags": ["youtube-os", "overview"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "templating": { "list": [{ "name": "datasource", "type": "datasource", "query": "prometheus", "current": { "text": "Prometheus", "value": "Prometheus" } }] },
+  "panels": [
+    { "type": "stat", "title": "Service Availability", "datasource": "$datasource", "targets": [{ "expr": "up{job=\"youtube-os\"}", "refId": "A" }], "gridPos": { "x": 0, "y": 0, "w": 6, "h": 6 } },
+    { "type": "stat", "title": "Request Rate", "datasource": "$datasource", "targets": [{ "expr": "sum(rate(http_requests_total{service=\"youtube-os\"}[5m]))", "refId": "A" }], "fieldConfig": { "defaults": { "unit": "reqps" } }, "gridPos": { "x": 6, "y": 0, "w": 6, "h": 6 } },
+    { "type": "stat", "title": "P95 Latency", "datasource": "$datasource", "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service=\"youtube-os\"}[5m])) by (le))", "refId": "A" }], "fieldConfig": { "defaults": { "unit": "s" } }, "gridPos": { "x": 12, "y": 0, "w": 6, "h": 6 } },
+    { "type": "stat", "title": "Error Rate", "datasource": "$datasource", "targets": [{ "expr": "100 * sum(rate(http_requests_total{service=\"youtube-os\",status=~\"5..\"}[5m])) / sum(rate(http_requests_total{service=\"youtube-os\"}[5m]))", "refId": "A" }], "fieldConfig": { "defaults": { "unit": "percent" } }, "gridPos": { "x": 18, "y": 0, "w": 6, "h": 6 } },
+    { "type": "timeseries", "title": "Requests and Errors", "datasource": "$datasource", "targets": [{ "expr": "sum(rate(http_requests_total{service=\"youtube-os\"}[5m]))", "legendFormat": "RPS", "refId": "A" }, { "expr": "sum(rate(http_requests_total{service=\"youtube-os\",status=~\"5..\"}[5m]))", "legendFormat": "5xx/sec", "refId": "B" }], "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 } },
+    { "type": "timeseries", "title": "Cache and Database Health", "datasource": "$datasource", "targets": [{ "expr": "youtube_os_cache_hit_rate_percent", "legendFormat": "cache hit rate", "refId": "A" }, { "expr": "pg_stat_activity_count{datname=\"neondb\"}", "legendFormat": "db connections", "refId": "B" }], "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 } }
+  ]
+}

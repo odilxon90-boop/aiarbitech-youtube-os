@@ -1,0 +1,2 @@
+export interface PromptDetailData { name: string; content: string; model: string; versionCount: number; }
+export function PromptDetail({ prompt }: { prompt: PromptDetailData }) { return <section className="card prompt-card" aria-labelledby="prompt-detail-title"><p className="section-kicker">Mock metadata</p><h2 id="prompt-detail-title">{prompt.name}</h2><p className="muted">{prompt.content}</p><strong>{prompt.model} · {prompt.versionCount} versions</strong></section>; }

@@ -1,0 +1,10 @@
+import { afterEach, describe, expect, it } from 'vitest';
+import { buildApp, NoopLogger } from '../app/server.js';
+import { loadEnvironment } from '../config/environment.js';
+const config = loadEnvironment({ NODE_ENV: 'test', DATABASE_URL: 'postgresql://localhost:5432/youtube_os' }); const headers = { authorization: 'Bearer mock-token', 'x-permissions': 'twin:access' }; const apps: Awaited<ReturnType<typeof buildApp>>[] = [];
+afterEach(async () => Promise.all(apps.splice(0).map((app) => app.close()))); async function createApp() { const app = await buildApp({ config, logger: new NoopLogger() }); apps.push(app); return app; }
+describe('Creator Twin API', () => {
+  it('requires authentication and twin:access', async () => { const app = await createApp(); expect((await app.inject({ method: 'GET', url: '/api/v1/twin/status' })).statusCode).toBe(401); expect((await app.inject({ method: 'GET', url: '/api/v1/twin/status', headers: { authorization: 'Bearer token' } })).statusCode).toBe(403); });
+  it('manages mock twin status and learning', async () => { const app = await createApp(); const active = await app.inject({ method: 'POST', url: '/api/v1/twin/activate', headers }); const inactive = await app.inject({ method: 'POST', url: '/api/v1/twin/deactivate', headers }); const learned = await app.inject({ method: 'POST', url: '/api/v1/twin/learn', headers, payload: { source: 'Mock feedback', summary: 'Prefer concise intros.' } }); expect(active.json().data.status).toBe('ACTIVE'); expect(inactive.json().data.status).toBe('INACTIVE'); expect(learned.json().data.source).toBe('Mock feedback'); });
+  it('returns decisions and recommendations', async () => { const app = await createApp(); const decisions = await app.inject({ method: 'GET', url: '/api/v1/twin/decisions', headers }); const recommendations = await app.inject({ method: 'GET', url: '/api/v1/twin/recommendations', headers }); expect(decisions.json().data.length).toBeGreaterThanOrEqual(10); expect(recommendations.json().data.length).toBeGreaterThanOrEqual(5); });
+});

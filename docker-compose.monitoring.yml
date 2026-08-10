@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3.8'
 
 services:
@@ -6,10 +7,77 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: aiarbitech-youtube-os-prometheus
+=======
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: youtube_os
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d youtube_os"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - monitoring
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.16.0
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: postgresql://postgres:postgres@postgres:5432/youtube_os?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - monitoring
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - youtube_os_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - monitoring
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.67.0
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis://redis:6379
+    ports:
+      - "9121:9121"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
     restart: unless-stopped
     ports:
       - "9090:9090"
     volumes:
+<<<<<<< HEAD
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./prometheus/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
       - prometheus_data:/prometheus
@@ -35,11 +103,21 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: aiarbitech-youtube-os-grafana
+=======
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:11.2.2
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
     restart: unless-stopped
     ports:
       - "3001:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+<<<<<<< HEAD
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/etc/grafana/dashboards:ro
     environment:
@@ -165,12 +243,30 @@ services:
     networks:
       - monitoring
     pid: host
+=======
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+volumes:
+  postgres_data:
+  youtube_os_redis_data:
+  grafana_data:
+  prometheus_data:
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 
 networks:
   monitoring:
     driver: bridge
+<<<<<<< HEAD
 
 volumes:
   prometheus_data:
   grafana_data:
   alertmanager_data:
+=======
+    name: youtube-os-monitoring
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

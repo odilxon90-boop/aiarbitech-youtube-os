@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useMemo, useState } from 'react';
 import { createAnalyticsClient } from '../analytics/analytics-client';
 import type { AnalyticsClient } from '../analytics/analytics-client';
@@ -125,3 +126,6 @@ function AnalyticsContent({ data, selectedMetric, onSelectMetric }: AnalyticsCon
     </div>
   );
 }
+=======
+export function AnalyticsPage() { return <section className="card journey-page" aria-labelledby="analytics-title"><p className="section-kicker">Mock analytics</p><h2 id="analytics-title">Analytics</h2><svg className="journey-chart" viewBox="0 0 300 100" role="img" aria-label="Mock views chart"><polyline points="0,80 100,60 200,35 300,20" fill="none" stroke="currentColor" strokeWidth="4" /></svg><p className="muted">Retention 68% · Mock revenue $420</p></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

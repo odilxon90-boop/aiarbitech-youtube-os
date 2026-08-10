@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/bin/bash
 # Automatic SSL Certificate Renewal Script
 # Usage: ./renew.sh
@@ -90,3 +91,16 @@ else
     
     exit 1
 fi
+=======
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOG_FILE="/var/log/letsencrypt-renew.log"
+
+sudo systemctl stop nginx >> "$LOG_FILE" 2>&1
+trap 'sudo systemctl start nginx >> "$LOG_FILE" 2>&1' EXIT
+sudo certbot renew --quiet >> "$LOG_FILE" 2>&1
+
+# Install a daily renewal check with:
+# 0 3 * * * /absolute/path/to/ssl/renew.sh
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

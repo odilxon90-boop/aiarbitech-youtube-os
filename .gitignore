@@ -12,6 +12,7 @@ coverage/
 # Environment and local state
 .env
 .env.*
+backend/.env
 !.env.example
 *.local
 *.log

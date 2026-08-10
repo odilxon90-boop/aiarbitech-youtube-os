@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
+<<<<<<< HEAD
 import { requirePermission } from '../shared/auth.js';
 import { PlatformError } from '../shared/errors.js';
 import { videoController } from './video-controller.js';
@@ -46,4 +47,16 @@ export function registerVideoRoutes(app: FastifyInstance): void {
     }
     return successResponse(project, request.correlationId);
   });
+=======
+import { VideoController } from './video-controller.js';
+import { VideoService } from './video-service.js';
+
+export function registerVideoRoutes(
+  app: FastifyInstance,
+  controller = new VideoController(new VideoService()),
+): void {
+  app.get<{ Querystring: { genre?: string } }>('/api/v1/videos/ideas', async (request) =>
+    successResponse(controller.ideas(request), request.correlationId),
+  );
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { CapabilityRegistry, ContractCompatibility, Gate0BGovernance, GlobalEcosystemConnectionStatus, GovernanceArtifact, HealthStatus, PlatformBoundaryRegistry, PlatformFoundationStatus, PlatformHealthManifest, PlatformManifest, RegistrationSummary } from './types';
 interface ApiEnvelope<T>{data:T;meta:{correlationId:string;timestamp:string}}
 interface ReadyResponse{status:'READY';checks:{environment:'VALID';platformManifest:'AVAILABLE';globalEcosystem:'NOT_CONFIGURED'|'NOT_VERIFIED'}}
@@ -12,5 +13,75 @@ export class HttpPlatformFoundationClient implements PlatformFoundationClient{
   const keys=Object.keys(paths) as (keyof Gate0BGovernance)[];const governance=Object.fromEntries(keys.map((key,index)=>[key,governanceValues[index]])) as unknown as Gate0BGovernance;governance.capabilities=governance.capabilities as CapabilityRegistry;governance.boundaries=governance.boundaries as PlatformBoundaryRegistry;governance.healthManifest=governance.healthManifest as PlatformHealthManifest;
   const health:HealthStatus={live:live.status,ready:ready.status,environment:ready.checks.environment};return{manifest,health,connection,registration,governance:{...governance,contractCompatibility:governance.contractCompatibility as ContractCompatibility}};
  }
+=======
+import type {
+  GlobalEcosystemConnectionStatus,
+  HealthStatus,
+  PlatformFoundationStatus,
+  PlatformManifest,
+} from './types';
+
+interface ApiEnvelope<T> {
+  data: T;
+  meta: {
+    correlationId: string;
+    timestamp: string;
+  };
+}
+
+interface ReadyResponse {
+  status: 'READY';
+  checks: {
+    environment: 'VALID';
+    platformManifest: 'AVAILABLE';
+    globalEcosystem: 'NOT_CONFIGURED' | 'NOT_VERIFIED';
+  };
+}
+
+interface LiveResponse {
+  status: 'ALIVE';
+}
+
+export interface PlatformFoundationClient {
+  loadFoundationStatus(signal?: AbortSignal): Promise<PlatformFoundationStatus>;
+}
+
+export class HttpPlatformFoundationClient implements PlatformFoundationClient {
+  constructor(private readonly baseUrl: string) {}
+
+  private async get<T>(path: string, signal?: AbortSignal): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      ...(signal ? { signal } : {}),
+    });
+    if (!response.ok) throw new Error(`Platform API returned ${response.status}`);
+    const envelope = (await response.json()) as ApiEnvelope<T>;
+    return envelope.data;
+  }
+
+  async loadFoundationStatus(signal?: AbortSignal): Promise<PlatformFoundationStatus> {
+    const [manifest, live, ready, connection] = await Promise.all([
+      this.get<PlatformManifest>('/platform/manifest', signal),
+      this.get<LiveResponse>('/health/live', signal),
+      this.get<ReadyResponse>('/health/ready', signal),
+      this.get<GlobalEcosystemConnectionStatus>('/platform/compatibility', signal),
+    ]);
+
+    const health: HealthStatus = {
+      live: live.status,
+      ready: ready.status,
+      environment: ready.checks.environment,
+    };
+    return { manifest, health, connection };
+  }
+}
+
+export function createPlatformFoundationClient(): PlatformFoundationClient {
+  const configuredBaseUrl =
+    import.meta.env.VITE_PLATFORM_API_BASE_URL?.trim() ||
+    'https://aiarbitech-youtube-os-production.up.railway.app/api/v1';
+  return new HttpPlatformFoundationClient(configuredBaseUrl || '/api/v1');
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 }
 export function createPlatformFoundationClient():PlatformFoundationClient{const configuredBaseUrl=import.meta.env.VITE_PLATFORM_API_BASE_URL?.trim();return new HttpPlatformFoundationClient(configuredBaseUrl||'/api/v1')}

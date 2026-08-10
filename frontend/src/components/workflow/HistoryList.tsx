@@ -1,0 +1,2 @@
+export interface WorkflowHistoryItem { id: string; timestamp: string; event: string; detail: string; }
+export function HistoryList({ entries }: { entries: readonly WorkflowHistoryItem[] }) { return <section className="card workflow-card workflow-card--wide" aria-labelledby="workflow-history-title"><p className="section-kicker">Mock event log</p><h2 id="workflow-history-title">Workflow history</h2><ul className="workflow-list">{entries.map((entry) => <li key={entry.id}><span>{entry.event}: {entry.detail}</span><small>{entry.timestamp}</small></li>)}</ul></section>; }

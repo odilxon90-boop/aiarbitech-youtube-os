@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { FastifyInstance } from 'fastify';
 
 /**
@@ -15,3 +16,8 @@ export function registerGatewayMiddleware(app: FastifyInstance): void {
     return payload;
   });
 }
+=======
+import type { FastifyRequest } from 'fastify';
+import { requirePermission } from '../auth/permission.middleware.js';
+export function requireGatewayAccess(request: FastifyRequest): void { requirePermission(request, 'gateway:access'); }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

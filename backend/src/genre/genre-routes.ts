@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { successResponse } from '../contracts/api.js';
+<<<<<<< HEAD
 import { requirePermission } from '../shared/auth.js';
 import { PlatformError } from '../shared/errors.js';
 import { genreController } from './genre-controller.js';
@@ -31,4 +32,16 @@ export function registerGenreRoutes(app: FastifyInstance): void {
     }
     return successResponse(result, request.correlationId);
   });
+=======
+import { GenreController } from './genre-controller.js';
+import { GenreService } from './genre-service.js';
+
+export function registerGenreRoutes(
+  app: FastifyInstance,
+  controller = new GenreController(new GenreService()),
+): void {
+  app.get<{ Querystring: { channelId?: string } }>('/api/v1/genres/recommendations', async (request) =>
+    successResponse(controller.recommendations(request), request.correlationId),
+  );
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
 }

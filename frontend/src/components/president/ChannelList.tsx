@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { ChannelStat } from '../../president/types';
 
 export interface ChannelListProps {
@@ -31,3 +32,6 @@ export function ChannelList({ channels }: ChannelListProps) {
     </section>
   );
 }
+=======
+export function ChannelList({ channels }: { channels: readonly { id: string; name: string; subscribers: number; monetized: boolean; growthPercent: number }[] }) { return <article><h3>Channels</h3>{channels.map((channel) => <p key={channel.id}>{channel.name} - {channel.subscribers.toLocaleString()} subscribers, {channel.growthPercent}% growth, {channel.monetized ? 'monetized' : 'not monetized'}</p>)}</article>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f

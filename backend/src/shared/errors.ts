@@ -26,6 +26,7 @@ export function registerErrorHandler(app: FastifyInstance, logger: PlatformLogge
       logger.error('Unhandled request error', {
         correlationId: request.correlationId,
         errorName: error instanceof Error ? error.name : 'UnknownError',
+        ...(error instanceof Error && error.stack ? { stack: error.stack } : {}),
       });
     }
 

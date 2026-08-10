@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { GatewayStatusResponse } from '../../gateway/types';
 
 const STATUS_ICON: Record<GatewayStatusResponse['status'], string> = {
@@ -48,3 +49,6 @@ export function StatusCard({ status }: StatusCardProps) {
     </section>
   );
 }
+=======
+export function StatusCard({ status }: { status: string }) { return <section className="card gateway-card" aria-labelledby="gateway-status-title"><p className="section-kicker">Mock gateway</p><h2 id="gateway-status-title">Gateway status</h2><strong className="gateway-status">{status}</strong></section>; }
+>>>>>>> 81fef7325c2bc9ed278736de444923623b49724f
