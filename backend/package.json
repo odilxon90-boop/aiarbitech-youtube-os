@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "engines": {
-    "node": ">=20.19.0 <21"
+    "node": "24.x"
   },
   "main": "dist/app/server.js",
   "scripts": {
@@ -37,7 +37,6 @@
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.5",
     "prisma": "^6.19.0",
-    "tsc": "^4.0.0",
     "typescript": "^5.9.1",
     "vitest": "^3.2.4"
   },
