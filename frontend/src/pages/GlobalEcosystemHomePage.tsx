@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ensureAutoTranslations, supportedLanguages, type SupportedLanguage } from '../i18n';
+
 const platforms = [
   { name: 'YouTube OS', description: 'AI-powered YouTube automation and optimization platform.', accent: 'red', icon: '▶', motif: '◼︎ ◼︎ ◼︎', detail: 'Creator intelligence · Revenue monitoring' },
   { name: 'AI Arbitrage', description: 'Autonomous arbitrage systems for global digital markets.', accent: 'violet', icon: '↗', motif: '╱╲╱╲', detail: 'Signals · Numbers · Fast execution' },
@@ -60,6 +64,17 @@ function Globe() {
 }
 
 export function GlobalEcosystemHomePage() {
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState<SupportedLanguage>(() => {
+    const current = i18n.resolvedLanguage ?? i18n.language ?? 'en';
+    return (supportedLanguages.includes(current as SupportedLanguage) ? current : 'en') as SupportedLanguage;
+  });
+
+  useEffect(() => {
+    void ensureAutoTranslations(language);
+    void i18n.changeLanguage(language);
+  }, [language, i18n]);
+
   return (
     <div className="min-h-screen overflow-hidden bg-[#070b16] text-white">
       <nav className="border-b border-white/10 bg-[#070b16]/85 backdrop-blur-xl">
@@ -69,7 +84,22 @@ export function GlobalEcosystemHomePage() {
             <span className="leading-tight"><strong className="block text-sm tracking-wide">AIArbiTechnology</strong><small className="block text-[9px] uppercase tracking-[.3em] text-slate-400">Global Ecosystem</small></span>
           </a>
           <div className="hidden items-center gap-8 text-sm text-slate-300 md:flex"><a href="#ecosystem" className="text-white">Ecosystem</a><a href="#platforms" className="hover:text-white">Platforms</a><a href="#solutions" className="hover:text-white">Solutions</a><a href="#footer" className="hover:text-white">Company</a></div>
-          <div className="flex items-center gap-3"><span className="hidden text-sm text-slate-300 sm:inline">◎ EN⌄</span><button className="hidden rounded-lg border border-white/15 px-4 py-2 text-sm sm:block">Sign In</button><a href="#platforms" className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-bold shadow-[0_0_24px_rgba(56,189,248,.22)]">Enter Ecosystem</a></div>
+          <div className="flex items-center gap-3">
+            <label className="hidden items-center gap-2 rounded-lg border border-white/15 px-2 py-1 text-sm text-slate-300 sm:flex">
+              <span>{t('nav.language')}</span>
+              <select
+                value={language}
+                onChange={(event) => setLanguage(event.target.value as SupportedLanguage)}
+                className="rounded bg-[#0f172a] px-2 py-1 text-xs text-slate-100"
+              >
+                {supportedLanguages.map((code) => (
+                  <option key={code} value={code}>{code.toUpperCase()}</option>
+                ))}
+              </select>
+            </label>
+            <button className="hidden rounded-lg border border-white/15 px-4 py-2 text-sm sm:block">{t('nav.login')}</button>
+            <a href="#platforms" className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-bold shadow-[0_0_24px_rgba(56,189,248,.22)]">{t('nav.register')}</a>
+          </div>
         </div>
       </nav>
 

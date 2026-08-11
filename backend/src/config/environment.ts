@@ -46,6 +46,11 @@ const environmentSchema = z
     YOUTUBE_CLIENT_SECRET: optionalNonEmpty,
     YOUTUBE_ACCESS_TOKEN: optionalNonEmpty,
     YOUTUBE_REFRESH_TOKEN: optionalNonEmpty,
+    TRANSLATION_PROVIDER: z.enum(['mock', 'openai', 'google']).default('mock'),
+    TRANSLATION_CACHE_TTL_SECONDS: z.coerce.number().int().min(60).max(604_800).default(86_400),
+    OPENAI_API_KEY: optionalNonEmpty,
+    OPENAI_TRANSLATION_MODEL: z.string().min(1).default('gpt-4o-mini'),
+    GOOGLE_TRANSLATE_API_KEY: optionalNonEmpty,
   })
   .superRefine((config, context) => {
     const hasClientId = Boolean(config.GLOBAL_ECOSYSTEM_CLIENT_ID);
@@ -95,6 +100,22 @@ const environmentSchema = z
         code: z.ZodIssueCode.custom,
         path: ['YOUTUBE_REFRESH_TOKEN'],
         message: 'YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET are required when YOUTUBE_REFRESH_TOKEN is configured',
+      });
+    }
+
+    if (config.TRANSLATION_PROVIDER === 'openai' && !config.OPENAI_API_KEY) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['OPENAI_API_KEY'],
+        message: 'OPENAI_API_KEY is required when TRANSLATION_PROVIDER=openai',
+      });
+    }
+
+    if (config.TRANSLATION_PROVIDER === 'google' && !config.GOOGLE_TRANSLATE_API_KEY) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['GOOGLE_TRANSLATE_API_KEY'],
+        message: 'GOOGLE_TRANSLATE_API_KEY is required when TRANSLATION_PROVIDER=google',
       });
     }
   });

@@ -1,4 +1,4 @@
-import Fastify, { type FastifyInstance } from 'fastify';
+﻿import Fastify, { type FastifyInstance } from 'fastify';
 import 'dotenv/config';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
@@ -9,7 +9,6 @@ import { registerJwtAuthentication } from '../auth/auth.middleware.js';
 import { registerAuthRoutes } from '../auth/auth.routes.js';
 import { JwtService } from '../auth/jwt.service.js';
 import { registerAdminRoutes } from '../admin/admin-routes.js';
-import { registerCreatorRoutes } from '../creator/creator-routes.js';
 import { registerAISyncRoutes } from '../ai-sync/ai-sync-routes.js';
 import { registerWorkflowRoutes } from '../workflow/workflow-routes.js';
 import { registerPromptRoutes } from '../prompt-registry/prompt-routes.js';
@@ -20,6 +19,7 @@ import { registerGatewayRoutes } from '../integration-gateway/gateway-routes.js'
 import { registerPermissionRoutes } from '../governance/permission-routes.js';
 import { registerJourneyRoutes } from '../journey/routes.js';
 import { registerYouTubeRoutes } from '../youtube/youtube-routes.js';
+import { registerTranslationRoutes } from '../i18n/translation-routes.js';
 import { registerMonitoringHealthRoutes } from '../monitoring/healthcheck.js';
 import { registerMonitoringMiddleware } from '../monitoring/monitoring-middleware.js';
 import { MetricsCollector } from '../monitoring/metrics.js';
@@ -98,7 +98,6 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerMusicRoutes(app);
   registerGenreRoutes(app);
   registerAdminRoutes(app);
-  registerCreatorRoutes(app);
   registerAISyncRoutes(app);
   registerWorkflowRoutes(app);
   registerPromptRoutes(app);
@@ -109,6 +108,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerPermissionRoutes(app);
   registerJourneyRoutes(app);
   registerYouTubeRoutes(app);
+  registerTranslationRoutes(app, config);
   app.get('/health', async () => ({ status: 'ok' }));
   app.get('/api/health', async () => ({ status: 'ok' }));
   registerMonitoringHealthRoutes(app, metrics, cacheWarming);
