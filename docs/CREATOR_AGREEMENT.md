@@ -4,6 +4,20 @@
 
 This agreement defines Creator responsibilities, platform commitments, and operating boundaries in YouTube OS.
 
+## Creator Rights and Obligations
+
+Creator rights:
+
+- Access approved creator-facing platform capabilities.
+- Receive operational transparency for channel/workflow/revenue views.
+- Request support and incident handling through defined admin channels.
+
+Creator obligations:
+
+- Use the platform in compliance with policy, legal, and security requirements.
+- Maintain accurate account/channel information.
+- Avoid prohibited automation or abusive operational behavior.
+
 ## Creator Responsibilities
 
 - Provide accurate account and channel information.
@@ -29,6 +43,11 @@ This agreement defines Creator responsibilities, platform commitments, and opera
 - Financial infrastructure is governed by Global shared services boundaries.
 - Revenue views are informational and controlled by approved reporting flows.
 
+Revenue sharing note:
+
+- Affiliate and revenue-sharing behavior follows approved enterprise policy constraints.
+- Where applicable, paid-subscription affiliate sharing follows the approved 30% policy model.
+
 ## AI and Workflow Usage
 
 - AI guidance is assistive and policy-bounded, not unrestricted authority.
@@ -38,3 +57,7 @@ This agreement defines Creator responsibilities, platform commitments, and opera
 
 - Violations are handled through Admin and security governance process.
 - Severe incidents may result in temporary suspension while review is completed.
+
+## Platform Rules Acceptance
+
+By operating as a Creator in YouTube OS, the user accepts platform governance hierarchy, security controls, operational boundaries, and auditability requirements.
