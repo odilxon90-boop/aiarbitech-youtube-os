@@ -2,9 +2,17 @@
 
 AIArbiTech YouTube OS is an **independent platform service** governed by the AIArbiTechnology Global Ecosystem.
 
+This repository provides platform foundation, governance artifacts, integration boundaries, and operational standards for controlled enterprise evolution.
+
 ## Foundation status
 
 This repository contains foundation infrastructure only. It intentionally contains no YouTube channel, video, publishing, revenue, or analytics business implementation.
+
+Current state:
+
+- Architecture baseline is governed and frozen by approved boundaries.
+- Business-runtime expansion remains gated by change management and audit.
+- Cross-platform dependencies remain contract-driven and policy-controlled.
 
 ## Architectural invariants
 
@@ -18,12 +26,29 @@ This repository contains foundation infrastructure only. It intentionally contai
 - Compatibility remains `NOT_VERIFIED` until approved Global Ecosystem contracts are inspected.
 - Gate 0 must complete before any business feature implementation.
 
+## Governance and control model
+
+YouTube OS follows a strict governance hierarchy:
+
+Constitution -> Policies and Standards -> Architecture -> Runbooks and Manuals -> Sprint Scope -> Code.
+
+Implementation cannot override higher-order governance controls.
+
 ## Packages
 
 - `frontend/`: React, TypeScript, and Vite platform shell.
 - `backend/`: Node.js, TypeScript, Fastify, Prisma, Zod foundation API.
 - `contracts/`: versioned compatibility placeholders; not approved production contracts.
 - `docs/`: architecture, boundaries, integration, and Gate 0 baseline.
+
+## Operational domains
+
+- Platform governance and readiness tracking
+- Integration boundary management
+- Security and incident operations
+- Release and rollback control
+- Testing and quality assurance
+- Executive, admin, creator, and AI operating manuals
 
 ## Local validation
 
@@ -42,6 +67,16 @@ npm run build
 npx prisma validate
 npx prisma generate
 ```
+
+## Recommended quality gates
+
+Before merge or release:
+
+- Typecheck passes (frontend and backend).
+- Relevant test suites pass.
+- Build passes.
+- Security and boundary checks are validated.
+- Required docs and audit evidence are updated.
 
 ## Deployment endpoints
 
@@ -83,3 +118,56 @@ docker compose -f docker-compose.monitoring.yml up -d
 - Pre-built Grafana dashboards for API performance and infrastructure health
 - Automated alerting via email, Slack, PagerDuty, Telegram, and webhooks
 - 20+ alert rules covering API, database, Redis, and system metrics
+
+## Core documentation map
+
+Architecture and boundaries:
+
+- `docs/ARCHITECTURE.md`
+- `docs/PLATFORM_BOUNDARIES.md`
+- `docs/BOUNDED_CONTEXTS.md`
+- `docs/GLOBAL_ECOSYSTEM_INTEGRATION.md`
+- `docs/ARCHITECTURE_FREEZE.md`
+
+Governance and decision records:
+
+- `docs/ADR.md`
+- `docs/ARCHITECTURE_DECISION_REGISTER.md`
+- `docs/CHANGE_REGISTER.md`
+- `docs/DECISION_LOG.md`
+- `docs/RISK_REGISTER.md`
+- `docs/TECHNICAL_DEBT_REGISTER.md`
+- `docs/READY_STATUS_TRACKER.md`
+
+Policies and standards:
+
+- `docs/SECURITY_POLICY.md`
+- `docs/PRIVACY_POLICY.md`
+- `docs/DATA_RETENTION_POLICY.md`
+- `docs/API_RATE_LIMIT_POLICY.md`
+- `docs/INCIDENT_RESPONSE_POLICY.md`
+- `docs/DEVELOPMENT_STANDARDS.md`
+- `docs/TESTING_STANDARD.md`
+- `docs/RELEASE_ROLLBACK_STANDARD.md`
+- `docs/DOR_DOD.md`
+
+Operating manuals and playbooks:
+
+- `docs/EXECUTIVE_HANDBOOK.md`
+- `docs/ADMIN_HANDBOOK.md`
+- `docs/CREATOR_HANDBOOK.md`
+- `docs/AI_DIRECTOR_HANDBOOK.md`
+- `docs/ENTERPRISE_OPERATING_MANUAL.md`
+- `docs/DISASTER_RECOVERY_PLAYBOOK.md`
+- `docs/OPERATIONAL_RUNBOOKS.md`
+
+Legal and usage documents:
+
+- `docs/TERMS_OF_SERVICE.md`
+- `docs/CREATOR_AGREEMENT.md`
+
+## Change policy
+
+- Major platform changes require approved change request, architecture review, and audit traceability.
+- Baseline architecture changes are allowed only through formal Change Management workflow.
+- Unapproved cross-platform coupling and direct database integration remain prohibited.
