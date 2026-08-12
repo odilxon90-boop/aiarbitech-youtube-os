@@ -27,7 +27,6 @@ export function registerJwtAuthentication(
       !legacyToken.includes('.') &&
       legacyToken !== 'not-a-jwt' &&
       (isAllowedLegacyToken || typeof request.headers['x-permissions'] === 'string')
->>>>>>> 2d07f22 (fix: backend tests and engines)
     ) {
       const permissions = String(request.headers['x-permissions'] ?? '')
         .split(',')
