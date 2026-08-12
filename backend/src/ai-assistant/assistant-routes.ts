@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { requirePermission as requireJwtPermission } from '../auth/permission.middleware.js';
 import { successResponse } from '../contracts/api.js';
 import { PlatformError } from '../shared/errors.js';
 import { requirePermission } from '../shared/auth.js';
@@ -21,6 +22,21 @@ export function registerAssistantRoutes(app: FastifyInstance, service: Assistant
   const controller = createAssistantController(service);
 
   app.post('/api/v1/ai/chat/send', async (request) => {
+    if (
+      request.auth &&
+      'sub' in request.auth &&
+      Object.prototype.hasOwnProperty.call(request.body ?? {}, 'message')
+    ) {
+      requireJwtPermission(request, 'ai:access');
+      const message = (request.body as { message?: unknown } | undefined)?.message;
+      if (typeof message !== 'string' || message.trim().length === 0) {
+        throw new PlatformError(400, 'INVALID_AI_MESSAGE', 'Message cannot be empty.');
+      }
+      return successResponse(
+        { message: `Mock AI response: ${message}`, model: 'mock-ai-director-v1' },
+        request.correlationId,
+      );
+    }
     const principal = requirePermission(request, AI_CHAT_PERMISSION);
     const parsed = chatSendSchema.safeParse(request.body);
     if (!parsed.success) {

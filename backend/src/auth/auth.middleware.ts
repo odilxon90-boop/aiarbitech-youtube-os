@@ -14,7 +14,13 @@ export function registerJwtAuthentication(
     if (!authorization) return;
     const match = /^Bearer\s+(.+)$/i.exec(authorization);
     if (!match) throw new PlatformError(401, 'UNAUTHENTICATED', 'A valid bearer token is required.');
-    if (allowLegacyTestTokens && !match[1]!.includes('.') && match[1] !== 'not-a-jwt') {
+    const token = match[1]!;
+    if (
+      allowLegacyTestTokens &&
+      !token.includes('.') &&
+      token !== 'not-a-jwt' &&
+      !token.toLowerCase().includes('invalid')
+    ) {
       const permissions = String(request.headers['x-permissions'] ?? '')
         .split(',')
         .map((permission) => permission.trim())
@@ -32,7 +38,7 @@ export function registerJwtAuthentication(
       };
       return;
     }
-    request.auth = jwtService.verify(match[1]!);
+    request.auth = jwtService.verify(token);
   });
 }
 

@@ -31,12 +31,22 @@ import { CacheWarmingService, RedisCacheStore } from '../cache/warming.service.j
 import { registerHealthRoutes } from '../health/routes.js';
 import { MockGlobalEcosystemApiClient } from '../integrations/global-ecosystem/mock-adapter.js';
 import { registerPlatformRoutes } from '../platform/routes.js';
+import { registerRegistrationRoutes } from '../registration/routes.js';
+import { registerDashboardRoutes } from '../dashboard/dashboard-routes.js';
+import { registerAnalyticsRoutes } from '../analytics/analytics-routes.js';
 import { registerQualityRoutes } from '../quality/quality-routes.js';
 import { registerPresidentRoutes } from '../president/president-routes.js';
 import { registerGoalsRoutes } from '../goals/goals-routes.js';
+import { AssistantService } from '../ai-assistant/assistant-service.js';
+import { registerAssistantRoutes } from '../ai-assistant/assistant-routes.js';
+import { registerMemoryRoutes } from '../memory/memory-routes.js';
+import { registerIntelligenceRoutes } from '../intelligence/intelligence-routes.js';
 import { registerVideoRoutes } from '../video/video-routes.js';
 import { registerMusicRoutes } from '../music/music-routes.js';
 import { registerGenreRoutes } from '../genre/genre-routes.js';
+import { registerHeirRoutes } from '../heir/heir-routes.js';
+import { registerRateLimitMiddleware } from '../middleware/rate-limit.middleware.js';
+import { registerThrottleMiddleware } from '../middleware/throttle.middleware.js';
 import { registerCorrelationIds } from '../shared/correlation-id.js';
 import { registerErrorHandler } from '../shared/errors.js';
 import { NoopLogger, StructuredConsoleLogger, type PlatformLogger } from '../shared/logger.js';
@@ -69,6 +79,10 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   const metrics = new MetricsCollector();
   registerMonitoringMiddleware(app, logger, metrics);
   registerErrorHandler(app, logger);
+  registerRateLimitMiddleware(app);
+  if (options.enableThrottle ?? config.NODE_ENV !== 'test') {
+    registerThrottleMiddleware(app);
+  }
   const cacheWarming = new CacheWarmingService(
     getCacheWarmingConfig(config),
     config.REDIS_URL ? new RedisCacheStore(config.REDIS_URL) : undefined,
@@ -91,12 +105,19 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerHealthRoutes(app, config);
   registerAuthRoutes(app, new AuthController(jwtService, getBootstrapAdminCredentials(config)));
   registerPlatformRoutes(app, config, globalEcosystemClient);
+  registerRegistrationRoutes(app);
+  registerDashboardRoutes(app);
+  registerAnalyticsRoutes(app);
   registerQualityRoutes(app);
   registerPresidentRoutes(app);
   registerGoalsRoutes(app);
+  registerAssistantRoutes(app, new AssistantService());
+  registerMemoryRoutes(app);
+  registerIntelligenceRoutes(app);
   registerVideoRoutes(app);
   registerMusicRoutes(app);
   registerGenreRoutes(app);
+  registerHeirRoutes(app);
   registerAdminRoutes(app);
   registerAISyncRoutes(app);
   registerWorkflowRoutes(app);
