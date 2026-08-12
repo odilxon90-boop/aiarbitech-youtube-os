@@ -40,53 +40,19 @@ export function registerGenreRoutes(
   app: FastifyInstance,
   controller = new GenreController(new GenreService()),
 ): void {
-  app.get<{ Querystring: { channelId?: string } }>('/api/v1/genres/recommendations', async (request) =>
+  app.get('/api/v1/genre/trends', async (request) =>
+    successResponse(controller.trends(request), request.correlationId),
+  );
+  app.get('/api/v1/genre/recommendations', async (request) =>
     successResponse(controller.recommendations(request), request.correlationId),
   );
-
-  app.get('/api/v1/genre/trends', async (request) => {
-    requirePermission(request, 'genre:read');
-    return successResponse({
-      genres: genreDetails.map((genre) => ({
-        id: genre.id,
-        name: genre.name,
-        currentScore: genre.popularityScore,
-        delta: 2.4,
-        points: trendPoints(genre.popularityScore - 6),
-      })),
-    }, request.correlationId);
-  });
-
-  app.get('/api/v1/genre/recommendations', async (request) => {
-    requirePermission(request, 'genre:read');
-    const items = genreDetails.slice(0, 6).map((genre, index) => ({
-      id: `recommendation-${index + 1}`,
-      name: genre.name,
-      confidence: 96 - index * 5,
-      reason: 'Strong audience fit and positive engagement trend.',
-      tags: genre.styleKeywords,
-    }));
-    return successResponse({ count: items.length, items }, request.correlationId);
-  });
-
-  app.get('/api/v1/genre/popularity', async (request) => {
-    requirePermission(request, 'genre:read');
-    const genres = [...genreDetails]
-      .sort((left, right) => right.popularityScore - left.popularityScore)
-      .map((genre, index) => ({
-        id: genre.id,
-        name: genre.name,
-        score: genre.popularityScore,
-        rank: index + 1,
-        change: genre.trendDirection === 'STABLE' ? 'STABLE' : 'UP',
-      }));
-    return successResponse({ genres }, request.correlationId);
-  });
-
-  app.get<{ Params: { id: string } }>('/api/v1/genre/:id/details', async (request) => {
-    requirePermission(request, 'genre:read');
-    const genre = genreDetails.find((candidate) => candidate.id === request.params.id);
-    if (!genre) throw new PlatformError(404, 'NOT_FOUND', `Genre '${request.params.id}' was not found.`);
-    return successResponse({ genre }, request.correlationId);
-  });
+  app.get('/api/v1/genres/recommendations', async (request) =>
+    successResponse(controller.recommendations(request), request.correlationId),
+  );
+  app.get('/api/v1/genre/popularity', async (request) =>
+    successResponse(controller.popularity(request), request.correlationId),
+  );
+  app.get<{ Params: { genreId: string } }>('/api/v1/genre/:genreId/details', async (request) =>
+    successResponse(controller.details(request), request.correlationId),
+  );
 }

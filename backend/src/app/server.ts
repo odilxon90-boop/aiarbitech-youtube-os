@@ -19,7 +19,6 @@ import { registerGatewayRoutes } from '../integration-gateway/gateway-routes.js'
 import { registerPermissionRoutes } from '../governance/permission-routes.js';
 import { registerJourneyRoutes } from '../journey/routes.js';
 import { registerYouTubeRoutes } from '../youtube/youtube-routes.js';
-import { registerTranslationRoutes } from '../i18n/translation-routes.js';
 import { registerMonitoringHealthRoutes } from '../monitoring/healthcheck.js';
 import { registerMonitoringMiddleware } from '../monitoring/monitoring-middleware.js';
 import { MetricsCollector } from '../monitoring/metrics.js';
@@ -36,6 +35,7 @@ import { registerDashboardRoutes } from '../dashboard/dashboard-routes.js';
 import { registerAnalyticsRoutes } from '../analytics/analytics-routes.js';
 import { registerQualityRoutes } from '../quality/quality-routes.js';
 import { registerPresidentRoutes } from '../president/president-routes.js';
+import { registerHeirRoutes } from '../heir/heir-routes.js';
 import { registerGoalsRoutes } from '../goals/goals-routes.js';
 import { AssistantService } from '../ai-assistant/assistant-service.js';
 import { registerAssistantRoutes } from '../ai-assistant/assistant-routes.js';
@@ -44,12 +44,11 @@ import { registerIntelligenceRoutes } from '../intelligence/intelligence-routes.
 import { registerVideoRoutes } from '../video/video-routes.js';
 import { registerMusicRoutes } from '../music/music-routes.js';
 import { registerGenreRoutes } from '../genre/genre-routes.js';
-import { registerHeirRoutes } from '../heir/heir-routes.js';
-import { registerRateLimitMiddleware } from '../middleware/rate-limit.middleware.js';
-import { registerThrottleMiddleware } from '../middleware/throttle.middleware.js';
 import { registerCorrelationIds } from '../shared/correlation-id.js';
 import { registerErrorHandler } from '../shared/errors.js';
 import { NoopLogger, StructuredConsoleLogger, type PlatformLogger } from '../shared/logger.js';
+import { registerRateLimitMiddleware } from '../middleware/rate-limit.middleware.js';
+import { registerThrottleMiddleware } from '../middleware/throttle.middleware.js';
 
 export interface BuildAppOptions {
   config?: EnvironmentConfig;
@@ -72,6 +71,10 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   });
   await registerCompressionMiddleware(app);
   registerCacheMiddleware(app);
+  registerRateLimitMiddleware(app);
+  if (options.enableThrottle) {
+    registerThrottleMiddleware(app);
+  }
 
   registerCorrelationIds(app);
   const jwtService = new JwtService(getJwtSecret(config), config.JWT_EXPIRES_IN, config.JWT_REFRESH_EXPIRES_IN);
@@ -79,10 +82,6 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   const metrics = new MetricsCollector();
   registerMonitoringMiddleware(app, logger, metrics);
   registerErrorHandler(app, logger);
-  registerRateLimitMiddleware(app);
-  if (options.enableThrottle ?? config.NODE_ENV !== 'test') {
-    registerThrottleMiddleware(app);
-  }
   const cacheWarming = new CacheWarmingService(
     getCacheWarmingConfig(config),
     config.REDIS_URL ? new RedisCacheStore(config.REDIS_URL) : undefined,
@@ -110,14 +109,14 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerAnalyticsRoutes(app);
   registerQualityRoutes(app);
   registerPresidentRoutes(app);
+  registerHeirRoutes(app);
   registerGoalsRoutes(app);
-  registerAssistantRoutes(app, new AssistantService());
+  registerAssistantRoutes(app, new AssistantService({ fixedDelayMs: config.NODE_ENV === 'test' ? 0 : undefined }));
   registerMemoryRoutes(app);
   registerIntelligenceRoutes(app);
   registerVideoRoutes(app);
   registerMusicRoutes(app);
   registerGenreRoutes(app);
-  registerHeirRoutes(app);
   registerAdminRoutes(app);
   registerAISyncRoutes(app);
   registerWorkflowRoutes(app);
@@ -129,7 +128,6 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerPermissionRoutes(app);
   registerJourneyRoutes(app);
   registerYouTubeRoutes(app);
-  registerTranslationRoutes(app, config);
   app.get('/health', async () => ({ status: 'ok' }));
   app.get('/api/health', async () => ({ status: 'ok' }));
   registerMonitoringHealthRoutes(app, metrics, cacheWarming);

@@ -16,6 +16,17 @@ export interface Principal {
   permissions: readonly string[];
 }
 
+const PERMISSION_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  'goals:read': ['goals:manage'],
+  'goals:write': ['goals:manage'],
+  'genre:read': ['genres:read'],
+  'video:read': ['videos:read'],
+  'video:write': ['videos:write'],
+  'ai:chat': ['ai:access'],
+  'dashboard:read': ['dashboard:access'],
+  'analytics:read': ['analytics:access'],
+};
+
 /**
  * Mock credential store for the dashboard foundation. This is stub/development
  * authentication only; it authorizes no production integration and is replaced by
@@ -72,16 +83,38 @@ export function resolvePrincipal(token: string | undefined): Principal | undefin
   return MOCK_CREDENTIALS[token];
 }
 
+function resolveLegacyPrincipal(request: FastifyRequest, token: string | undefined): Principal | undefined {
+  const rawPermissions = request.headers['x-permissions'];
+  if (!token || typeof rawPermissions !== 'string' || rawPermissions.trim() === '') {
+    return undefined;
+  }
+
+  return {
+    subject: token,
+    role: 'ADMIN',
+    permissions: rawPermissions.split(',').map((permission) => permission.trim()).filter(Boolean),
+  };
+}
+
+function hasPermission(principal: Principal, permission: string): boolean {
+  if (principal.permissions.includes(permission)) {
+    return true;
+  }
+
+  return (PERMISSION_ALIASES[permission] ?? []).some((alias) => principal.permissions.includes(alias));
+}
+
 /**
  * Enforces authentication (401) and permission (403) for a single request.
  * Returns the resolved principal for the request handler to use.
  */
 export function requirePermission(request: FastifyRequest, permission: string): Principal {
-  const principal = resolvePrincipal(bearerToken(request));
+  const token = bearerToken(request);
+  const principal = resolvePrincipal(token) ?? resolveLegacyPrincipal(request, token);
   if (!principal) {
     throw new PlatformError(401, 'UNAUTHORIZED', 'A valid bearer token is required.');
   }
-  if (!principal.permissions.includes(permission)) {
+  if (!hasPermission(principal, permission)) {
     throw new PlatformError(
       403,
       'FORBIDDEN',

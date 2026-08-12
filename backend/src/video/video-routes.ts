@@ -35,44 +35,25 @@ export function registerVideoRoutes(
   app: FastifyInstance,
   controller = new VideoController(new VideoService()),
 ): void {
-  app.get<{ Querystring: { genre?: string } }>('/api/v1/videos/ideas', async (request) =>
+  app.get('/api/v1/video/ideas', async (request) =>
     successResponse(controller.ideas(request), request.correlationId),
   );
-
-  app.get('/api/v1/video/ideas', async (request) => {
-    requirePermission(request, 'video:read');
-    return successResponse({ ideas: videoIdeas }, request.correlationId);
-  });
-
-  app.get<{ Params: { id: string } }>('/api/v1/video/script/:id', async (request) => {
-    requirePermission(request, 'video:read');
-    const script = scripts.get(request.params.id);
-    if (!script) throw new PlatformError(404, 'NOT_FOUND', 'Script not found.');
-    return successResponse(script, request.correlationId);
-  });
-
-  app.post<{ Body: { topic?: string; style?: string; length?: string } }>('/api/v1/video/generate', async (request) => {
-    requirePermission(request, 'video:write');
-    const script = {
-      id: `script-${Date.now()}`,
-      topic: request.body?.topic ?? '',
-      style: request.body?.style ?? '',
-      length: request.body?.length ?? '',
-      outline: ['Intro hook', 'Main content', 'Examples', 'Conclusion'],
-    };
-    scripts.set(script.id, script);
-    return successResponse({ script }, request.correlationId);
-  });
-
-  app.get('/api/v1/video/projects', async (request) => {
-    requirePermission(request, 'video:read');
-    return successResponse({ projects }, request.correlationId);
-  });
-
-  app.get<{ Params: { id: string } }>('/api/v1/video/projects/:id', async (request) => {
-    requirePermission(request, 'video:read');
-    const project = projects.find((candidate) => candidate.id === request.params.id);
-    if (!project) throw new PlatformError(404, 'NOT_FOUND', 'Project not found.');
-    return successResponse(project, request.correlationId);
-  });
+  app.get<{ Querystring: { genre?: string } }>('/api/v1/videos/ideas', async (request) =>
+    successResponse(
+      request.query.genre ? controller.ideas(request).ideas.slice(0, 1) : controller.ideas(request).ideas,
+      request.correlationId,
+    ),
+  );
+  app.get<{ Params: { scriptId: string } }>('/api/v1/video/script/:scriptId', async (request) =>
+    successResponse(controller.script(request), request.correlationId),
+  );
+  app.post('/api/v1/video/generate', async (request) =>
+    successResponse(controller.generate(request), request.correlationId),
+  );
+  app.get('/api/v1/video/projects', async (request) =>
+    successResponse(controller.projects(request), request.correlationId),
+  );
+  app.get<{ Params: { projectId: string } }>('/api/v1/video/projects/:projectId', async (request) =>
+    successResponse(controller.project(request), request.correlationId),
+  );
 }

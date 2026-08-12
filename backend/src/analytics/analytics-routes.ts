@@ -24,4 +24,12 @@ export function registerAnalyticsRoutes(app: FastifyInstance): void {
     requirePermission(request, ANALYTICS_READ);
     return successResponse(await analyticsController.getPerformance(), request.correlationId);
   });
+
+  app.get<{ Querystring: { range?: 'week' | 'month'; channel?: string } }>('/api/v1/analytics/overview', async (request) => {
+    requirePermission(request, ANALYTICS_READ);
+    return successResponse(
+      await analyticsController.getOverview(request.query.channel, request.query.range),
+      request.correlationId,
+    );
+  });
 }

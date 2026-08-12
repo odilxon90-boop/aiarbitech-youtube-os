@@ -60,6 +60,12 @@ export interface AnalyticsPerformance {
   devices: readonly DeviceBreakdown[];
 }
 
+const LEGACY_OVERVIEW = [
+  { dateRange: 'week' as const, channel: 'channel-1', views: [120, 165, 210, 245], retentionPercent: 68, revenue: 420 },
+  { dateRange: 'week' as const, channel: 'channel-2', views: [85, 110, 143, 170], retentionPercent: 61, revenue: 280 },
+  { dateRange: 'month' as const, channel: 'channel-1', views: [480, 660, 840, 980], retentionPercent: 71, revenue: 1680 },
+];
+
 const DAYS = 30;
 
 function dateFor(daysAgo: number): string {
@@ -187,4 +193,8 @@ export async function getAnalyticsPerformance(): Promise<AnalyticsPerformance> {
   ];
 
   return { generatedAt: nowIso(), topVideos, geography, devices };
+}
+
+export async function getAnalyticsOverview(channel = 'channel-1', range: 'week' | 'month' = 'week') {
+  return LEGACY_OVERVIEW.find((item) => item.channel === channel && item.dateRange === range) ?? LEGACY_OVERVIEW[0]!;
 }

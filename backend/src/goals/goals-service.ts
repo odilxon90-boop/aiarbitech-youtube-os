@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { PlatformError } from '../shared/errors.js';
 
-export type GoalStatus = 'ACTIVE' | 'PAUSED' | 'COMPLETED';
+export type GoalStatus = 'ON_TRACK' | 'AT_RISK' | 'BEHIND' | 'ACHIEVED' | 'PAUSED' | 'ACTIVE';
 
 export interface Goal {
   id: string;
   userId: string;
+  type: string;
   title: string;
   target: number;
   current: number;
@@ -17,6 +18,7 @@ export interface Goal {
 
 export interface CreateGoalInput {
   userId: string;
+  type: string;
   title: string;
   target: number;
   current: number;
@@ -32,109 +34,32 @@ export interface UpdateGoalInput {
   status?: GoalStatus;
 }
 
-export type GoalCenterType = 'subscribers' | 'revenue' | 'video_count' | 'watch_time';
-export type GoalCenterStatus = 'ON_TRACK' | 'AT_RISK' | 'BEHIND' | 'ACHIEVED' | 'PAUSED';
+const seedGoals = (): Goal[] => {
+  const createdAt = '2026-08-01T09:00:00.000Z';
+  return [
+    { id: 'goal-1', userId: 'creator-1', type: 'views', title: 'Reach 100,000 monthly views', target: 100000, current: 64250, deadline: '2026-12-31', status: 'ON_TRACK', createdAt, updatedAt: createdAt },
+    { id: 'goal-2', userId: 'creator-1', type: 'subscribers', title: 'Grow to 10,000 subscribers', target: 10000, current: 7200, deadline: '2026-11-30', status: 'AT_RISK', createdAt, updatedAt: createdAt },
+    { id: 'goal-3', userId: 'creator-1', type: 'revenue', title: 'Hit $5,000 monthly revenue', target: 5000, current: 2100, deadline: '2026-10-31', status: 'BEHIND', createdAt, updatedAt: createdAt },
+    { id: 'goal-4', userId: 'creator-1', type: 'consistency', title: 'Publish 8 videos this month', target: 8, current: 8, deadline: '2026-08-31', status: 'ACHIEVED', createdAt, updatedAt: createdAt },
+  ];
+};
 
-export interface GoalCenterGoal {
-  id: string;
-  type: GoalCenterType;
-  title: string;
-  target: number;
-  current: number;
-  deadline: string;
-  status: GoalCenterStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const seededGoalCenterGoals: GoalCenterGoal[] = [
-  ['goal-1', 'subscribers', 'Reach 1,000 subscribers', 1000, 684, 'ON_TRACK'],
-  ['goal-2', 'revenue', 'Earn $1,000/month', 1000, 512, 'AT_RISK'],
-  ['goal-3', 'video_count', 'Publish 30 videos', 30, 18, 'BEHIND'],
-  ['goal-4', 'watch_time', 'Hit 4,000 watch hours', 4000, 3200, 'ON_TRACK'],
-].map(([id, type, title, target, current, status], index) => ({
-  id: id as string,
-  type: type as GoalCenterType,
-  title: title as string,
-  target: target as number,
-  current: current as number,
-  deadline: `2026-12-${String(index + 1).padStart(2, '0')}`,
-  status: status as GoalCenterStatus,
-  createdAt: `2026-07-${String(index + 1).padStart(2, '0')}T00:00:00.000Z`,
-  updatedAt: `2026-08-${String(index + 1).padStart(2, '0')}T00:00:00.000Z`,
-}));
-
-let goalCenterStore: GoalCenterGoal[] = [];
+let goalsStore: Goal[] = seedGoals();
 
 export function resetGoalsStore(): void {
-  goalCenterStore = seededGoalCenterGoals.map((goal) => ({ ...goal }));
+  goalsStore = seedGoals();
 }
 
-resetGoalsStore();
-
-export function listGoalCenterGoals(): GoalCenterGoal[] {
-  return goalCenterStore.map((goal) => ({ ...goal }));
-}
-
-export function createGoalCenterGoal(input: {
-  type: GoalCenterType;
+interface GoalRecommendation {
+  id: string;
+  category: 'STEPS' | 'CONTENT_STRATEGY' | 'PUBLISHING_FREQUENCY' | 'SEO';
   title: string;
-  target: number;
-  deadline: string;
-}): GoalCenterGoal {
-  const now = new Date().toISOString();
-  const goal: GoalCenterGoal = {
-    id: `goal-${goalCenterStore.length + 1}`,
-    ...input,
-    current: 0,
-    status: 'BEHIND',
-    createdAt: now,
-    updatedAt: now,
-  };
-  goalCenterStore.push(goal);
-  return { ...goal };
-}
-
-export function updateGoalCenterProgress(
-  goalId: string,
-  current: number,
-  status?: GoalCenterStatus,
-): GoalCenterGoal | undefined {
-  const goal = goalCenterStore.find((candidate) => candidate.id === goalId);
-  if (!goal) return undefined;
-  goal.current = current;
-  goal.status = current >= goal.target ? 'ACHIEVED' : status ?? goal.status;
-  goal.updatedAt = new Date().toISOString();
-  return { ...goal };
-}
-
-export function deleteGoalCenterGoal(goalId: string): boolean {
-  const index = goalCenterStore.findIndex((goal) => goal.id === goalId);
-  if (index < 0) return false;
-  goalCenterStore.splice(index, 1);
-  return true;
-}
-
-export function getGoalCenterRecommendations() {
-  const categories = ['STEPS', 'CONTENT_STRATEGY', 'PUBLISHING_FREQUENCY', 'SEO'] as const;
-  return {
-    goals: listGoalCenterGoals(),
-    recommendations: goalCenterStore.flatMap((goal) =>
-      categories.map((category, index) => ({
-        id: `${goal.id}-${index + 1}`,
-        goalId: goal.id,
-        category,
-        title: `${category.replaceAll('_', ' ')} recommendation`,
-        suggestion: `Recommended next action for ${goal.title}.`,
-      }))),
-  };
+  detail: string;
 }
 
 export class GoalsService {
-  private readonly goals: Goal[] = [];
-
   list(userId?: string): readonly Goal[] {
-    return userId ? this.goals.filter((goal) => goal.userId === userId) : this.goals;
+    return userId ? goalsStore.filter((goal) => goal.userId === userId) : goalsStore;
   }
 
   get(id: string): Goal {
@@ -144,7 +69,7 @@ export class GoalsService {
   create(input: CreateGoalInput): Goal {
     const now = new Date().toISOString();
     const goal: Goal = { id: randomUUID(), ...input, createdAt: now, updatedAt: now };
-    this.goals.unshift(goal);
+    goalsStore.unshift(goal);
     return goal;
   }
 
@@ -155,15 +80,35 @@ export class GoalsService {
   }
 
   delete(id: string): { id: string; deleted: true } {
-    const index = this.goals.findIndex((goal) => goal.id === id);
-    if (index < 0) throw new PlatformError(404, 'GOAL_NOT_FOUND', `Goal ${id} was not found.`);
-    this.goals.splice(index, 1);
+    const index = goalsStore.findIndex((goal) => goal.id === id);
+    if (index < 0) throw new PlatformError(404, 'NOT_FOUND', `Goal ${id} was not found.`);
+    goalsStore.splice(index, 1);
     return { id, deleted: true };
   }
 
+  recommendations(): { goals: readonly Goal[]; recommendations: readonly GoalRecommendation[] } {
+    return {
+      goals: goalsStore.slice(0, 4),
+      recommendations: [
+        { id: 'gr-1', category: 'STEPS', title: 'Break subscriber goal into weekly targets', detail: 'Aim for 175 subscribers per week.' },
+        { id: 'gr-2', category: 'STEPS', title: 'Review lagging KPI every Friday', detail: 'Track progress and adjust content mix.' },
+        { id: 'gr-3', category: 'STEPS', title: 'Bundle production tasks', detail: 'Record two videos in one session.' },
+        { id: 'gr-4', category: 'CONTENT_STRATEGY', title: 'Double down on tutorials', detail: 'Tutorials currently drive the best retention.' },
+        { id: 'gr-5', category: 'CONTENT_STRATEGY', title: 'Repurpose top long-form videos into Shorts', detail: 'Use clips to widen discovery.' },
+        { id: 'gr-6', category: 'CONTENT_STRATEGY', title: 'Create a recurring series', detail: 'Recurring formats improve return viewers.' },
+        { id: 'gr-7', category: 'PUBLISHING_FREQUENCY', title: 'Publish twice weekly', detail: 'Consistency matters more than bursts.' },
+        { id: 'gr-8', category: 'PUBLISHING_FREQUENCY', title: 'Reserve one Shorts slot', detail: 'Shorts can support subscriber growth.' },
+        { id: 'gr-9', category: 'PUBLISHING_FREQUENCY', title: 'Schedule uploads at peak audience times', detail: 'Use the top 2 audience windows.' },
+        { id: 'gr-10', category: 'SEO', title: 'Refresh titles with clear outcomes', detail: 'Outcome-driven titles improve CTR.' },
+        { id: 'gr-11', category: 'SEO', title: 'Expand keyword clusters', detail: 'Target adjacent niche terms.' },
+        { id: 'gr-12', category: 'SEO', title: 'Add search-first descriptions', detail: 'Front-load primary query phrases.' },
+      ],
+    };
+  }
+
   private find(id: string): Goal {
-    const goal = this.goals.find((item) => item.id === id);
-    if (!goal) throw new PlatformError(404, 'GOAL_NOT_FOUND', `Goal ${id} was not found.`);
+    const goal = goalsStore.find((item) => item.id === id);
+    if (!goal) throw new PlatformError(404, 'NOT_FOUND', `Goal ${id} was not found.`);
     return goal;
   }
 }

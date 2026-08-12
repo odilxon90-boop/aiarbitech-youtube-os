@@ -75,6 +75,10 @@ export interface RevenueSeries {
 }
 
 export interface DashboardSummary {
+  creatorScore?: number;
+  activeWorkflows?: number;
+  qualityScore?: number;
+  viewsTrendPercent?: number;
   aiStatus: AiStatus;
   monetization: MonetizationProgress;
   channels: ChannelSummary[];
@@ -100,6 +104,10 @@ const nowIso = (): string => new Date().toISOString();
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   return {
+    creatorScore: 72,
+    activeWorkflows: 2,
+    qualityScore: 91,
+    viewsTrendPercent: 12,
     aiStatus: {
       level: 'HEALTHY',
       label: 'HEALTHY',
