@@ -50,7 +50,7 @@ export function resetGoalsStore(): void {
   goalsStore = seedGoals();
 }
 
-interface GoalRecommendation {
+export interface GoalRecommendation {
   id: string;
   category: 'STEPS' | 'CONTENT_STRATEGY' | 'PUBLISHING_FREQUENCY' | 'SEO';
   title: string;

@@ -1,4 +1,35 @@
+import type { AdminHealthResponse } from '../../admin/types';
+
 export interface HealthMetric { name: string; status: 'GREEN' | 'YELLOW' | 'RED'; detail: string; }
-export function HealthCard({ metrics }: { metrics: readonly HealthMetric[] }) {
-  return <section className="card admin-card admin-card--wide" aria-labelledby="admin-health-title"><p className="section-kicker">Mock system status</p><h2 id="admin-health-title">System health</h2><ul className="admin-list">{metrics.map((metric) => <li key={metric.name}><span>{metric.name}: {metric.detail}</span><small className={`health-status health-status--${metric.status.toLowerCase()}`}>{metric.status}</small></li>)}</ul></section>;
+
+interface HealthCardProps {
+  metrics?: readonly HealthMetric[];
+  health?: AdminHealthResponse;
+}
+
+const statusIcon = (status: string): string => {
+  if (status === 'OK' || status === 'GREEN') return '🟢';
+  if (status === 'DEGRADED' || status === 'YELLOW') return '🟡';
+  return '🔴';
+};
+
+export function HealthCard({ metrics, health }: HealthCardProps) {
+  const items = health?.metrics ?? metrics ?? [];
+  return (
+    <section className="card admin-card admin-card--wide" aria-labelledby="admin-health-title">
+      <p className="section-kicker">Overall: {health?.overall ?? 'Mock system status'}</p>
+      <h2 id="admin-health-title">System Health</h2>
+      <ul className="admin-list">
+        {items.map((metric) => {
+          const name = 'service' in metric ? metric.service : metric.name;
+          return (
+            <li key={name}>
+              <span>{statusIcon(metric.status)} {name}: {metric.detail}</span>
+              <small>{metric.status}{'latencyMs' in metric ? ` · ${metric.latencyMs} ms` : ''}</small>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 }

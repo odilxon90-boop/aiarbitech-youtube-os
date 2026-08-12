@@ -1,6 +1,38 @@
 import React from 'react';
+import type { AnalyticsBundle, AnalyticsClient } from '../analytics/types';
+import { AudienceBreakdown } from '../components/analytics/AudienceBreakdown';
+import { MetricCard } from '../components/analytics/MetricCard';
+import { TimeSeriesChart } from '../components/analytics/TimeSeriesChart';
+import { TopVideosTable } from '../components/analytics/TopVideosTable';
 
-export function AnalyticsPage() {
+interface AnalyticsPageProps {
+  initialData?: AnalyticsBundle;
+  client?: AnalyticsClient;
+}
+
+export function AnalyticsPage({ initialData, client }: AnalyticsPageProps) {
+  if (!initialData && client) {
+    return <main><h1>Creator Analytics Center</h1><p>Loading creator analytics…</p></main>;
+  }
+  if (initialData) {
+    const activeSeries = initialData.trends.series[0];
+    return (
+      <main className="analytics-page">
+        <h1>Creator Analytics Center</h1>
+        <section>
+          <h2>Key Metrics (last 30 days)</h2>
+          <div className="metric-grid">{initialData.summary.metrics.map((metric) => <MetricCard key={metric.metric} summary={metric} />)}</div>
+        </section>
+        <section>
+          <h2>Performance Trends</h2>
+          <div data-testid="metric-tabs">{initialData.trends.series.map((series) => <button type="button" key={series.metric}>{series.label}</button>)}</div>
+          {activeSeries ? <TimeSeriesChart series={activeSeries} /> : <p>No trend data available.</p>}
+        </section>
+        <section><h2>Top Performing Videos</h2><TopVideosTable videos={initialData.performance.topVideos} /></section>
+        <section><h2>Audience</h2><AudienceBreakdown geography={initialData.performance.geography} devices={initialData.performance.devices} /></section>
+      </main>
+    );
+  }
   const metrics = [
     ['Subscribers', '1.2M', '+12%'],
     ['Views', '45.8M', '+8%'],

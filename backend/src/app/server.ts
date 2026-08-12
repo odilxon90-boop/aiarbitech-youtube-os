@@ -44,6 +44,8 @@ import { registerIntelligenceRoutes } from '../intelligence/intelligence-routes.
 import { registerVideoRoutes } from '../video/video-routes.js';
 import { registerMusicRoutes } from '../music/music-routes.js';
 import { registerGenreRoutes } from '../genre/genre-routes.js';
+import { registerCreatorRoutes } from '../creator/creator-routes.js';
+import { closeRedis, initializeRedis } from '../cache/redis-client.js';
 import { registerCorrelationIds } from '../shared/correlation-id.js';
 import { registerErrorHandler } from '../shared/errors.js';
 import { NoopLogger, StructuredConsoleLogger, type PlatformLogger } from '../shared/logger.js';
@@ -89,12 +91,16 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   );
   const cacheWarmingScheduler = new CacheWarmingScheduler(cacheWarming, config.CACHE_WARMING_INTERVAL_SECONDS, logger);
   app.addHook('onReady', async () => {
+    if (config.REDIS_URL) {
+      await initializeRedis();
+    }
     await cacheWarming.warmOnStartup();
     cacheWarmingScheduler.start();
   });
   app.addHook('onClose', async () => {
     cacheWarmingScheduler.stop();
     await cacheWarming.close();
+    await closeRedis();
   });
 
   const globalEcosystemClient = new MockGlobalEcosystemApiClient(
@@ -117,6 +123,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   registerVideoRoutes(app);
   registerMusicRoutes(app);
   registerGenreRoutes(app);
+  registerCreatorRoutes(app);
   registerAdminRoutes(app);
   registerAISyncRoutes(app);
   registerWorkflowRoutes(app);

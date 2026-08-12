@@ -40,6 +40,7 @@ export function ChatInput({
       <button
         type="button"
         className="chat-input__send"
+        aria-label="Send message"
         onClick={submit}
         disabled={disabled || !value.trim()}
       >

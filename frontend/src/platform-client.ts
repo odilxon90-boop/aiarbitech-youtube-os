@@ -24,6 +24,15 @@ export interface VideoPlan {
   plan: { hook: string; scenes: string[]; nextAction: string };
 }
 
+export interface YouTubeStatus {
+  status: 'CONFIGURED' | 'DEGRADED';
+  mode: 'API_KEY' | 'OAUTH' | 'MOCK_FALLBACK';
+  readConfigured: boolean;
+  uploadConfigured: boolean;
+  fallbackEnabled: boolean;
+  checkedAt: string;
+}
+
 export interface PlatformApiClient {
   getUsers(signal?: AbortSignal): Promise<unknown>;
   getPlatforms(signal?: AbortSignal): Promise<unknown>;
@@ -32,6 +41,7 @@ export interface PlatformApiClient {
   getRevenue(signal?: AbortSignal): Promise<CreatorRevenue>;
   getVideos(signal?: AbortSignal): Promise<CreatorVideos>;
   createVideoPlan(prompt: string, signal?: AbortSignal): Promise<VideoPlan>;
+  getYouTubeStatus(signal?: AbortSignal): Promise<YouTubeStatus>;
 }
 
 interface ApiEnvelope<T> {
@@ -100,6 +110,10 @@ export class HttpPlatformApiClient implements PlatformApiClient {
 
   createVideoPlan(prompt: string, signal?: AbortSignal): Promise<VideoPlan> {
     return this.post('/creator/plan', { prompt }, signal);
+  }
+
+  getYouTubeStatus(signal?: AbortSignal): Promise<YouTubeStatus> {
+    return this.get('/youtube/status', signal);
   }
 }
 

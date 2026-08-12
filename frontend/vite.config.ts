@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(({ mode }) => ({
+  base: '/youtube-os/',
   plugins: [
     react(),
     tailwindcss(),

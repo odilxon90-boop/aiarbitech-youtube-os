@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
+import { ConsentBanner } from '../components/privacy/ConsentBanner';
 
 interface AppShellProps {
   children: ReactNode;
 }
 
 export function AppShell({ children }: AppShellProps) {
-  return <div className="app-shell">{children}</div>;
+  return <div className="app-shell">{children}<ConsentBanner /></div>;
 }

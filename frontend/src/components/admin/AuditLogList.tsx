@@ -1,4 +1,33 @@
+import type { AuditLogEntry } from '../../admin/types';
+
 export interface AuditLog { id: string; timestamp: string; actor: string; action: string; }
-export function AuditLogList({ logs }: { logs: readonly AuditLog[] }) {
-  return <section className="card admin-card admin-card--wide" aria-labelledby="admin-audit-title"><p className="section-kicker">Mock audit trail</p><h2 id="admin-audit-title">Audit logs</h2><ul className="admin-list">{logs.map((log) => <li key={log.id}><span>{log.action} by {log.actor}</span><small>{log.timestamp}</small></li>)}</ul></section>;
+
+interface AuditLogListProps {
+  logs?: readonly AuditLog[];
+  entries?: readonly AuditLogEntry[];
+}
+
+export function AuditLogList({ logs, entries }: AuditLogListProps) {
+  const items = entries ?? logs ?? [];
+  return (
+    <section className="card admin-card admin-card--wide" aria-labelledby="admin-audit-title">
+      <p className="section-kicker">{items.length} recent events</p>
+      <h2 id="admin-audit-title">Audit Logs</h2>
+      {items.length === 0 ? (
+        <p>No audit log entries found.</p>
+      ) : (
+        <ul className="admin-list">
+          {items.map((log) => (
+            <li key={log.id}>
+              <span>
+                {log.action} by {log.actor}
+                {'outcome' in log ? ` · ${log.outcome} · ${log.ip}` : ''}
+              </span>
+              <small>{'at' in log ? log.at : log.timestamp}</small>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
 }

@@ -7,9 +7,10 @@ export interface AppProps {
 }
 
 export function App(_props: AppProps) {
+  const path = window.location.pathname.replace(/^\/youtube-os/, '');
   return (
     <AppShell>
-      {window.location.pathname === '/creator' ? <CreatorDashboard /> : <GlobalEcosystemHomePage />}
+      {path === '/creator' ? <CreatorDashboard /> : <GlobalEcosystemHomePage />}
     </AppShell>
   );
 }
