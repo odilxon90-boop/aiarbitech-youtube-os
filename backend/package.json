@@ -43,6 +43,4 @@
   "prisma": {
     "schema": "prisma/schema.prisma"
   }
-}"engines": {
-  "node": "24.x"
 }
