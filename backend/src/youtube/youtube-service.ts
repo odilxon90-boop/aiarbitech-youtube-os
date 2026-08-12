@@ -43,15 +43,48 @@ function fallbackVideoList(channelId: string): readonly YouTubeVideoSummary[] {
 
 export class YouTubeService {
   private readonly client: YouTubeRealClient;
+  private readonly configuration: {
+    apiKey: boolean;
+    oauthClient: boolean;
+    accessToken: boolean;
+    refreshToken: boolean;
+  };
 
-  constructor() {
+  constructor(source: NodeJS.ProcessEnv = process.env) {
     const options: ConstructorParameters<typeof YouTubeRealClient>[0] = {};
-    if (process.env.YOUTUBE_API_KEY) options.apiKey = process.env.YOUTUBE_API_KEY;
-    if (process.env.YOUTUBE_CLIENT_ID) options.clientId = process.env.YOUTUBE_CLIENT_ID;
-    if (process.env.YOUTUBE_CLIENT_SECRET) options.clientSecret = process.env.YOUTUBE_CLIENT_SECRET;
-    if (process.env.YOUTUBE_ACCESS_TOKEN) options.accessToken = process.env.YOUTUBE_ACCESS_TOKEN;
-    if (process.env.YOUTUBE_REFRESH_TOKEN) options.refreshToken = process.env.YOUTUBE_REFRESH_TOKEN;
+    if (source.YOUTUBE_API_KEY) options.apiKey = source.YOUTUBE_API_KEY;
+    if (source.YOUTUBE_CLIENT_ID) options.clientId = source.YOUTUBE_CLIENT_ID;
+    if (source.YOUTUBE_CLIENT_SECRET) options.clientSecret = source.YOUTUBE_CLIENT_SECRET;
+    if (source.YOUTUBE_ACCESS_TOKEN) options.accessToken = source.YOUTUBE_ACCESS_TOKEN;
+    if (source.YOUTUBE_REFRESH_TOKEN) options.refreshToken = source.YOUTUBE_REFRESH_TOKEN;
     this.client = new YouTubeRealClient(options);
+    this.configuration = {
+      apiKey: Boolean(source.YOUTUBE_API_KEY),
+      oauthClient: Boolean(source.YOUTUBE_CLIENT_ID && source.YOUTUBE_CLIENT_SECRET),
+      accessToken: Boolean(source.YOUTUBE_ACCESS_TOKEN),
+      refreshToken: Boolean(source.YOUTUBE_REFRESH_TOKEN),
+    };
+  }
+
+  status() {
+    const readConfigured = this.client.isConfiguredForRead();
+    const uploadConfigured =
+      this.configuration.accessToken ||
+      (this.configuration.oauthClient && this.configuration.refreshToken);
+    const mode = this.configuration.apiKey
+      ? 'API_KEY'
+      : uploadConfigured || this.configuration.oauthClient
+        ? 'OAUTH'
+        : 'MOCK_FALLBACK';
+
+    return {
+      status: readConfigured ? 'CONFIGURED' : 'DEGRADED',
+      mode,
+      readConfigured,
+      uploadConfigured,
+      fallbackEnabled: true,
+      checkedAt: new Date().toISOString(),
+    };
   }
 
   async getChannelMetadata(channelId: string): Promise<YouTubeChannelMetadata> {

@@ -3,14 +3,14 @@ interface TrendPoint {
   value: number;
 }
 
-interface TrendGenre {
+export interface TrendGenre {
   id: string;
   name: string;
   currentScore: number;
   points: TrendPoint[];
 }
 
-interface RecommendedGenre {
+export interface RecommendedGenre {
   id: string;
   name: string;
   confidence: number;
@@ -18,7 +18,7 @@ interface RecommendedGenre {
   tags: string[];
 }
 
-interface PopularityGenre {
+export interface PopularityGenre {
   id: string;
   name: string;
   score: number;
@@ -26,7 +26,7 @@ interface PopularityGenre {
   change: 'UP' | 'DOWN' | 'STABLE';
 }
 
-interface GenreDetails {
+export interface GenreDetails {
   id: string;
   name: string;
   styleKeywords: string[];

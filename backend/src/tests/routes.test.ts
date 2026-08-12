@@ -99,4 +99,15 @@ describe('foundation routes', () => {
     expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).statusCode).toBe(404);
     expect((await app.inject({ method:'GET', url:'/api/v1/platform/capabilities/UNKNOWN' })).json().error.code).toBe('CAPABILITY_NOT_FOUND');
   });
+
+  it('registers authenticated creator and GDPR data-rights routes', async () => {
+    const app = await createApp();
+    const headers = {
+      authorization: 'Bearer test-token',
+      'x-permissions': 'dashboard:access,videos:read,ai:access',
+    };
+    expect((await app.inject({ method: 'GET', url: '/api/v1/creator/stats', headers })).statusCode).toBe(200);
+    expect((await app.inject({ method: 'GET', url: '/api/v1/privacy/export', headers })).statusCode).toBe(200);
+    expect((await app.inject({ method: 'GET', url: '/api/v1/privacy/export' })).statusCode).toBe(401);
+  });
 });

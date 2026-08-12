@@ -35,7 +35,7 @@ export function registerVideoRoutes(
   app: FastifyInstance,
   controller = new VideoController(new VideoService()),
 ): void {
-  app.get('/api/v1/video/ideas', async (request) =>
+  app.get<{ Querystring: { genre?: string } }>('/api/v1/video/ideas', async (request) =>
     successResponse(controller.ideas(request), request.correlationId),
   );
   app.get<{ Querystring: { genre?: string } }>('/api/v1/videos/ideas', async (request) =>
@@ -47,7 +47,7 @@ export function registerVideoRoutes(
   app.get<{ Params: { scriptId: string } }>('/api/v1/video/script/:scriptId', async (request) =>
     successResponse(controller.script(request), request.correlationId),
   );
-  app.post('/api/v1/video/generate', async (request) =>
+  app.post<{ Body: { topic?: string; style?: string; length?: string } }>('/api/v1/video/generate', async (request) =>
     successResponse(controller.generate(request), request.correlationId),
   );
   app.get('/api/v1/video/projects', async (request) =>

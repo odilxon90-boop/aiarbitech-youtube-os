@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ensureAutoTranslations, supportedLanguages, type SupportedLanguage } from '../i18n';
+import { publicRuntimeConfig } from '../config/runtime';
 
 const platforms = [
   { name: 'YouTube OS', description: 'AI-powered YouTube automation and optimization platform.', accent: 'red', icon: '▶', motif: '◼︎ ◼︎ ◼︎', detail: 'Creator intelligence · Revenue monitoring' },
@@ -147,18 +148,13 @@ export function GlobalEcosystemHomePage() {
               <div><strong className="block text-sm">AIArbiTechnology</strong><small className="text-[9px] uppercase tracking-[.3em] text-slate-500">Global Ecosystem</small></div>
             </div>
             <p className="mt-5 max-w-xs text-sm leading-6 text-slate-400">One ecosystem. Unlimited platforms. One shared future.</p>
-            <div className="mt-6 flex gap-2">
-              {['𝕏', '▶', 'in', '◉'].map((icon, index) => {
-                const labels = ['Twitter', 'YouTube', 'LinkedIn', 'GitHub'];
-                return <a key={labels[index]} href="#footer" aria-label={labels[index]} className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[.04] text-xs font-bold text-slate-300 transition hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200">{icon}</a>;
-              })}
-            </div>
+            {publicRuntimeConfig.social.length > 0 && <div className="mt-6 flex gap-2">{publicRuntimeConfig.social.map(({ icon, label, url }) => <a key={label} href={url} aria-label={label} target="_blank" rel="noreferrer" className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[.04] text-xs font-bold text-slate-300 transition hover:border-cyan-300/50 hover:bg-cyan-300/10 hover:text-cyan-200">{icon}</a>)}</div>}
           </div>
           <div><h3 className="text-sm font-bold text-white">Platforms</h3><div className="mt-4 grid gap-3 text-sm text-slate-400"><a href="#platforms" className="hover:text-cyan-300">YouTube OS</a><a href="#platforms" className="hover:text-cyan-300">AI Arbitrage</a><a href="#platforms" className="hover:text-cyan-300">AI Market Pulse Scalper</a><a href="#platforms" className="hover:text-cyan-300">AI Video Creator Studio</a><a href="#platforms" className="hover:text-cyan-300">AIArbiTech TV Global Media</a></div></div>
-          <div><h3 className="text-sm font-bold text-white">Company</h3><div className="mt-4 grid gap-3 text-sm text-slate-400"><a href="#ecosystem" className="hover:text-cyan-300">About</a><a href="mailto:hello@aiarbitech.com" className="hover:text-cyan-300">Contact</a><a href="#footer" className="hover:text-cyan-300">Privacy Policy</a></div></div>
+          <div><h3 className="text-sm font-bold text-white">Company</h3><div className="mt-4 grid gap-3 text-sm text-slate-400"><a href="#ecosystem" className="hover:text-cyan-300">About</a><a href={`mailto:${publicRuntimeConfig.supportEmail}`} className="hover:text-cyan-300">Contact</a><a href={`mailto:${publicRuntimeConfig.supportEmail}?subject=Privacy%20or%20data%20rights%20request`} className="hover:text-cyan-300">Privacy and data rights</a></div></div>
           <div><h3 className="text-sm font-bold text-white">Stay connected</h3><p className="mt-4 text-sm leading-6 text-slate-400">Discover what is next across the AIArbiTechnology ecosystem.</p><a href="#platforms" className="mt-5 inline-flex rounded-lg border border-cyan-300/30 px-4 py-2 text-sm font-bold text-cyan-200 hover:bg-cyan-300/10">Explore platforms →</a></div>
         </div>
-        <div className="border-t border-white/10"><div className="mx-auto flex max-w-[1380px] flex-col gap-2 px-6 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-10"><p>© 2025 AIArbiTechnology. All rights reserved.</p><p>Secure by design · Built for a shared future</p></div></div>
+        <div className="border-t border-white/10"><div className="mx-auto flex max-w-[1380px] flex-col gap-2 px-6 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-10"><p>© {new Date().getFullYear()} AIArbiTechnology. All rights reserved.</p><p>Secure by design · Built for a shared future</p></div></div>
       </footer>
     </div>
   );

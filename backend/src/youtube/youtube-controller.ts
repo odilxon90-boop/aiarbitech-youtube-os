@@ -25,6 +25,10 @@ function authorizeWrite(request: FastifyRequest): void {
 export class YouTubeController {
   constructor(private readonly service: YouTubeService) {}
 
+  status() {
+    return this.service.status();
+  }
+
   channelMetadata(request: FastifyRequest<{ Params: ChannelParams }>) {
     authorizeRead(request);
     return this.service.getChannelMetadata(request.params.channelId);

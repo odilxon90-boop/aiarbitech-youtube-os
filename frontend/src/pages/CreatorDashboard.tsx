@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { createPlatformApiClient, type CreatorStats } from '../platform-client';
+import { createPlatformApiClient, type CreatorStats, type YouTubeStatus } from '../platform-client';
+import { createYouTubeOAuthUrl, publicRuntimeConfig } from '../config/runtime';
 
 const api = createPlatformApiClient();
 const chart = [34, 48, 42, 68, 57, 82, 65, 94, 76, 100];
@@ -20,12 +21,20 @@ export function CreatorDashboard() {
   const [stats, setStats] = useState<CreatorStats>();
   const [notice, setNotice] = useState('');
   const [prompt, setPrompt] = useState('');
+  const [youtubeStatus, setYoutubeStatus] = useState<YouTubeStatus>();
 
   useEffect(() => {
-    Promise.all([api.getCreatorStats(), api.getRevenue(), api.getVideos()])
-      .then(([creatorStats]) => setStats(creatorStats))
+    Promise.all([api.getCreatorStats(), api.getRevenue(), api.getVideos(), api.getYouTubeStatus()])
+      .then(([creatorStats, , , status]) => {
+        setStats(creatorStats);
+        setYoutubeStatus(status);
+      })
       .catch((error: unknown) => setNotice(error instanceof Error ? error.message : 'Unable to load creator data.'));
   }, []);
+
+  const [oauthState] = useState(() => crypto.randomUUID());
+  const oauthUrl = createYouTubeOAuthUrl(oauthState);
+  const initials = publicRuntimeConfig.userDisplayName.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 
   const planVideo = async () => {
     if (!prompt.trim()) return;
@@ -36,9 +45,9 @@ export function CreatorDashboard() {
 
   return <div className="min-h-screen overflow-hidden bg-[#070b16] text-white">
     <nav className="border-b border-white/10 bg-[#070b16]/90 backdrop-blur-xl"><div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-5 lg:px-10">
-      <a href="/" className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/40 bg-gradient-to-br from-cyan-400/20 to-violet-500/30 text-xl font-black text-cyan-200">AI</span><span><strong className="block text-sm tracking-wide">AIArbiTechnology</strong><small className="block text-[9px] uppercase tracking-[.3em] text-slate-400">Creator Dashboard</small></span></a>
+      <a href={import.meta.env.BASE_URL} className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/40 bg-gradient-to-br from-cyan-400/20 to-violet-500/30 text-xl font-black text-cyan-200">AI</span><span><strong className="block text-sm tracking-wide">AIArbiTechnology</strong><small className="block text-[9px] uppercase tracking-[.3em] text-slate-400">Creator Dashboard</small></span></a>
       <div className="hidden items-center gap-8 text-sm text-slate-300 md:flex"><a href="#overview" className="text-white">Overview</a><a href="#analytics" className="hover:text-white">Analytics</a><a href="#videos" className="hover:text-white">Videos</a><a href="#director" className="hover:text-white">AI Director</a></div>
-      <div className="flex items-center gap-3"><span className="hidden text-sm text-slate-300 sm:inline">◎ EN⌄</span><a href="/" className="rounded-lg border border-white/15 px-4 py-2 text-sm">Ecosystem</a><button className="rounded-lg bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-sm font-bold">Upload Video</button></div>
+      <div className="flex items-center gap-3"><span className="hidden text-sm text-slate-300 sm:inline">◎ EN⌄</span><a href={import.meta.env.BASE_URL} className="rounded-lg border border-white/15 px-4 py-2 text-sm">Ecosystem</a>{publicRuntimeConfig.userAvatarUrl ? <img src={publicRuntimeConfig.userAvatarUrl} alt={`${publicRuntimeConfig.userDisplayName} avatar`} className="h-10 w-10 rounded-full object-cover" referrerPolicy="no-referrer" /> : <span className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 text-xs font-bold" aria-label={`${publicRuntimeConfig.userDisplayName} avatar`}>{initials}</span>}</div>
     </div></nav>
     <main id="overview" className="!p-0">
       <section className="relative mx-auto grid max-w-[1380px] items-center gap-4 px-6 pb-8 pt-12 lg:grid-cols-[.9fr_1.1fr] lg:px-10 lg:pb-10 lg:pt-16">
@@ -47,11 +56,11 @@ export function CreatorDashboard() {
         <NetworkOrb />
       </section>
       <section className="mx-auto grid max-w-[1380px] grid-cols-2 gap-3 px-6 pb-8 sm:grid-cols-4 lg:px-10">{(stats?.kpis ?? []).slice(0, 4).map((metric, index) => <div key={metric.label} className="border-r border-white/10 px-4 py-3 last:border-0"><p className="text-2xl font-black text-white">{metric.value}</p><p className="mt-1 text-xs text-slate-500">{metric.label}</p><p className="mt-2 text-xs text-emerald-300">+{metric.delta}% growth</p></div>)}</section>
-      <section id="analytics" className="mx-6 rounded-2xl border border-white/10 bg-[#101827]/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,.2)] lg:mx-auto lg:max-w-[1380px] lg:p-7"><div className="flex items-center justify-between"><div><h2 className="text-lg font-bold">Creator analytics</h2><p className="mt-1 text-sm text-slate-500">Your channel momentum · Last 30 days</p></div><span className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Live API data</span></div><div className="mt-7 flex h-36 items-end gap-2 border-b border-white/10">{chart.map((height, index) => <div key={index} className="flex-1 rounded-t-md bg-gradient-to-t from-violet-600 to-cyan-300 opacity-80" style={{ height: `${height}%` }} />)}</div></section>
+      <section id="analytics" className="mx-6 rounded-2xl border border-white/10 bg-[#101827]/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,.2)] lg:mx-auto lg:max-w-[1380px] lg:p-7"><div className="flex items-center justify-between gap-4"><div><h2 className="text-lg font-bold">Creator analytics</h2><p className="mt-1 text-sm text-slate-500">Your channel momentum · Last 30 days</p></div><div className="text-right"><span className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">{youtubeStatus?.status === 'CONFIGURED' ? 'YouTube API connected' : 'YouTube fallback mode'}</span>{oauthUrl && !youtubeStatus?.uploadConfigured && <a href={oauthUrl} className="mt-3 block text-xs font-bold text-cyan-300">Connect YouTube OAuth →</a>}</div></div><div className="mt-7 flex h-36 items-end gap-2 border-b border-white/10">{chart.map((height, index) => <div key={index} className="flex-1 rounded-t-md bg-gradient-to-t from-violet-600 to-cyan-300 opacity-80" style={{ height: `${height}%` }} />)}</div></section>
       <section id="videos" className="mx-auto mt-6 grid max-w-[1380px] gap-6 px-6 pb-12 lg:grid-cols-[1.2fr_.8fr] lg:px-10"><div className="rounded-2xl border border-white/10 bg-[#101827]/80 p-6"><div className="flex items-center justify-between"><h2 className="font-bold">Video intelligence</h2><span className="text-xs text-cyan-300">From Global API</span></div><div className="mt-5 grid gap-3">{(stats?.kpis ?? []).length === 0 ? <p className="text-sm text-slate-500">Loading creator videos...</p> : ['Your latest upload performance', 'Audience retention opportunity', 'Next recommended publishing slot'].map((item) => <div key={item} className="flex items-center gap-4 rounded-xl border border-white/10 bg-black/20 p-3"><span className="flex h-11 w-16 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600/60 to-cyan-500/30">▶</span><div><p className="text-sm font-semibold">{item}</p><p className="mt-1 text-xs text-slate-500">Optimized by YouTube OS intelligence</p></div></div>)}</div></div>
         <div id="director" className="rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/15 to-cyan-500/[.04] p-6"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/20 text-violet-200">✦</span><div><h2 className="font-bold">AI Director</h2><p className="text-xs text-slate-500">Global production intelligence</p></div></div><p className="mt-5 text-sm leading-6 text-slate-300">Describe your next story. The AI Director prepares the hook, scenes, and publishing plan.</p><textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="I want to create a video about..." className="mt-5 h-24 w-full resize-none rounded-xl border border-white/10 bg-black/20 p-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400" /><button onClick={() => void planVideo()} className="mt-3 w-full rounded-xl bg-violet-600 px-4 py-3 text-sm font-bold hover:bg-violet-500">Generate production plan ✦</button>{notice && <p className="mt-3 text-center text-xs text-emerald-300">{notice}</p>}</div>
       </section>
     </main>
-    <footer className="border-t border-white/10 px-6 py-6 text-center text-xs text-slate-500">One ecosystem. Unlimited platforms. One shared future.</footer>
+    <footer className="border-t border-white/10 px-6 py-6 text-center text-xs text-slate-500">One ecosystem. Unlimited platforms. <a className="text-cyan-300" href={`mailto:${publicRuntimeConfig.supportEmail}`}>Support and data rights</a>.</footer>
   </div>;
 }

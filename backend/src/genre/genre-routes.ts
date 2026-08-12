@@ -43,10 +43,10 @@ export function registerGenreRoutes(
   app.get('/api/v1/genre/trends', async (request) =>
     successResponse(controller.trends(request), request.correlationId),
   );
-  app.get('/api/v1/genre/recommendations', async (request) =>
+  app.get<{ Querystring: { channelId?: string } }>('/api/v1/genre/recommendations', async (request) =>
     successResponse(controller.recommendations(request), request.correlationId),
   );
-  app.get('/api/v1/genres/recommendations', async (request) =>
+  app.get<{ Querystring: { channelId?: string } }>('/api/v1/genres/recommendations', async (request) =>
     successResponse(controller.recommendations(request), request.correlationId),
   );
   app.get('/api/v1/genre/popularity', async (request) =>

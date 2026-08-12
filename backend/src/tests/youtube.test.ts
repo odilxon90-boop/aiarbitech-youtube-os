@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { buildApp, NoopLogger } from '../app/server.js';
 import { loadEnvironment } from '../config/environment.js';
 import { YouTubeRealClient } from '../youtube/youtube-real-client.js';
+import { YouTubeService } from '../youtube/youtube-service.js';
 
 const config = loadEnvironment({ NODE_ENV: 'test', DATABASE_URL: 'postgresql://localhost:5432/youtube_os' });
 const apps: Awaited<ReturnType<typeof buildApp>>[] = [];
@@ -15,6 +16,25 @@ async function createApp() {
 }
 
 describe('YouTube API integration', () => {
+  it('reports explicit fallback and configured status without exposing credentials', async () => {
+    const app = await createApp();
+    const fallback = await app.inject({ method: 'GET', url: '/api/v1/youtube/status' });
+    expect(fallback.statusCode).toBe(200);
+    expect(fallback.json().data).toMatchObject({
+      status: 'DEGRADED',
+      mode: 'MOCK_FALLBACK',
+      readConfigured: false,
+      uploadConfigured: false,
+      fallbackEnabled: true,
+    });
+
+    expect(new YouTubeService({ YOUTUBE_API_KEY: 'secret-key' }).status()).toMatchObject({
+      status: 'CONFIGURED',
+      mode: 'API_KEY',
+      readConfigured: true,
+    });
+    expect(JSON.stringify(new YouTubeService({ YOUTUBE_API_KEY: 'secret-key' }).status())).not.toContain('secret-key');
+  });
   it('falls back to mock channel metadata when credentials are absent', async () => {
     const app = await createApp();
     const response = await app.inject({ method: 'GET', url: '/api/v1/youtube/channels/channel-01', headers: { authorization: 'Bearer legacy-youtube-token', 'x-permissions': 'videos:read' } });

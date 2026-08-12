@@ -83,4 +83,30 @@ export class AuthController {
     this.jwtService.revoke(claims);
     return { loggedOut: true };
   }
+
+  exportPersonalData(request: FastifyRequest) {
+    const claims = requireAuthenticated(request);
+    return {
+      exportedAt: new Date().toISOString(),
+      account: {
+        id: claims.sub,
+        email: claims.email,
+        role: claims.role,
+        permissions: claims.permissions,
+      },
+      dataSources: ['identity-token'],
+    };
+  }
+
+  requestAccountDeletion(request: FastifyRequest) {
+    const claims = requireAuthenticated(request);
+    this.jwtService.revoke(claims);
+    return {
+      requestId: randomUUID(),
+      status: 'RECEIVED',
+      requestedAt: new Date().toISOString(),
+      subjectId: claims.sub,
+      sessionRevoked: true,
+    };
+  }
 }

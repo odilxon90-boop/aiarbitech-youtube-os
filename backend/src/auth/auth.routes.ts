@@ -12,4 +12,10 @@ export function registerAuthRoutes(app: FastifyInstance, controller: AuthControl
   app.post('/api/v1/auth/logout', async (request) =>
     successResponse(controller.logout(request), request.correlationId),
   );
+  app.get('/api/v1/privacy/export', async (request) =>
+    successResponse(controller.exportPersonalData(request), request.correlationId),
+  );
+  app.post('/api/v1/privacy/deletion-request', async (request) =>
+    successResponse(controller.requestAccountDeletion(request), request.correlationId),
+  );
 }

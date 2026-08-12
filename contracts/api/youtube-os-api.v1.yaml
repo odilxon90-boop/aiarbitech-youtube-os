@@ -27,6 +27,10 @@ tags:
     description: Mock autonomous creator twin operations.
   - name: Integration Gateway
     description: Mock Global Ecosystem gateway operations.
+  - name: YouTube
+    description: YouTube Data API and OAuth integration operations.
+  - name: Privacy
+    description: Authenticated personal-data rights operations.
 paths:
   /health/live:
     get:
@@ -52,6 +56,31 @@ paths:
       summary: Get Global Ecosystem compatibility
       security: []
       responses: { '200': { $ref: '#/components/responses/CompatibilityResponse' } }
+  /youtube/status:
+    get:
+      tags: [YouTube]
+      summary: Get credential-safe YouTube integration status
+      security: []
+      responses:
+        '200':
+          description: YouTube integration mode and capabilities
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: object
+                    required: [status, mode, readConfigured, uploadConfigured, fallbackEnabled, checkedAt]
+                    properties:
+                      status: { type: string, enum: [CONFIGURED, DEGRADED] }
+                      mode: { type: string, enum: [API_KEY, OAUTH, MOCK_FALLBACK] }
+                      readConfigured: { type: boolean }
+                      uploadConfigured: { type: boolean }
+                      fallbackEnabled: { type: boolean }
+                      checkedAt: { type: string, format: date-time }
+                  meta: { $ref: '#/components/schemas/Meta' }
   /auth/login:
     post:
       tags: [Authentication]
@@ -99,6 +128,20 @@ paths:
       summary: Revoke the current JWT access token
       responses:
         '200': { $ref: '#/components/responses/LogoutResponse' }
+        '401': { $ref: '#/components/responses/Error' }
+  /privacy/export:
+    get:
+      tags: [Privacy]
+      summary: Export the authenticated account's available personal data
+      responses:
+        '200': { description: Personal-data export envelope }
+        '401': { $ref: '#/components/responses/Error' }
+  /privacy/deletion-request:
+    post:
+      tags: [Privacy]
+      summary: Register an account deletion request and revoke the current session
+      responses:
+        '200': { description: Deletion request receipt }
         '401': { $ref: '#/components/responses/Error' }
   /admin/users:
     get:
