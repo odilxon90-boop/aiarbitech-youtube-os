@@ -34,6 +34,9 @@ export interface UpdateGoalInput {
   status?: GoalStatus;
 }
 
+export type GoalCenterType = string;
+export type GoalCenterStatus = GoalStatus;
+
 const seedGoals = (): Goal[] => {
   const createdAt = '2026-08-01T09:00:00.000Z';
   return [
@@ -46,8 +49,61 @@ const seedGoals = (): Goal[] => {
 
 let goalsStore: Goal[] = seedGoals();
 
+interface GoalCenterCreateInput {
+  type: GoalCenterType;
+  title: string;
+  target: number;
+  deadline: string;
+}
+
 export function resetGoalsStore(): void {
   goalsStore = seedGoals();
+}
+
+export function listGoalCenterGoals(): readonly Goal[] {
+  return goalsStore;
+}
+
+export function getGoalCenterRecommendations(): readonly GoalRecommendation[] {
+  return new GoalsService().recommendations().recommendations;
+}
+
+export function createGoalCenterGoal(input: GoalCenterCreateInput): Goal {
+  const service = new GoalsService();
+  return service.create({
+    userId: 'creator-1',
+    type: input.type,
+    title: input.title,
+    target: input.target,
+    current: 0,
+    deadline: input.deadline,
+    status: 'ACTIVE',
+  });
+}
+
+export function updateGoalCenterProgress(
+  goalId: string,
+  current: number,
+  status?: GoalCenterStatus,
+): Goal | null {
+  const existing = goalsStore.find((goal) => goal.id === goalId);
+  if (!existing) {
+    return null;
+  }
+
+  return new GoalsService().update(goalId, {
+    current,
+    ...(status ? { status } : {}),
+  });
+}
+
+export function deleteGoalCenterGoal(goalId: string): boolean {
+  const existing = goalsStore.find((goal) => goal.id === goalId);
+  if (!existing) {
+    return false;
+  }
+  new GoalsService().delete(goalId);
+  return true;
 }
 
 interface GoalRecommendation {
