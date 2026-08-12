@@ -1,8 +1,35 @@
 import React from 'react';
+import type { DashboardSummary } from '../dashboard/types';
+import { ChannelHealthCard } from '../components/dashboard/ChannelHealthCard';
+import { KPICard } from '../components/dashboard/KPICard';
+import { RecentActivityList } from '../components/dashboard/RecentActivityList';
+import { RecommendationCard } from '../components/dashboard/RecommendationCard';
+import { RevenueChart } from '../components/dashboard/RevenueChart';
+import { StatusCard } from '../components/dashboard/StatusCard';
 
-export function DashboardPage() {
+export function DashboardPage({ initialData }: { initialData?: DashboardSummary }) {
+  if (initialData) {
+    return (
+      <main className="dashboard-page">
+        <h1>Creator Dashboard</h1>
+        <div className="dashboard-grid">
+          <StatusCard aiStatus={initialData.aiStatus} />
+          <section className="card"><h3>Monetization Progress</h3><p>{initialData.monetization.current} / {initialData.monetization.goal}</p><p>{initialData.monetization.note}</p></section>
+          <section className="card"><h3>Channel Overview</h3>{initialData.channels.map((channel) => <p key={channel.id}>{channel.title} · {channel.subscriberCount} subscribers · {channel.videoCount} videos</p>)}</section>
+          <section className="card"><h3>KPI Summary</h3>{initialData.kpis.map((kpi) => <KPICard key={kpi.id} kpi={kpi} />)}</section>
+          <RevenueChart series={initialData.revenueSeries} />
+          <ChannelHealthCard health={initialData.channelHealth} />
+          <section className="card"><h3>AI Recommendations</h3>{initialData.recommendations.map((item) => <RecommendationCard key={item.id} recommendation={item} />)}</section>
+          <RecentActivityList items={initialData.recentActivity} />
+          <section className="card"><h3>Quick Actions</h3>{initialData.quickActions.map((action) => <button type="button" key={action.id}>{action.icon} {action.label}</button>)}</section>
+          <section className="card"><h3>{initialData.aiChat.label}</h3><p>{initialData.aiChat.prompt}</p></section>
+        </div>
+      </main>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black p-8 text-white">
+      <p role="status">Loading creator dashboard…</p>
       <header className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">AIArbiTech YouTube OS</h1>
         <div className="rounded-full bg-gray-800 px-4 py-2 text-sm">Gate 08 · Foundation 0.1.0</div>
