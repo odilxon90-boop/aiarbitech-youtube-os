@@ -4,6 +4,15 @@ import { CreatorDashboard } from '../pages/CreatorDashboard';
 import { PresidentPanelPage } from '../pages/PresidentPanelPage';
 import { GoalsPage } from '../pages/GoalsPage';
 import { MusicStudioPage } from '../pages/MusicStudioPage';
+import { HeirPanelPage } from '../pages/HeirPanelPage';
+import { AdminPanelPage } from '../pages/AdminPanelPage';
+import { GovernancePage } from '../pages/GovernancePage';
+import { AISyncPage } from '../pages/AISyncPage';
+import { WorkflowPage } from '../pages/WorkflowPage';
+import { PromptRegistryPage } from '../pages/PromptRegistryPage';
+import { OnboardingPage } from '../pages/OnboardingPage';
+import { SuccessScorePage } from '../pages/SuccessScorePage';
+import { TwinPage } from '../pages/TwinPage';
 import type { PlatformFoundationClient } from '../platform/platform-client';
 
 export interface AppProps {
@@ -13,5 +22,19 @@ export interface AppProps {
 export function App(_props: AppProps) {
   const path = window.location.pathname.replace(/^\/youtube-os/, '');
   const isCreatorRoute = path === '' || path === '/' || path === '/creator';
-  return <AppShell>{isCreatorRoute ? <CreatorDashboard /> : path === '/president' ? <PresidentPanelPage /> : path === '/goals' ? <GoalsPage /> : path === '/music' ? <MusicStudioPage /> : <GlobalEcosystemHomePage />}</AppShell>;
+  const page = isCreatorRoute ? <CreatorDashboard />
+    : path === '/president' ? <PresidentPanelPage />
+    : path === '/goals' ? <GoalsPage />
+    : path === '/music' ? <MusicStudioPage />
+    : path === '/heir' ? <HeirPanelPage />
+    : path === '/admin' ? <AdminPanelPage />
+    : path === '/governance' ? <GovernancePage />
+    : path === '/ai-sync' ? <AISyncPage />
+    : path === '/workflow' ? <WorkflowPage />
+    : path === '/prompts' ? <PromptRegistryPage />
+    : path === '/onboarding' ? <OnboardingPage />
+    : path === '/success' ? <SuccessScorePage />
+    : path === '/twin' ? <TwinPage />
+    : <GlobalEcosystemHomePage />;
+  return <AppShell>{page}</AppShell>;
 }
