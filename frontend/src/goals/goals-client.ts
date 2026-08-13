@@ -1,6 +1,7 @@
 import type {
   CreateGoalInput,
   Goal,
+  GoalRecommendation,
   GoalsBundle,
   GoalsClient,
   ProgressInput,
@@ -66,11 +67,17 @@ export class HttpGoalsClient implements GoalsClient {
   getRecommendations(goalId?: string, signal?: AbortSignal): Promise<GoalsBundle> {
     const url = new URL(`${this.baseUrl}/goals/recommendations`);
     if (goalId) url.searchParams.set('goalId', goalId);
-    return this.request<GoalsBundle>(url.toString(), {
+    return this.request<{ goals: Goal[]; recommendations: Array<GoalRecommendation & { detail?: string }> }>(url.toString(), {
       method: 'GET',
       headers: this.headers(),
       ...(signal ? { signal } : {}),
-    });
+    }).then((data) => ({
+      goals: data.goals,
+      recommendations: data.recommendations.map((recommendation) => ({
+        ...recommendation,
+        suggestion: recommendation.suggestion ?? recommendation.detail ?? '',
+      })),
+    }));
   }
 }
 
