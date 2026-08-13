@@ -14,11 +14,11 @@ interface ApiEnvelope<T> {
 
 export interface PresidentClient {
   loadDashboard(signal?: AbortSignal): Promise<PresidentDashboard>;
-  loadHealth(signal?: AbortSignal): Promise<{ health: HealthMetric[] }>;
+  loadHealth(signal?: AbortSignal): Promise<HealthMetric[]>;
   loadRevenue(signal?: AbortSignal): Promise<RevenueOverview>;
-  loadChannels(signal?: AbortSignal): Promise<{ channels: ChannelStat[] }>;
-  loadAiStatus(signal?: AbortSignal): Promise<{ aiStatus: AIStatus[] }>;
-  loadRisks(signal?: AbortSignal): Promise<{ risks: RiskAlert[] }>;
+  loadChannels(signal?: AbortSignal): Promise<ChannelStat[]>;
+  loadAiStatus(signal?: AbortSignal): Promise<AIStatus[]>;
+  loadRisks(signal?: AbortSignal): Promise<RiskAlert[]>;
 }
 
 export class HttpPresidentClient implements PresidentClient {
@@ -43,24 +43,24 @@ export class HttpPresidentClient implements PresidentClient {
     return this.get<PresidentDashboard>('/president/dashboard', signal);
   }
 
-  loadHealth(signal?: AbortSignal): Promise<{ health: HealthMetric[] }> {
-    return this.get<{ health: HealthMetric[] }>('/president/health', signal);
+  loadHealth(signal?: AbortSignal): Promise<HealthMetric[]> {
+    return this.get<HealthMetric[]>('/president/health', signal);
   }
 
   loadRevenue(signal?: AbortSignal): Promise<RevenueOverview> {
     return this.get<RevenueOverview>('/president/revenue', signal);
   }
 
-  loadChannels(signal?: AbortSignal): Promise<{ channels: ChannelStat[] }> {
-    return this.get<{ channels: ChannelStat[] }>('/president/channels', signal);
+  loadChannels(signal?: AbortSignal): Promise<ChannelStat[]> {
+    return this.get<ChannelStat[]>('/president/channels', signal);
   }
 
-  loadAiStatus(signal?: AbortSignal): Promise<{ aiStatus: AIStatus[] }> {
-    return this.get<{ aiStatus: AIStatus[] }>('/president/ai-status', signal);
+  loadAiStatus(signal?: AbortSignal): Promise<AIStatus[]> {
+    return this.get<AIStatus[]>('/president/ai-status', signal);
   }
 
-  loadRisks(signal?: AbortSignal): Promise<{ risks: RiskAlert[] }> {
-    return this.get<{ risks: RiskAlert[] }>('/president/risks', signal);
+  loadRisks(signal?: AbortSignal): Promise<RiskAlert[]> {
+    return this.get<RiskAlert[]>('/president/risks', signal);
   }
 }
 

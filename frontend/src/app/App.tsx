@@ -1,7 +1,9 @@
 import { AppShell } from './AppShell';
 import { GlobalEcosystemHomePage } from '../pages/GlobalEcosystemHomePage';
 import { CreatorDashboard } from '../pages/CreatorDashboard';
+import { PresidentPanelPage } from '../pages/PresidentPanelPage';
 import type { PlatformFoundationClient } from '../platform/platform-client';
+
 export interface AppProps {
   client?: PlatformFoundationClient;
 }
@@ -9,9 +11,5 @@ export interface AppProps {
 export function App(_props: AppProps) {
   const path = window.location.pathname.replace(/^\/youtube-os/, '');
   const isCreatorRoute = path === '' || path === '/' || path === '/creator';
-  return (
-    <AppShell>
-      {isCreatorRoute ? <CreatorDashboard /> : <GlobalEcosystemHomePage />}
-    </AppShell>
-  );
+  return <AppShell>{isCreatorRoute ? <CreatorDashboard /> : path === '/president' ? <PresidentPanelPage /> : <GlobalEcosystemHomePage />}</AppShell>;
 }

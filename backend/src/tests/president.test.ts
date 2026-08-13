@@ -11,6 +11,15 @@ it('protects and returns President Panel mock data', async () => {
   expect((await app.inject({ method: 'GET', url: '/api/v1/president/dashboard' })).statusCode).toBe(401);
   const headers = { authorization: `Bearer ${token}` };
   const responses = await Promise.all(['/dashboard', '/health', '/revenue', '/channels', '/ai-status', '/risks'].map((path) => app.inject({ method: 'GET', url: `/api/v1/president${path}`, headers })));
-  expect(responses[0]!.json().data).toMatchObject({ platformHealth: 'HEALTHY', activeChannels: 42 });
-  expect(responses[1]!.json().data.length).toBeGreaterThanOrEqual(3); expect(responses[2]!.json().data.monthly).toBe(28450); expect(responses[3]!.json().data).toHaveLength(10); expect(responses[4]!.json().data).toHaveLength(5); expect(responses[5]!.json().data).toHaveLength(5);
+  const dashboard = responses[0]!.json().data;
+  expect(dashboard.health).toHaveLength(4);
+  expect(dashboard.revenue.monthly).toBe(28_450);
+  expect(dashboard.channels).toHaveLength(10);
+  expect(dashboard.aiStatus).toHaveLength(5);
+  expect(dashboard.risks).toHaveLength(5);
+  expect(responses[1]!.json().data).toEqual(expect.arrayContaining([expect.objectContaining({ status: 'CRITICAL' })]));
+  expect(responses[2]!.json().data.monthly).toBe(28_450);
+  expect(responses[3]!.json().data).toHaveLength(10);
+  expect(responses[4]!.json().data).toHaveLength(5);
+  expect(responses[5]!.json().data).toHaveLength(5);
 });
